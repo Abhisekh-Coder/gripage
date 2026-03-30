@@ -1,0 +1,169 @@
+import { jsPDF } from "jspdf";
+import type { Participant } from "./types";
+import { STAGE_MAP } from "./formula";
+
+export function generateResultPDF(participant: Participant): void {
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const w = doc.internal.pageSize.getWidth();
+  const stage = STAGE_MAP[participant.bioStage];
+  const delta = participant.age - participant.biologicalAge;
+  const isYounger = delta > 0;
+  const vitalityScore = Math.round(Math.max(0, Math.min(100, 50 + delta * 3.3)));
+
+  // Colors
+  const green = [74, 222, 128] as const;
+  const dark = [10, 15, 12] as const;
+
+  // Background
+  doc.setFillColor(...dark);
+  doc.rect(0, 0, w, 297, "F");
+
+  // Header band
+  doc.setFillColor(20, 30, 25);
+  doc.rect(0, 0, w, 50, "F");
+
+  // Logo text
+  doc.setFontSize(28);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.text("GripAge", 20, 22);
+  doc.setFontSize(10);
+  doc.setTextColor(150, 150, 150);
+  doc.text("Grip Strength & Biological Age Report", 20, 30);
+
+  // Date
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text(new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }), w - 20, 22, { align: "right" });
+
+  // Participant name
+  doc.setFontSize(9);
+  doc.setTextColor(150, 150, 150);
+  doc.text("RESULTS FOR", 20, 45);
+
+  doc.setFontSize(20);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.text(participant.name, 20, 60);
+
+  // Contact info
+  doc.setFontSize(9);
+  doc.setTextColor(120, 120, 120);
+  doc.text(`${participant.email}  |  ${participant.phone}`, 20, 67);
+
+  // ─── BIG BIO AGE ───
+  doc.setFillColor(15, 25, 20);
+  doc.roundedRect(20, 75, w - 40, 55, 4, 4, "F");
+
+  doc.setFontSize(60);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...green);
+  doc.text(`${participant.biologicalAge}`, 40, 112);
+
+  doc.setFontSize(14);
+  doc.setTextColor(200, 200, 200);
+  doc.text("years", 40 + doc.getTextWidth(`${participant.biologicalAge}`) + 3, 112);
+
+  doc.setFontSize(10);
+  doc.text("Biological Age", 40, 120);
+
+  // Stage badge
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...green);
+  doc.text(participant.bioStage, w - 30, 95, { align: "right" });
+
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(150, 150, 150);
+  doc.text(
+    isYounger ? `${Math.abs(delta)} years younger biologically` : delta < 0 ? `${Math.abs(delta)} years older biologically` : "On track for your age",
+    w - 30, 103, { align: "right" }
+  );
+
+  doc.setFontSize(10);
+  doc.setTextColor(120, 120, 120);
+  doc.text(`Vitality Score: ${vitalityScore}/100`, w - 30, 115, { align: "right" });
+
+  // ─── METRICS TABLE ───
+  let y = 140;
+
+  doc.setFillColor(15, 25, 20);
+  doc.roundedRect(20, y, w - 40, 50, 4, 4, "F");
+
+  const metrics = [
+    ["Chronological Age", `${participant.age} years`],
+    ["Height / Weight", `${participant.heightCm} cm / ${participant.weightKg} kg`],
+    ["Grip Strength (Avg)", `${participant.gripAvgKg} kg`],
+    ["Expected Grip", `${participant.expectedGrip} kg`],
+    ...(participant.gripLeftKg !== null ? [["Left Hand", `${participant.gripLeftKg} kg`]] : []),
+    ...(participant.gripRightKg !== null ? [["Right Hand", `${participant.gripRightKg} kg`]] : []),
+  ];
+
+  doc.setFontSize(9);
+  metrics.forEach(([label, value], i) => {
+    const rowY = y + 10 + i * 7;
+    doc.setTextColor(120, 120, 120);
+    doc.text(label, 30, rowY);
+    doc.setTextColor(220, 220, 220);
+    doc.setFont("helvetica", "bold");
+    doc.text(value, w - 30, rowY, { align: "right" });
+    doc.setFont("helvetica", "normal");
+  });
+
+  // ─── FITNESS PROFILE ───
+  y = 200;
+  doc.setFillColor(15, 25, 20);
+  doc.roundedRect(20, y, w - 40, 55, 4, 4, "F");
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...green);
+  doc.text("FITNESS PROFILE", 30, y + 10);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  const fa = participant.fitnessAnswers;
+  const fitnessInfo = [
+    ["Gym / Workout", fa.doesGym === "yes" ? "Yes" : fa.doesGym === "sometimes" ? "Sometimes" : "No"],
+    ["Frequency", fa.gymFrequency],
+    ["Activity Level", fa.activityLevel.charAt(0).toUpperCase() + fa.activityLevel.slice(1).replace("_", " ")],
+    ["Exercises", fa.exerciseType.length > 0 ? fa.exerciseType.join(", ").replace(/_/g, " ") : "None specified"],
+    ["Fitness Goal", fa.fitnessGoal],
+  ];
+
+  fitnessInfo.forEach(([label, value], i) => {
+    const rowY = y + 20 + i * 7;
+    doc.setTextColor(120, 120, 120);
+    doc.text(label, 30, rowY);
+    doc.setTextColor(220, 220, 220);
+    doc.text(value, w - 30, rowY, { align: "right" });
+  });
+
+  // ─── RECOMMENDATION ───
+  y = 265;
+  doc.setFontSize(8);
+  doc.setTextColor(80, 80, 80);
+  doc.text(stage.description + ". " + getRecommendation(participant.bioStage), 20, y, { maxWidth: w - 40 });
+
+  // Footer
+  doc.setFontSize(7);
+  doc.setTextColor(60, 60, 60);
+  doc.text("Generated by GripAge — Grip Strength & Biological Age Game", w / 2, 290, { align: "center" });
+  doc.text("Formula anchored to Indian population norms (LASI). For informational purposes only.", w / 2, 294, { align: "center" });
+
+  doc.save(`GripAge_${participant.name.replace(/\s+/g, "_")}_Report.pdf`);
+}
+
+function getRecommendation(stage: string): string {
+  switch (stage) {
+    case "Elite Vitality": return "Exceptional fitness! Keep up your training regimen and inspire others.";
+    case "Peak Fitness": return "Your grip strength indicates excellent biological health. Maintain your current fitness routine.";
+    case "Above Average": return "You're doing well! Consider adding grip-specific exercises to further improve.";
+    case "On Track": return "Age-appropriate strength. Regular exercise and a balanced diet will help maintain this level.";
+    case "Below Average": return "Consider incorporating strength training 2-3 times per week. Focus on compound exercises.";
+    case "Needs Attention": return "We recommend consulting a fitness professional. Start with light resistance training and build up gradually.";
+    case "Critical Gap": return "Please consult a healthcare provider. Begin with guided rehabilitation exercises under professional supervision.";
+    default: return "";
+  }
+}
