@@ -6,7 +6,7 @@ function generateCode(): string {
 }
 
 // Columns to select for events — NEVER include admin_pin on client
-const EVENT_COLS = "id, code, name, date, description, location, duration, image_url, status, created_at";
+const EVENT_COLS = "id,code,name,date,description,location,duration,image_url,status,created_at";
 
 // ─── Events ───
 
@@ -70,7 +70,7 @@ export async function createEvent(name: string, date: string, adminPin: string, 
   const { data, error } = await supabase
     .from("events")
     .insert(row)
-    .select(EVENT_COLS)
+    .select()
     .single();
   if (error) throw new Error(error.message);
   return mapEvent(data);
