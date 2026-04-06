@@ -43,7 +43,7 @@ function ageGroupLabel(age: number): string {
 
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"><p className="text-white/40">Loading...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ background: "#080e1a" }}><p className="text-white/40">Loading...</p></div>}>
       <ResultsContent />
     </Suspense>
   );
@@ -87,7 +87,7 @@ function ResultsContent() {
 
   const handlePDF = useCallback(() => { if (participant) generateResultPDF(participant); }, [participant]);
 
-  if (!participant) return <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"><p className="text-white/40">Result not found</p></div>;
+  if (!participant) return <div className="min-h-screen flex items-center justify-center" style={{ background: "#080e1a" }}><p className="text-white/40">Result not found</p></div>;
 
   const delta = participant.age - participant.biologicalAge;
   const stage = STAGE_MAP[participant.bioStage];
@@ -99,8 +99,12 @@ function ResultsContent() {
   const circumference = 2 * Math.PI * 42;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#080e1a" }}>
+      {/* Blue light beam — matches event page */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.12) 0%, rgba(56,189,248,0.03) 40%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.06) 0%, transparent 60%)" }} />
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 py-6 space-y-5">
 
         {/* ═══ GREETING HEADER ═══ */}
         <div>
@@ -115,7 +119,7 @@ function ResultsContent() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
           {/* Bio Age */}
-          <div className="rounded-2xl p-6 text-center relative overflow-hidden bg-white/[0.03] border border-white/[0.06]">
+          <div className="rounded-2xl p-6 text-center relative overflow-hidden bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
             <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 50% 0%, ${stage.color}12, transparent 70%)` }} />
             <div className="relative">
               <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3">Biological Age</p>
@@ -127,7 +131,7 @@ function ResultsContent() {
           </div>
 
           {/* Grip Strength */}
-          <div className="rounded-2xl p-6 text-center bg-[#d4845a]/8 border border-[#d4845a]/15">
+          <div className="rounded-2xl p-6 text-center bg-[#d4845a]/8 border border-[#d4845a]/20 backdrop-blur-sm">
             <p className="text-[10px] text-[#d4845a]/60 uppercase tracking-wider mb-3">Grip Strength</p>
             <p className="text-6xl font-black text-[#d4845a]">{participant.gripAvgKg}</p>
             <p className="text-sm text-white/30 mt-1">kg</p>
@@ -137,7 +141,7 @@ function ResultsContent() {
           </div>
 
           {/* Vitality Score — Circular */}
-          <div className="rounded-2xl p-6 text-center bg-white/[0.03] border border-white/[0.06]">
+          <div className="rounded-2xl p-6 text-center bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
             <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3">Vitality Score</p>
             <div className="relative inline-block">
               <svg width="110" height="110" viewBox="0 0 110 110">
@@ -330,16 +334,17 @@ function ResultsContent() {
 
         {/* ═══ ACTIONS ═══ */}
         <div className={`space-y-3 max-w-lg mx-auto pb-8 ${revealed ? "page-enter" : "opacity-0"}`}>
-          <button onClick={handlePDF} className="w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all active:scale-[0.98]"
-            style={{ background: `linear-gradient(135deg, ${stage.color}, ${stage.color}cc)`, color: "#000", boxShadow: `0 8px 32px ${stage.color}30` }}>
+          <button onClick={handlePDF} className="w-full py-4 px-6 rounded-full font-semibold text-lg transition-all active:scale-[0.98] text-black"
+            style={{ background: "linear-gradient(135deg, #e8a03c, #f0a830)", boxShadow: "0 8px 32px rgba(232,160,60,0.25)" }}>
             Download PDF Report
           </button>
-          <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="w-full py-4 px-6 bg-white/5 border border-white/[0.08] rounded-2xl font-semibold text-lg text-white/70 hover:bg-white/8 transition-all active:scale-[0.98]">
-            View Leaderboard
-          </button>
           <div className="flex gap-3">
-            <button onClick={() => router.push(`/event/${eventId}/register`)} className="flex-1 py-4 px-6 bg-white/5 border border-white/[0.08] rounded-2xl font-semibold text-white/50 hover:text-white/70 transition-all active:scale-[0.98]">Next Player →</button>
-            <button onClick={() => router.push(`/event/${eventId}`)} className="py-4 px-6 rounded-2xl text-white/25 hover:text-white/50 transition-colors text-sm">Event Home</button>
+            <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-4 px-6 rounded-full font-semibold text-lg border-2 border-[#d4845a] text-[#d4845a] hover:bg-[#d4845a]/10 transition-all active:scale-[0.98]">
+              View Leaderboard
+            </button>
+            <button onClick={() => router.push(`/event/${eventId}/register`)} className="flex-1 py-4 px-6 rounded-full font-semibold text-lg border-2 border-[#d4845a] text-[#d4845a] hover:bg-[#d4845a]/10 transition-all active:scale-[0.98]">
+              Next Player →
+            </button>
           </div>
         </div>
       </div>
@@ -349,8 +354,8 @@ function ResultsContent() {
 
 function Card({ title, children, variant = "dark" }: { title: string; children: React.ReactNode; variant?: "dark" | "accent" }) {
   return (
-    <div className={`rounded-2xl p-5 ${variant === "dark" ? "bg-white/[0.03] border border-white/[0.06]" : "bg-[#d4845a]/8 border border-[#d4845a]/15"}`}>
-      <p className={`text-[10px] uppercase tracking-wider font-medium mb-4 ${variant === "dark" ? "text-white/25" : "text-[#d4845a]/60"}`}>{title}</p>
+    <div className={`rounded-2xl p-5 backdrop-blur-sm ${variant === "dark" ? "bg-white/[0.04] border border-white/[0.08]" : "bg-[#d4845a]/8 border border-[#d4845a]/20"}`}>
+      <p className={`text-[10px] uppercase tracking-wider font-medium mb-4 ${variant === "dark" ? "text-white/30" : "text-[#d4845a]/60"}`}>{title}</p>
       {children}
     </div>
   );
