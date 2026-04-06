@@ -54,9 +54,7 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-[#0B0B0F] overflow-hidden">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(74,222,128,0.05) 0%, transparent 60%)" }} />
+    <div className="min-h-screen bg-[#0B0B0F]">
 
       <div className="relative z-10 min-h-screen p-4 lg:p-8">
         <div className="page-enter max-w-5xl mx-auto">
@@ -81,19 +79,18 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
-          {/* View tabs */}
-          <div className="glass-card rounded-2xl p-1.5 mb-4 flex gap-1">
+          {/* View tabs — minimal */}
+          <div className="flex gap-1 mb-4">
             {views.map((v) => (
               <button
                 key={v.key}
                 onClick={() => setView(v.key)}
-                className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                className={`py-2 px-4 rounded-lg text-xs font-semibold transition-all ${
                   view === v.key
-                    ? "glass-toggle-active"
-                    : "text-white/40 hover:text-white/70"
+                    ? "bg-white/[0.08] text-white"
+                    : "text-white/25 hover:text-white/50"
                 }`}
               >
-                <span className="hidden sm:inline">{v.icon}</span>
                 {v.label}
               </button>
             ))}
@@ -130,59 +127,46 @@ export default function LeaderboardPage() {
           </div>
 
           {/* Stats bar */}
-          <div className="glass-card rounded-xl px-4 py-2 mb-6 flex items-center justify-between">
-            <span className="text-white/40 text-sm">{sorted.length} participants</span>
+          <div className="rounded-lg px-4 py-2 mb-4 flex items-center justify-between bg-white/[0.02] border border-white/[0.04]">
+            <span className="text-white/30 text-xs">{sorted.length} participants</span>
             {sorted.length > 0 && (
-              <span className="text-white/30 text-xs">
-                Best: <span className="text-[#4ADE80] font-medium">{getMetric(sorted[0], view)}</span>
-              </span>
+              <span className="text-white/20 text-xs">Best: <span className="text-white/40 font-medium">{getMetric(sorted[0], view)}</span></span>
             )}
           </div>
 
           {/* Desktop: side by side podium + list */}
           <div className="lg:grid lg:grid-cols-[340px_1fr] lg:gap-6">
 
-            {/* Podium */}
+            {/* Top 3 — clean, no emojis */}
             {sorted.length >= 1 && (
               <div className="mb-6 lg:mb-0">
-                <div className="glass-card rounded-3xl p-6 lg:sticky lg:top-8">
-                  <p className="text-xs text-white/30 uppercase tracking-wider mb-4">Top Performers</p>
+                <div className="rounded-2xl p-5 bg-white/[0.025] border border-white/[0.05] lg:sticky lg:top-8">
+                  <p className="text-[9px] text-white/20 font-semibold uppercase tracking-[0.1em] mb-4">Top 3</p>
 
-                  {/* 1st place hero */}
                   {sorted[0] && (
-                    <div className="podium-gold glass-card-strong rounded-2xl p-5 text-center mb-4">
-                      <span className="text-4xl">🥇</span>
-                      <p className="text-xl font-bold mt-2">{sorted[0].name}</p>
-                      <p className="text-3xl font-black mt-1" style={{ color: STAGE_MAP[sorted[0].bioStage].color }}>
-                        {getMetric(sorted[0], view)}
-                      </p>
-                      <p className="text-xs mt-1" style={{ color: STAGE_MAP[sorted[0].bioStage].color, opacity: 0.7 }}>
-                        {sorted[0].bioStage}
-                      </p>
-                      <p className="text-xs text-white/30 mt-1">Age {sorted[0].age} · {sorted[0].gender}</p>
+                    <div className="rounded-xl p-4 bg-white/[0.03] border border-white/[0.06] text-center mb-3">
+                      <p className="text-[10px] text-white/15 font-bold mb-1">1ST</p>
+                      <p className="font-bold text-base">{sorted[0].name}</p>
+                      <p className="text-2xl font-black text-white/80 mt-1">{getMetric(sorted[0], view)}</p>
+                      <p className="text-[10px] text-white/20 mt-1">{sorted[0].bioStage} · Age {sorted[0].age}</p>
                     </div>
                   )}
 
-                  {/* 2nd and 3rd */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     {sorted[1] && (
-                      <div className="podium-silver glass-card rounded-2xl p-4 text-center">
-                        <span className="text-2xl">🥈</span>
-                        <p className="font-semibold text-sm mt-1 truncate">{sorted[1].name}</p>
-                        <p className="text-lg font-black mt-1" style={{ color: STAGE_MAP[sorted[1].bioStage].color }}>
-                          {getMetric(sorted[1], view)}
-                        </p>
-                        <p className="text-xs text-white/30">{sorted[1].bioStage}</p>
+                      <div className="rounded-xl p-3 bg-white/[0.02] border border-white/[0.04] text-center">
+                        <p className="text-[9px] text-white/12 font-bold mb-1">2ND</p>
+                        <p className="font-semibold text-xs truncate">{sorted[1].name}</p>
+                        <p className="text-base font-black text-white/60 mt-1">{getMetric(sorted[1], view)}</p>
+                        <p className="text-[9px] text-white/15">{sorted[1].bioStage}</p>
                       </div>
                     )}
                     {sorted[2] && (
-                      <div className="podium-bronze glass-card rounded-2xl p-4 text-center">
-                        <span className="text-2xl">🥉</span>
-                        <p className="font-semibold text-sm mt-1 truncate">{sorted[2].name}</p>
-                        <p className="text-lg font-black mt-1" style={{ color: STAGE_MAP[sorted[2].bioStage].color }}>
-                          {getMetric(sorted[2], view)}
-                        </p>
-                        <p className="text-xs text-white/30">{sorted[2].bioStage}</p>
+                      <div className="rounded-xl p-3 bg-white/[0.02] border border-white/[0.04] text-center">
+                        <p className="text-[9px] text-white/12 font-bold mb-1">3RD</p>
+                        <p className="font-semibold text-xs truncate">{sorted[2].name}</p>
+                        <p className="text-base font-black text-white/60 mt-1">{getMetric(sorted[2], view)}</p>
+                        <p className="text-[9px] text-white/15">{sorted[2].bioStage}</p>
                       </div>
                     )}
                   </div>
@@ -223,8 +207,8 @@ function FilterChip({ label, active, onClick }: { label: string; active: boolean
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-        active ? "glass-toggle-active" : "glass-toggle"
+      className={`px-3 py-1.5 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all ${
+        active ? "bg-white/[0.08] text-white" : "text-white/20 hover:text-white/40"
       }`}
     >
       {label}
@@ -241,48 +225,28 @@ function getMetric(p: Participant, view: LeaderboardView): string {
 }
 
 function LeaderboardRow({ rank, participant: p, view, highlighted }: { rank: number; participant: Participant; view: LeaderboardView; highlighted: boolean }) {
-  const stage = STAGE_MAP[p.bioStage];
-  const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
   const delta = p.age - p.biologicalAge;
 
   return (
-    <div
-      className={`glass-card-hover rounded-xl p-3 lg:p-4 flex items-center gap-3 transition-all ${highlighted ? "ring-2 ring-[#4ADE80]/50 bg-[#4ADE80]/5" : ""}`}
-    >
-      <span className="w-10 text-center font-bold text-sm flex-shrink-0">
-        {medal || <span className="text-white/30">#{rank}</span>}
+    <div className={`rounded-xl p-3 flex items-center gap-3 transition-all bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] ${highlighted ? "border-white/[0.12]" : ""}`}>
+      <span className="w-8 text-center text-xs font-bold text-white/20 shrink-0">
+        {rank <= 3 ? <span className="text-white/50">#{rank}</span> : `#${rank}`}
       </span>
 
-      {/* Avatar circle */}
-      <div
-        className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-        style={{ background: stage.bgColor, color: stage.color }}
-      >
+      <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-xs font-bold text-white/40 shrink-0">
         {p.name.charAt(0).toUpperCase()}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="font-medium truncate">{p.name}</p>
-        <p className="text-xs text-white/30">Age {p.age} · {p.gender} · {p.gripAvgKg}kg</p>
+        <p className="font-medium text-sm truncate">{p.name}</p>
+        <p className="text-[10px] text-white/20">Age {p.age} · {p.gender} · {p.gripAvgKg}kg</p>
       </div>
 
-      <div className="text-right flex-shrink-0">
-        <p className="font-bold text-sm" style={{ color: stage.color }}>
-          {view === "delta" ? (
-            <>{delta > 0 ? `${delta}y younger` : delta < 0 ? `${Math.abs(delta)}y older` : "On track"}</>
-          ) : (
-            <>{p.gripAvgKg} kg</>
-          )}
+      <div className="text-right shrink-0">
+        <p className="font-bold text-sm text-white/70">
+          {view === "delta" ? (delta > 0 ? `${delta}y younger` : delta < 0 ? `${Math.abs(delta)}y older` : "On track") : `${p.gripAvgKg} kg`}
         </p>
-        <p className="text-xs" style={{ color: stage.color, opacity: 0.6 }}>
-          {p.bioStage}
-        </p>
-        {view === "strongest" && (
-          <p className="text-xs text-white/30">Bio: {p.biologicalAge}</p>
-        )}
-        {view === "delta" && (
-          <p className="text-xs text-white/30">{p.gripAvgKg}kg grip</p>
-        )}
+        <p className="text-[10px] text-white/15">{p.bioStage}</p>
       </div>
     </div>
   );
