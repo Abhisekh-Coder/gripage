@@ -96,13 +96,16 @@ export default function OrganizerDashboard() {
     return m === 0 ? `${h12}:00 ${suffix}` : `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
   }
 
+  const [createError, setCreateError] = useState("");
+
   async function handleCreateEvent() {
     if (!newName.trim() || !newDate) return;
     setCreating(true);
+    setCreateError("");
     try {
       let imageUrl = "";
       if (newImageFile) {
-        try { imageUrl = await uploadEventImage(newImageFile); } catch { /* ignore upload errors */ }
+        try { imageUrl = await uploadEventImage(newImageFile); } catch (e) { console.error("Image upload failed:", e); }
       }
       const duration = newStartTime && newEndTime ? `${formatTime12(newStartTime)} – ${formatTime12(newEndTime)}` : newDuration.trim();
       await createEvent(newName.trim(), newDate, newDesc.trim(), newLocation.trim(), duration, imageUrl);
@@ -111,6 +114,10 @@ export default function OrganizerDashboard() {
       setNewImageFile(null); setNewImagePreview("");
       setShowCreateModal(false);
       await loadEvents();
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to create event";
+      console.error("Create event error:", msg);
+      setCreateError(msg);
     } finally { setCreating(false); }
   }
 
@@ -348,6 +355,7 @@ export default function OrganizerDashboard() {
                   className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 focus:outline-none resize-none" />
               </div>
 
+              {createError && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">{createError}</p>}
               <button onClick={handleCreateEvent} disabled={!newName.trim() || !newDate || creating}
                 className="w-full py-4 rounded-xl text-base font-semibold disabled:opacity-30 transition-all"
                 style={{ background: "linear-gradient(135deg, #4ADE80, #4ADE80)", color: "#000" }}>
