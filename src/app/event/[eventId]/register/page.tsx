@@ -33,9 +33,15 @@ export default function RegisterPage() {
   const router = useRouter();
   const eventId = params.eventId as string;
   const [eventName, setEventName] = useState("");
+  const [eventEnded, setEventEnded] = useState(false);
 
   useEffect(() => {
-    getEvent(eventId).then((e) => e && setEventName(e.name));
+    getEvent(eventId).then((e) => {
+      if (e) {
+        setEventName(e.name);
+        if (e.status === "ended") setEventEnded(true);
+      }
+    });
   }, [eventId]);
 
   const [name, setName] = useState("");
@@ -105,6 +111,14 @@ export default function RegisterPage() {
             <h1 className="text-2xl sm:text-3xl font-black">Register</h1>
             <p className="text-white/30 text-sm mt-1">{eventName} · Step 1 of 2</p>
           </div>
+
+          {eventEnded && (
+            <div className="mb-6 p-4 rounded-2xl bg-red-500/8 border border-red-500/15 text-center">
+              <p className="text-red-400 font-medium text-sm">This event has ended</p>
+              <p className="text-white/30 text-xs mt-1">Registration is no longer available.</p>
+              <button onClick={() => router.push(`/event/${eventId}`)} className="mt-3 text-xs text-white/40 hover:text-white/60 transition-colors">← Back to Event</button>
+            </div>
+          )}
 
           <div className="flex items-center gap-2 mb-8">
             <div className="step-dot step-dot-active" /><div className="step-dot" />
@@ -225,7 +239,7 @@ export default function RegisterPage() {
               {emailError}
             </div>
           )}
-          <button onClick={handleNext} disabled={!isValid || submitting} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg mt-6">
+          <button onClick={handleNext} disabled={!isValid || submitting || eventEnded} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg mt-6">
             {submitting ? "Checking..." : "Next: Grip Test →"}
           </button>
         </div>

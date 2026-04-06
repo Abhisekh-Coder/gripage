@@ -110,23 +110,73 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
-            {[
-              { n: "01", t: "Squeeze", d: "Grip a professional dynamometer with each hand. We record your max strength.", img: "/beautiful-brunette-female-sportswear-doing-lunge-with-barbell-fitness-club-gym.jpg" },
-              { n: "02", t: "Analyze", d: "Our algorithm compares your grip against population norms — age, gender, height, weight.", img: "/beautiful-girl-is-engaged-gym.jpg" },
-              { n: "03", t: "Rank", d: "Get your biological age, percentile ranking, and download a detailed PDF report.", img: "/man-moving-giant-tire-wheel-gym.jpg" },
-            ].map(s => (
-              <div key={s.n} className="group glass-hover rounded-2xl overflow-hidden">
-                <div className="relative h-48 overflow-hidden">
-                  <Image src={s.img} alt={s.t} fill className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/40 to-transparent" />
-                  <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">{s.n}</span>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-base font-black uppercase tracking-tight mb-1.5">{s.t}</h3>
-                  <p className="text-white/35 text-sm leading-relaxed">{s.d}</p>
+            {/* Step 1 — Squeeze */}
+            <div className="glass-hover rounded-2xl overflow-hidden group">
+              <div className="relative h-48 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
+                <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">01</span>
+                {/* Hand gripping icon */}
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
+                  <path d="M28 52V32a4 4 0 018 0v-6a4 4 0 018 0v-2a4 4 0 018 0v8a4 4 0 018 0v16c0 10-6 18-16 18H40c-8 0-12-6-12-14z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M36 32v12M44 26v18M52 30v14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+                  <circle cx="40" cy="62" r="3" fill="currentColor" opacity="0.3"/>
+                </svg>
+                {/* Floating kg badge */}
+                <div className="absolute bottom-4 right-5 glass px-3 py-1.5 rounded-lg text-[10px] font-bold text-[#4ADE80]/60">
+                  45.2 kg
                 </div>
               </div>
-            ))}
+              <div className="p-5">
+                <h3 className="text-base font-black uppercase tracking-tight mb-1.5">Squeeze</h3>
+                <p className="text-white/35 text-sm leading-relaxed">Grip a professional dynamometer with each hand. We record your maximum strength in kilograms.</p>
+              </div>
+            </div>
+
+            {/* Step 2 — Analyze */}
+            <div className="glass-hover rounded-2xl overflow-hidden group">
+              <div className="relative h-48 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
+                <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">02</span>
+                {/* Analysis/heartbeat icon */}
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
+                  <rect x="14" y="16" width="52" height="48" rx="6" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M14 32h12l6-10 8 20 6-14 6 8h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="40" cy="52" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+                  <text x="40" y="56" textAnchor="middle" fill="currentColor" fontSize="10" fontWeight="bold" opacity="0.5">28</text>
+                </svg>
+                {/* Floating bio age badge */}
+                <div className="absolute bottom-4 right-5 glass px-3 py-1.5 rounded-lg text-[10px] font-bold text-[#4ADE80]/60">
+                  Bio Age: 28
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="text-base font-black uppercase tracking-tight mb-1.5">Analyze</h3>
+                <p className="text-white/35 text-sm leading-relaxed">Our algorithm compares your grip against population norms — adjusted for age, gender, height, and weight.</p>
+              </div>
+            </div>
+
+            {/* Step 3 — Rank */}
+            <div className="glass-hover rounded-2xl overflow-hidden group">
+              <div className="relative h-48 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
+                <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">03</span>
+                {/* Podium/ranking icon */}
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
+                  <rect x="10" y="40" width="16" height="24" rx="2" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="32" y="28" width="16" height="36" rx="2" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="54" y="46" width="16" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
+                  <text x="18" y="58" textAnchor="middle" fill="currentColor" fontSize="10" fontWeight="bold" opacity="0.5">2</text>
+                  <text x="40" y="46" textAnchor="middle" fill="currentColor" fontSize="10" fontWeight="bold" opacity="0.5">1</text>
+                  <text x="62" y="60" textAnchor="middle" fill="currentColor" fontSize="10" fontWeight="bold" opacity="0.5">3</text>
+                  <path d="M36 22l4-6 4 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+                </svg>
+                {/* Floating rank badge */}
+                <div className="absolute bottom-4 right-5 glass px-3 py-1.5 rounded-lg text-[10px] font-bold text-[#4ADE80]/60">
+                  #1 of 42
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="text-base font-black uppercase tracking-tight mb-1.5">Rank</h3>
+                <p className="text-white/35 text-sm leading-relaxed">See your biological age, where you stand on the live leaderboard, and download your PDF report.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -141,14 +191,16 @@ export default function HomePage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: "🧬", title: "Biological Age", desc: "Your body's true age based on grip strength science" },
-              { icon: "📊", title: "Live Leaderboard", desc: "Compete and rank against others at the event" },
-              { icon: "💪", title: "Grip Analysis", desc: "Left/right comparison, percentile, expected strength" },
-              { icon: "📄", title: "PDF Report", desc: "Download a detailed report with all your metrics" },
+              { title: "Biological Age", desc: "Your body's true age based on grip strength science", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 8V4m0 4a4 4 0 100 8 4 4 0 000-8z"/><path d="M3 12h4m10 0h4M5.6 5.6l2.8 2.8m7.2 7.2l2.8 2.8M5.6 18.4l2.8-2.8m7.2-7.2l2.8-2.8"/></svg> },
+              { title: "Live Leaderboard", desc: "Compete and rank against others at the event in real-time", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> },
+              { title: "Grip Analysis", desc: "Left vs right comparison, percentile, expected strength for your age", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12h-4l-3 9L9 3l-3 9H2"/></svg> },
+              { title: "PDF Report", desc: "Download a detailed report with all your metrics and recommendations", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6M16 13H8m8 4H8m2-8H8"/></svg> },
             ].map(f => (
-              <div key={f.title} className="glass rounded-2xl p-5 group hover:border-[#4ADE80]/15 transition-colors">
-                <span className="text-2xl block mb-3">{f.icon}</span>
-                <h3 className="text-sm font-bold mb-1">{f.title}</h3>
+              <div key={f.title} className="glass rounded-2xl p-5 group hover:border-[#4ADE80]/20 transition-all hover:bg-white/[0.05]">
+                <div className="w-10 h-10 rounded-xl bg-[#4ADE80]/8 border border-[#4ADE80]/15 flex items-center justify-center text-[#4ADE80] mb-4 group-hover:bg-[#4ADE80]/12 transition-colors">
+                  {f.icon}
+                </div>
+                <h3 className="text-sm font-bold mb-1.5">{f.title}</h3>
                 <p className="text-xs text-white/30 leading-relaxed">{f.desc}</p>
               </div>
             ))}
@@ -158,13 +210,18 @@ export default function HomePage() {
 
       {/* ═══ CTA ═══ */}
       <section className="relative z-10 py-20 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="glass-strong rounded-3xl p-10 sm:p-14 relative overflow-hidden">
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(74,222,128,0.08) 0%, transparent 60%)" }} />
-            <div className="relative">
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-3">Ready to discover your true age?</h2>
-              <p className="text-white/35 text-sm mb-8 max-w-md mx-auto">Join a live event or ask your organizer for an event code to get started.</p>
-              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="btn-primary px-8 py-3.5 text-sm font-bold">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass-strong rounded-3xl relative overflow-hidden">
+            {/* Green gradient glow */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% -20%, rgba(74,222,128,0.12) 0%, transparent 60%)" }} />
+            <div className="absolute -top-px left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-[#4ADE80]/30 to-transparent" />
+
+            <div className="relative px-8 sm:px-14 py-12 sm:py-16 flex flex-col lg:flex-row items-center gap-8">
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">Ready to discover your true age?</h2>
+                <p className="text-white/35 text-sm max-w-md mx-auto lg:mx-0">Join a live event or ask your organizer for an event code to get started.</p>
+              </div>
+              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="btn-primary px-8 py-4 text-sm font-bold whitespace-nowrap shrink-0">
                 Enter Event Code
               </button>
             </div>

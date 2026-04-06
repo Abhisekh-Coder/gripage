@@ -5,48 +5,50 @@ function generateCode(): string {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
+// Columns to select for events — NEVER include admin_pin on client
+const EVENT_COLS = "id, code, name, date, description, location, duration, image_url, status, created_at";
+
 // ─── Events ───
 
 export async function getEvents(): Promise<GripEvent[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("events")
-    .select("*")
+    .select(EVENT_COLS)
     .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data.map(mapEvent);
+  if (error) { console.error("[store.getEvents]", error.message); return []; }
+  return (data ?? []).map(mapEvent);
 }
 
 export async function getLiveEvents(): Promise<GripEvent[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("events")
-    .select("*")
+    .select(EVENT_COLS)
     .eq("status", "live")
     .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data.map(mapEvent);
+  if (error) { console.error("[store.getLiveEvents]", error.message); return []; }
+  return (data ?? []).map(mapEvent);
 }
 
 export async function getPastEvents(): Promise<GripEvent[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("events")
-    .select("*")
+    .select(EVENT_COLS)
     .eq("status", "ended")
     .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data.map(mapEvent);
+  if (error) { console.error("[store.getPastEvents]", error.message); return []; }
+  return (data ?? []).map(mapEvent);
 }
 
 export async function getEvent(eventId: string): Promise<GripEvent | null> {
   const supabase = createClient();
-  // Try by id first, then by code
-  let { data } = await supabase.from("events").select("*").eq("id", eventId).single();
-  if (!data) {
-    const res = await supabase.from("events").select("*").eq("code", eventId.toUpperCase()).single();
-    data = res.data;
-  }
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId);
+  const col = isUUID ? "id" : "code";
+  const val = isUUID ? eventId : eventId.toUpperCase();
+  const { data, error } = await supabase.from("events").select(EVENT_COLS).eq(col, val).single();
+  if (error) return null;
   return data ? mapEvent(data) : null;
 }
 
@@ -54,7 +56,7 @@ export async function getEventByCode(code: string): Promise<GripEvent | null> {
   const supabase = createClient();
   const { data } = await supabase
     .from("events")
-    .select("*")
+    .select(EVENT_COLS)
     .eq("code", code.toUpperCase())
     .single();
   return data ? mapEvent(data) : null;
@@ -68,7 +70,7 @@ export async function createEvent(name: string, date: string, adminPin: string, 
   const { data, error } = await supabase
     .from("events")
     .insert(row)
-    .select()
+    .select(EVENT_COLS)
     .single();
   if (error) throw new Error(error.message);
   return mapEvent(data);
@@ -76,7 +78,10 @@ export async function createEvent(name: string, date: string, adminPin: string, 
 
 export async function uploadEventImage(file: File): Promise<string> {
   const supabase = createClient();
-  const ext = file.name.split(".").pop();
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const allowed = ["jpg", "jpeg", "png", "webp", "gif"];
+  if (!allowed.includes(ext)) throw new Error("Invalid image type");
+  if (file.size > 5 * 1024 * 1024) throw new Error("Image must be under 5MB");
   const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
   const { error } = await supabase.storage.from("event-images").upload(path, file);
   if (error) throw new Error(error.message);
@@ -86,22 +91,26 @@ export async function uploadEventImage(file: File): Promise<string> {
 
 export async function endEvent(eventId: string): Promise<void> {
   const supabase = createClient();
-  await supabase.from("events").update({ status: "ended" }).eq("id", eventId);
+  const { error } = await supabase.from("events").update({ status: "ended" }).eq("id", eventId);
+  if (error) throw new Error(error.message);
 }
 
 export async function reopenEvent(eventId: string): Promise<void> {
   const supabase = createClient();
-  await supabase.from("events").update({ status: "live" }).eq("id", eventId);
+  const { error } = await supabase.from("events").update({ status: "live" }).eq("id", eventId);
+  if (error) throw new Error(error.message);
 }
 
 export async function deleteEvent(eventId: string): Promise<void> {
   const supabase = createClient();
-  await supabase.from("events").delete().eq("id", eventId);
+  const { error } = await supabase.from("events").delete().eq("id", eventId);
+  if (error) throw new Error(error.message);
 }
 
 export async function deleteParticipant(participantId: string): Promise<void> {
   const supabase = createClient();
-  await supabase.from("participants").delete().eq("id", participantId);
+  const { error } = await supabase.from("participants").delete().eq("id", participantId);
+  if (error) throw new Error(error.message);
 }
 
 // ─── Participants ───
@@ -113,31 +122,20 @@ export async function getParticipants(eventId: string): Promise<Participant[]> {
     .select("*")
     .eq("event_id", eventId)
     .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data.map(mapParticipant);
+  if (error) { console.error("[store.getParticipants]", error.message); return []; }
+  return (data ?? []).map(mapParticipant);
 }
 
 export async function getParticipantByEmail(eventId: string, email: string): Promise<Participant | null> {
   const supabase = createClient();
   const normalizedEmail = email.toLowerCase().trim();
-  // Try exact match first, then case-insensitive
-  let { data } = await supabase
+  const { data } = await supabase
     .from("participants")
     .select("*")
     .eq("event_id", eventId)
-    .eq("email", normalizedEmail)
+    .ilike("email", normalizedEmail)
+    .limit(1)
     .single();
-  if (!data) {
-    // Fallback: case-insensitive search using ilike
-    const res = await supabase
-      .from("participants")
-      .select("*")
-      .eq("event_id", eventId)
-      .ilike("email", normalizedEmail)
-      .limit(1)
-      .single();
-    data = res.data;
-  }
   return data ? mapParticipant(data) : null;
 }
 
@@ -191,6 +189,21 @@ export async function getParticipantCount(eventId: string): Promise<number> {
   return count ?? 0;
 }
 
+// ─── CSV Export (with proper escaping) ───
+
+function escapeCsv(val: string | number | null): string {
+  if (val === null || val === undefined) return "";
+  const s = String(val);
+  // Escape formula injection characters
+  const sanitized = s.startsWith("=") || s.startsWith("+") || s.startsWith("-") || s.startsWith("@")
+    ? `'${s}` : s;
+  // Quote if contains comma, quote, or newline
+  if (sanitized.includes(",") || sanitized.includes('"') || sanitized.includes("\n")) {
+    return `"${sanitized.replace(/"/g, '""')}"`;
+  }
+  return sanitized;
+}
+
 export async function exportParticipantsCSV(eventId: string): Promise<string> {
   const participants = await getParticipants(eventId);
   const headers = [
@@ -206,8 +219,8 @@ export async function exportParticipantsCSV(eventId: string): Promise<string> {
     p.fitnessAnswers.fitnessGoal,
     p.gripLeftKg ?? "", p.gripRightKg ?? "", p.gripAvgKg,
     p.expectedGrip, p.biologicalAge, p.bioStage,
-  ]);
-  return [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+  ].map(escapeCsv));
+  return [headers.map(escapeCsv).join(","), ...rows.map((r) => r.join(","))].join("\n");
 }
 
 // ─── Mappers ───
@@ -223,7 +236,7 @@ function mapEvent(row: any): GripEvent {
     location: row.location || "",
     duration: row.duration || "",
     imageUrl: row.image_url || "",
-    adminPin: row.admin_pin,
+    adminPin: "", // NEVER expose admin_pin to client
     status: row.status,
     createdAt: new Date(row.created_at).getTime(),
   };
