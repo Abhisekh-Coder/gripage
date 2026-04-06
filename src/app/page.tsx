@@ -34,12 +34,12 @@ export default function HomePage() {
             </div>
             <span className="text-base font-black tracking-tight">Grip<span className="text-[#4ADE80]">Age</span></span>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-8 text-[11px] font-medium uppercase tracking-[0.12em] text-white/35">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="hidden sm:flex items-center gap-6 text-[11px] font-medium uppercase tracking-[0.12em] text-white/35">
               <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/60 transition-colors">How it works</button>
               <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/60 transition-colors">Join</button>
             </div>
-            <a href="/organizer/login" className="text-[11px] font-semibold text-[#4ADE80]/70 hover:text-[#4ADE80] transition-colors uppercase tracking-wider">Organizers</a>
+            <a href="/organizer/login" className="text-[10px] sm:text-[11px] font-semibold text-[#4ADE80]/70 hover:text-[#4ADE80] transition-colors uppercase tracking-wider">Organizers</a>
           </div>
         </div>
       </nav>
@@ -50,56 +50,50 @@ export default function HomePage() {
         <div className="absolute inset-0 lg:left-[35%]">
           <Image src="/bodybuilder-training-arm-with-resistance-band.jpg" alt="Athlete" fill className="object-cover" style={{ objectPosition: "70% 20%" }} priority />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #0B0B0F 0%, rgba(11,11,15,0.75) 40%, rgba(11,11,15,0.2) 70%, rgba(11,11,15,0.15) 100%)" }} />
-          <div className="absolute inset-0 lg:hidden bg-[#0B0B0F]/65" />
+          <div className="absolute inset-0 lg:hidden bg-[#0B0B0F]/70" />
           {/* Green ambient glow */}
           <div className="absolute bottom-0 left-[20%] w-[500px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(74,222,128,0.06) 0%, transparent 70%)" }} />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 pt-28 pb-20">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 pt-24 sm:pt-28 pb-16 sm:pb-20">
           <div className="max-w-lg">
 
             {/* Pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass text-[11px] font-medium text-[#4ADE80]/80 mb-8 border-[#4ADE80]/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[10px] sm:text-[11px] font-medium text-[#4ADE80]/80 mb-6 sm:mb-8 border-[#4ADE80]/15">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
               Science-backed biological age testing
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight mb-5">
-              Elevate Your<br />
-              Fitness. Know<br />
-              <span className="text-[#4ADE80]">Your True Age.</span>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight mb-4 sm:mb-5">
+              Elevate Your Fitness.{" "}
+              <br className="hidden sm:block" />
+              Know <span className="text-[#4ADE80]">Your True Age.</span>
             </h1>
 
-            <p className="text-white/40 text-base sm:text-lg leading-relaxed mb-10 max-w-md">
+            <p className="text-white/40 text-sm sm:text-base lg:text-lg leading-relaxed mb-8 sm:mb-10 max-w-md">
               Grip strength is one of the strongest predictors of longevity. Test yours at a live event and discover your biological age — instantly.
             </p>
 
             {/* Join input */}
-            <div id="join" className="flex gap-2 max-w-sm mb-4">
+            <div id="join" className="flex gap-2 max-w-xs sm:max-w-sm mb-4">
               <input
                 type="text" placeholder="Event Code" value={code} maxLength={6} aria-label="Event code"
                 onChange={e => { setCode(e.target.value.toUpperCase()); setError(""); }}
                 onKeyDown={e => e.key === "Enter" && join()}
-                className="glass-input flex-1 py-3.5 px-4 text-center uppercase font-bold tracking-[0.25em] text-sm"
+                className="glass-input flex-1 py-3 sm:py-3.5 px-3 sm:px-4 text-center uppercase font-bold tracking-[0.2em] sm:tracking-[0.25em] text-sm"
               />
-              <button onClick={join} disabled={!code.trim() || loading} className="btn-primary px-6 py-3.5 text-sm font-bold whitespace-nowrap">
+              <button onClick={join} disabled={!code.trim() || loading} className="btn-primary px-5 sm:px-6 py-3 sm:py-3.5 text-sm font-bold whitespace-nowrap">
                 {loading ? "..." : "Join"}
               </button>
             </div>
             {error && <p className="text-red-400 text-xs mb-4">{error}</p>}
-
-            {/* Powered by badge */}
-            <div className="mt-10 flex items-center gap-2 text-[10px] text-white/15">
-              <span>Powered by</span>
-              <a href="https://foxo.club" target="_blank" rel="noopener noreferrer" className="text-[#4ADE80]/30 hover:text-[#4ADE80]/50 font-medium transition-colors">Foxo.club</a>
-            </div>
           </div>
         </div>
       </section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section id="how" className="relative z-10 py-24 sm:py-32 px-6">
+      <section id="how" className="relative z-10 py-16 sm:py-24 lg:py-32 px-5 sm:px-6">
         {/* Ambient glow */}
         <div className="absolute top-0 left-[50%] -translate-x-1/2 w-[800px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(74,222,128,0.04) 0%, transparent 70%)" }} />
 
@@ -182,7 +176,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FEATURES ═══ */}
-      <section className="relative z-10 py-20 px-6">
+      <section className="relative z-10 py-16 sm:py-20 px-5 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
             <p className="text-[11px] text-[#4ADE80]/60 font-semibold uppercase tracking-[0.2em] mb-2">Features</p>
@@ -209,7 +203,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ CTA ═══ */}
-      <section className="relative z-10 py-20 px-6">
+      <section className="relative z-10 py-16 sm:py-20 px-5 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="glass-strong rounded-3xl relative overflow-hidden">
             {/* Green gradient glow */}
@@ -230,7 +224,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-10 border-t border-white/[0.04] py-12 px-6">
+      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
             <div>
