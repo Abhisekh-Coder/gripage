@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Gender, FitnessAnswers } from "@/lib/types";
 import { saveRegistration } from "@/lib/session";
-import { getEvent } from "@/lib/store";
+import { getEvent, getParticipantByEmail } from "@/lib/store";
 
 function isValidEmail(e: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 function isValidPhone(p: string) { return p.replace(/\D/g, "").length >= 10; }
@@ -61,14 +61,32 @@ export default function RegisterPage() {
     Number(weight) >= 30 && Number(weight) <= 200 &&
     Number(age) >= 17 && Number(age) <= 90;
 
-  function handleNext() {
-    if (!isValid) return;
-    saveRegistration({
-      name: name.trim(), email: email.trim(), phone: phone.trim(), gender,
-      heightCm: Number(height), weightKg: Number(weight), age: Number(age),
-      fitnessAnswers: { doesGym, gymFrequency, exerciseType, fitnessGoal, activityLevel },
-    });
-    router.push(`/event/${eventId}/measure`);
+  const [emailError, setEmailError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleNext() {
+    if (!isValid || submitting) return;
+    setEmailError("");
+    setSubmitting(true);
+
+    try {
+      // Check for duplicate email
+      const existing = await getParticipantByEmail(eventId, email.trim());
+      if (existing) {
+        setEmailError("This email has already been used for this event. Use a different email or view your results from the event page.");
+        setSubmitting(false);
+        return;
+      }
+
+      saveRegistration({
+        name: name.trim(), email: email.trim().toLowerCase(), phone: phone.trim(), gender,
+        heightCm: Number(height), weightKg: Number(weight), age: Number(age),
+        fitnessAnswers: { doesGym, gymFrequency, exerciseType, fitnessGoal, activityLevel },
+      });
+      router.push(`/event/${eventId}/measure`);
+    } catch {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -200,8 +218,13 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <button onClick={handleNext} disabled={!isValid} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg mt-6">
-            Next: Grip Test →
+          {emailError && (
+            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+              {emailError}
+            </div>
+          )}
+          <button onClick={handleNext} disabled={!isValid || submitting} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg mt-6">
+            {submitting ? "Checking..." : "Next: Grip Test →"}
           </button>
         </div>
       </div>

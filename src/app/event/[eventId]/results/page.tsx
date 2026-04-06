@@ -237,7 +237,7 @@ function ResultsContent() {
           </Card>
 
           {/* Card: Grip Strength */}
-          <Card title="Grip Strength">
+          <Card title="Grip Strength" variant="accent">
             <div className="grid grid-cols-3 gap-4 text-center mb-5">
               <div>
                 <p className="text-3xl font-black" style={{ color: stage.color }}>{participant.gripAvgKg}</p>
@@ -358,7 +358,7 @@ function ResultsContent() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Card: Your Stage */}
-          <Card title="Your Stage">
+          <Card title="Your Stage" variant="accent">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ background: `${stage.color}15` }}>
                 {emoji}
@@ -451,11 +451,12 @@ function ResultsContent() {
   );
 }
 
-/* ─── Reusable Card Component ─── */
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
+/* ─── Reusable Card Components ─── */
+function Card({ title, children, variant = "dark" }: { title: string; children: React.ReactNode; variant?: "dark" | "accent" }) {
+  const isDark = variant === "dark";
   return (
-    <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5">
-      <p className="text-[11px] text-white/30 uppercase tracking-wider font-medium mb-4">{title}</p>
+    <div className={`rounded-2xl p-5 ${isDark ? "bg-white/[0.03] border border-white/[0.06]" : "bg-[#d4845a]/10 border border-[#d4845a]/20"}`}>
+      <p className={`text-[11px] uppercase tracking-wider font-medium mb-4 ${isDark ? "text-white/30" : "text-[#d4845a]/70"}`}>{title}</p>
       {children}
     </div>
   );

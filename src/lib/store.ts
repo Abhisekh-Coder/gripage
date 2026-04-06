@@ -105,6 +105,17 @@ export async function getParticipants(eventId: string): Promise<Participant[]> {
   return data.map(mapParticipant);
 }
 
+export async function getParticipantByEmail(eventId: string, email: string): Promise<Participant | null> {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("participants")
+    .select("*")
+    .eq("event_id", eventId)
+    .eq("email", email.toLowerCase().trim())
+    .single();
+  return data ? mapParticipant(data) : null;
+}
+
 export async function getParticipant(participantId: string): Promise<Participant | null> {
   const supabase = createClient();
   const { data } = await supabase

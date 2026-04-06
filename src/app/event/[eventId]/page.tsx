@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getEvent, getParticipantCount } from "@/lib/store";
+import { getEvent, getParticipantCount, getParticipantByEmail } from "@/lib/store";
 import type { GripEvent } from "@/lib/types";
 import { QRCodeSVG } from "qrcode.react";
 
@@ -14,7 +14,12 @@ export default function EventLandingPage() {
   const [count, setCount] = useState(0);
   const [showQR, setShowQR] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [savedResult, setSavedResult] = useState<{ pid: string; name: string } | null>(null);
+
+  // View results by email
+  const [showResultLookup, setShowResultLookup] = useState(false);
+  const [lookupEmail, setLookupEmail] = useState("");
+  const [lookupError, setLookupError] = useState("");
+  const [lookingUp, setLookingUp] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -25,14 +30,24 @@ export default function EventLandingPage() {
         setCount(c);
       }
       setLoading(false);
-
-      // Check for saved result
-      try {
-        const saved = localStorage.getItem(`gripage_result_${eventId}`);
-        if (saved) setSavedResult(JSON.parse(saved));
-      } catch {}
     })();
   }, [eventId]);
+
+  async function handleLookupResult() {
+    if (!lookupEmail.trim() || lookingUp) return;
+    setLookupError("");
+    setLookingUp(true);
+    try {
+      const p = await getParticipantByEmail(eventId, lookupEmail.trim());
+      if (p) {
+        router.push(`/event/${eventId}/results?pid=${p.id}`);
+      } else {
+        setLookupError("No results found for this email.");
+      }
+    } finally {
+      setLookingUp(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -101,26 +116,57 @@ export default function EventLandingPage() {
           <div className="space-y-3 mt-8 mb-6">
             {isLive && (
               <button onClick={() => router.push(`/event/${event.id}/register`)} className="btn-primary w-full py-5 px-6 rounded-2xl text-lg">
-                💪 Take the Grip Test
+                Take the Grip Test
               </button>
             )}
-            {savedResult && (
+
+            {/* View Results Section */}
+            {!showResultLookup ? (
               <button
-                onClick={() => router.push(`/event/${event.id}/results?pid=${savedResult.pid}`)}
+                onClick={() => setShowResultLookup(true)}
                 className="w-full py-4 px-6 rounded-2xl text-lg font-semibold bg-[#d4845a]/10 border border-[#d4845a]/30 text-[#d4845a] hover:bg-[#d4845a]/20 transition-all"
               >
-                📄 View My Results ({savedResult.name})
+                View My Results
               </button>
+            ) : (
+              <div className="glass-card rounded-2xl p-5 text-left">
+                <p className="text-sm text-white/50 mb-3">Enter the email you registered with</p>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={lookupEmail}
+                  onChange={(e) => { setLookupEmail(e.target.value); setLookupError(""); }}
+                  onKeyDown={(e) => e.key === "Enter" && handleLookupResult()}
+                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/25 focus:outline-none focus:border-[#d4845a]/60 transition-all mb-3"
+                />
+                {lookupError && <p className="text-red-400 text-sm mb-3">{lookupError}</p>}
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleLookupResult}
+                    disabled={!lookupEmail.trim() || lookingUp}
+                    className="flex-1 py-3 px-4 bg-[#d4845a] hover:bg-[#c27548] disabled:bg-white/5 disabled:text-white/20 text-white font-semibold rounded-xl transition-all"
+                  >
+                    {lookingUp ? "Searching..." : "Find Results"}
+                  </button>
+                  <button
+                    onClick={() => { setShowResultLookup(false); setLookupEmail(""); setLookupError(""); }}
+                    className="py-3 px-4 text-white/40 hover:text-white/60 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             )}
+
             <button onClick={() => router.push(`/event/${event.id}/leaderboard`)} className="btn-secondary w-full py-4 px-6 rounded-2xl text-lg">
-              🏆 View Leaderboard
+              View Leaderboard
             </button>
           </div>
 
           {/* QR */}
           <div className="glass-card rounded-2xl p-4">
             <button onClick={() => setShowQR(!showQR)} className="w-full flex items-center justify-center gap-2 text-white/40 hover:text-white/70 transition-colors py-1">
-              <span className="text-sm">{showQR ? "Hide QR Code" : "📱 Share via QR Code"}</span>
+              <span className="text-sm">{showQR ? "Hide QR Code" : "Share via QR Code"}</span>
             </button>
             {showQR && eventUrl && (
               <>
