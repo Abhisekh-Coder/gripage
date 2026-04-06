@@ -47,7 +47,7 @@ export default function OrganizerDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDate, setNewDate] = useState("");
-  const [newPin, setNewPin] = useState("");
+  // admin PIN removed — not needed for event creation
   const [newDesc, setNewDesc] = useState("");
   const [newLocation, setNewLocation] = useState("");
   const [newDuration, setNewDuration] = useState("");
@@ -97,7 +97,7 @@ export default function OrganizerDashboard() {
   }
 
   async function handleCreateEvent() {
-    if (!newName.trim() || !newDate || !newPin) return;
+    if (!newName.trim() || !newDate) return;
     setCreating(true);
     try {
       let imageUrl = "";
@@ -105,8 +105,8 @@ export default function OrganizerDashboard() {
         try { imageUrl = await uploadEventImage(newImageFile); } catch { /* ignore upload errors */ }
       }
       const duration = newStartTime && newEndTime ? `${formatTime12(newStartTime)} – ${formatTime12(newEndTime)}` : newDuration.trim();
-      await createEvent(newName.trim(), newDate, newPin, newDesc.trim(), newLocation.trim(), duration, imageUrl);
-      setNewName(""); setNewDate(""); setNewPin(""); setNewDesc(""); setNewLocation(""); setNewDuration("");
+      await createEvent(newName.trim(), newDate, newDesc.trim(), newLocation.trim(), duration, imageUrl);
+      setNewName(""); setNewDate(""); setNewDesc(""); setNewLocation(""); setNewDuration("");
       setNewStartTime("10:00"); setNewEndTime("11:00");
       setNewImageFile(null); setNewImagePreview("");
       setShowCreateModal(false);
@@ -348,15 +348,7 @@ export default function OrganizerDashboard() {
                   className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 focus:outline-none resize-none" />
               </div>
 
-              <div className="flex items-center gap-3 px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30 flex-shrink-0">
-                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
-                </svg>
-                <input type="text" placeholder="Admin PIN (4 digits)" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))} maxLength={4}
-                  className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 focus:outline-none tracking-[0.3em]" />
-              </div>
-
-              <button onClick={handleCreateEvent} disabled={!newName.trim() || !newDate || newPin.length !== 4 || creating}
+              <button onClick={handleCreateEvent} disabled={!newName.trim() || !newDate || creating}
                 className="w-full py-4 rounded-xl text-base font-semibold disabled:opacity-30 transition-all"
                 style={{ background: "linear-gradient(135deg, #4ADE80, #4ADE80)", color: "#000" }}>
                 {creating ? "Creating..." : "Create Event"}

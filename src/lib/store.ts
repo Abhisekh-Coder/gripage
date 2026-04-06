@@ -62,10 +62,10 @@ export async function getEventByCode(code: string): Promise<GripEvent | null> {
   return data ? mapEvent(data) : null;
 }
 
-export async function createEvent(name: string, date: string, adminPin: string, description = "", location = "", duration = "", imageUrl = ""): Promise<GripEvent> {
+export async function createEvent(name: string, date: string, description = "", location = "", duration = "", imageUrl = ""): Promise<GripEvent> {
   const supabase = createClient();
   const code = generateCode();
-  const row: Record<string, string> = { name, date, admin_pin: adminPin, code, status: "live", description, location, duration };
+  const row: Record<string, string> = { name, date, code, status: "live", description, location, duration };
   if (imageUrl) row.image_url = imageUrl;
   const { data, error } = await supabase
     .from("events")
