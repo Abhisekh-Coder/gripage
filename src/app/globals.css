@@ -21,27 +21,37 @@ body {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(ellipse at 20% 0%, rgba(212, 132, 90, 0.08) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 100%, rgba(56, 189, 248, 0.05) 0%, transparent 60%),
-              var(--bg-primary);
+  background: #0a1428;
 }
 
 .ambient-bg::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at 30% 40%, rgba(212, 132, 90, 0.04) 0%, transparent 50%),
-              radial-gradient(circle at 70% 60%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
+  top: -20%;
+  right: -15%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 140, 50, 0.45) 0%, rgba(232, 140, 50, 0.15) 40%, transparent 70%);
   animation: ambientDrift 20s ease-in-out infinite;
 }
 
+.ambient-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -15%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 140, 50, 0.35) 0%, rgba(200, 100, 30, 0.1) 40%, transparent 70%);
+  animation: ambientDrift 20s ease-in-out infinite 5s;
+}
+
 @keyframes ambientDrift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(2%, -1%) rotate(1deg); }
-  66% { transform: translate(-1%, 2%) rotate(-1deg); }
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(3%, -2%); }
+  66% { transform: translate(-2%, 3%); }
 }
 
 /* ─── Glassmorphism ─── */
@@ -49,26 +59,26 @@ body {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 170, 120, 0.12);
 }
 
 .glass-card-strong {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(212, 170, 120, 0.18);
 }
 
 .glass-card-hover {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 170, 120, 0.12);
   transition: all 0.3s ease;
 }
 .glass-card-hover:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(212, 170, 120, 0.25);
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
@@ -78,7 +88,7 @@ body {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 170, 120, 0.12);
   color: white;
   transition: all 0.3s ease;
 }
@@ -88,8 +98,8 @@ body {
 .glass-input:focus {
   outline: none;
   background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(212, 132, 90, 0.5);
-  box-shadow: 0 0 0 3px rgba(212, 132, 90, 0.1), 0 0 20px rgba(212, 132, 90, 0.05);
+  border-color: rgba(232, 160, 60, 0.6);
+  box-shadow: 0 0 0 3px rgba(232, 160, 60, 0.12), 0 0 20px rgba(232, 160, 60, 0.08);
 }
 
 /* Glass select/toggle button */
@@ -97,7 +107,7 @@ body {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 170, 120, 0.1);
   color: rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
 }
@@ -106,22 +116,22 @@ body {
   color: rgba(255, 255, 255, 0.7);
 }
 .glass-toggle-active {
-  background: linear-gradient(135deg, rgba(212, 132, 90, 0.2), rgba(212, 132, 90, 0.1));
-  border: 1px solid rgba(212, 132, 90, 0.4);
-  color: #d4845a;
-  box-shadow: 0 0 20px rgba(212, 132, 90, 0.1);
+  background: linear-gradient(135deg, rgba(232, 160, 60, 0.25), rgba(212, 132, 90, 0.12));
+  border: 1px solid rgba(232, 160, 60, 0.5);
+  color: #e8a03c;
+  box-shadow: 0 0 20px rgba(232, 160, 60, 0.12);
 }
 
 /* Primary CTA button */
 .btn-primary {
-  background: linear-gradient(135deg, #d4845a, #b86d42);
+  background: linear-gradient(135deg, #e8a03c, #d4845a);
   color: #000;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(74, 222, 128, 0.25);
+  box-shadow: 0 4px 24px rgba(232, 160, 60, 0.3);
 }
 .btn-primary:hover:not(:disabled) {
-  box-shadow: 0 8px 32px rgba(212, 132, 90, 0.4);
+  box-shadow: 0 8px 36px rgba(232, 160, 60, 0.45);
   transform: translateY(-1px);
 }
 .btn-primary:active:not(:disabled) {

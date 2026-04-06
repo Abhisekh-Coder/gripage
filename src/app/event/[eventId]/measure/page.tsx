@@ -115,23 +115,16 @@ export default function MeasurePage() {
         <div className="page-enter w-full max-w-md md:desktop-card">
 
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              onClick={() => router.back()}
-              className="glass-card w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-colors flex-shrink-0"
-            >
-              ←
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold">Grip Test</h1>
+          <div className="mb-8">
+            <button onClick={() => router.back()} className="text-white/30 hover:text-white/60 text-sm mb-4 inline-flex items-center gap-1 transition-colors">← Back</button>
+            <h1 className="text-3xl sm:text-4xl font-bold">Grip Strength Assessment</h1>
+            <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-2">
+                <div className="step-dot step-dot-done" />
+                <div className="step-dot step-dot-active" />
+              </div>
               <p className="text-white/30 text-sm">Step 2 of 2</p>
             </div>
-          </div>
-
-          {/* Step indicator */}
-          <div className="flex items-center gap-2 mb-6">
-            <div className="step-dot step-dot-done" />
-            <div className="step-dot step-dot-active" />
           </div>
 
           {/* Participant summary */}
@@ -160,7 +153,7 @@ export default function MeasurePage() {
 
           {/* Hand mode selector */}
           <div className="mb-5">
-            <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">Which hand(s)?</label>
+            <label className="block text-sm text-white/60 mb-2 font-medium">Which hand(s)?</label>
             <div className="grid grid-cols-3 gap-2">
               {(["both", "left", "right"] as HandMode[]).map((m) => (
                 <button
@@ -180,7 +173,7 @@ export default function MeasurePage() {
           <div className={`${handMode === "both" ? "form-grid-2" : ""} mb-6`}>
             {handMode !== "right" && (
               <div className="glass-card rounded-2xl p-5 text-center mb-3 sm:mb-0">
-                <label className="block text-xs text-white/40 uppercase tracking-wider mb-3">
+                <label className="block text-sm text-white/60 font-medium mb-3">
                   🤛 Left Hand
                 </label>
                 <input
@@ -199,7 +192,7 @@ export default function MeasurePage() {
 
             {handMode !== "left" && (
               <div className="glass-card rounded-2xl p-5 text-center">
-                <label className="block text-xs text-white/40 uppercase tracking-wider mb-3">
+                <label className="block text-sm text-white/60 font-medium mb-3">
                   🤜 Right Hand
                 </label>
                 <input
@@ -228,13 +221,15 @@ export default function MeasurePage() {
           )}
 
           {/* Submit */}
-          <button
-            onClick={handleSubmit}
-            disabled={!isValid || submitting}
-            className="btn-primary w-full py-5 px-6 rounded-2xl text-lg font-bold"
-          >
-            {submitting ? "Calculating..." : "🧬 Calculate My Bio Age"}
-          </button>
+          <div className="flex justify-center mt-2">
+            <button
+              onClick={handleSubmit}
+              disabled={!isValid || submitting}
+              className="btn-primary py-4 px-12 rounded-full text-lg font-bold"
+            >
+              {submitting ? "Calculating..." : "Calculate My Bio Age →"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

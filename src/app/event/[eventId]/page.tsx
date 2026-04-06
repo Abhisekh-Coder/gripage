@@ -175,13 +175,12 @@ export default function EventLandingPage() {
               </div>
             )}
 
-            {/* Status + Code */}
+            {/* Status */}
             <div className="flex items-center gap-3 mb-6 flex-wrap">
               <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${isLive ? "bg-green-500/15 text-green-400" : "bg-white/5 text-white/30"}`}>
                 {isLive && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />}
                 {isLive ? "LIVE" : "ENDED"}
               </span>
-              <span className="text-sm text-white/25">Code: <span className="font-mono font-bold text-[#d4845a]">{event.code}</span></span>
               <span className="text-sm text-white/20">{count} participants</span>
             </div>
 

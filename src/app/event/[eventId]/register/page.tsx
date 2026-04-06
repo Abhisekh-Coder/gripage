@@ -96,16 +96,15 @@ export default function RegisterPage() {
         <div className="page-enter max-w-4xl mx-auto">
 
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <button onClick={() => router.push(`/event/${eventId}`)} className="glass-card w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-colors flex-shrink-0">←</button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold">Register</h1>
+          <div className="mb-8">
+            <button onClick={() => router.push(`/event/${eventId}`)} className="text-white/30 hover:text-white/60 text-sm mb-4 inline-flex items-center gap-1 transition-colors">← Back</button>
+            <h1 className="text-3xl sm:text-4xl font-bold">User Fitness Profile Onboarding</h1>
+            <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-2">
+                <div className="step-dot step-dot-active" /><div className="step-dot" />
+              </div>
               <p className="text-white/30 text-sm">{eventName} · Step 1 of 2</p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 mb-8">
-            <div className="step-dot step-dot-active" /><div className="step-dot" />
           </div>
 
           {/* Two-column grid */}
@@ -113,27 +112,27 @@ export default function RegisterPage() {
             {/* Col 1: Personal */}
             <div className="space-y-4">
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">Personal Info</p>
+                <p className="text-lg font-bold text-white">Personal Info</p>
 
                 <div>
-                  <label className="block text-xs text-white/40 mb-1.5">Full Name *</label>
+                  <label className="block text-sm text-white/70 mb-1.5 font-medium">Full Name *</label>
                   <input type="text" placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl text-lg" />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-white/40 mb-1.5">Email *</label>
+                  <label className="block text-sm text-white/70 mb-1.5 font-medium">Email *</label>
                   <input type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl" />
                   {email && !isValidEmail(email) && <p className="text-red-400/80 text-xs mt-1">Invalid email</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs text-white/40 mb-1.5">Phone *</label>
+                  <label className="block text-sm text-white/70 mb-1.5 font-medium">Phone *</label>
                   <input type="tel" placeholder="+91 98765 43210" value={phone} onChange={(e) => setPhone(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl" />
                   {phone && !isValidPhone(phone) && <p className="text-red-400/80 text-xs mt-1">Invalid phone</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs text-white/40 mb-1.5">Gender *</label>
+                  <label className="block text-sm text-white/70 mb-1.5 font-medium">Gender *</label>
                   <div className="grid grid-cols-2 gap-2">
                     {(["male", "female"] as Gender[]).map((g) => (
                       <button key={g} onClick={() => setGender(g)} className={`py-3 rounded-xl font-medium transition-all capitalize ${gender === g ? "glass-toggle-active" : "glass-toggle"}`}>
@@ -146,15 +145,15 @@ export default function RegisterPage() {
                 {/* Body metrics inline */}
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="block text-xs text-white/40 mb-1.5">Height cm</label>
+                    <label className="block text-sm text-white/70 mb-1.5 font-medium">Height cm</label>
                     <input type="number" placeholder="170" value={height} onChange={(e) => setHeight(e.target.value)} className="glass-input w-full py-3 px-3 rounded-xl text-center font-semibold" />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/40 mb-1.5">Weight kg</label>
+                    <label className="block text-sm text-white/70 mb-1.5 font-medium">Weight kg</label>
                     <input type="number" placeholder="70" value={weight} onChange={(e) => setWeight(e.target.value)} className="glass-input w-full py-3 px-3 rounded-xl text-center font-semibold" />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/40 mb-1.5">Age</label>
+                    <label className="block text-sm text-white/70 mb-1.5 font-medium">Age</label>
                     <input type="number" placeholder="30" value={age} onChange={(e) => setAge(e.target.value)} className="glass-input w-full py-3 px-3 rounded-xl text-center font-semibold" />
                   </div>
                 </div>
@@ -164,10 +163,10 @@ export default function RegisterPage() {
             {/* Col 2: Fitness */}
             <div className="space-y-4">
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">🏋️ Fitness Profile</p>
+                <p className="text-lg font-bold text-white">Fitness Profile</p>
 
                 <div>
-                  <label className="block text-xs text-white/40 mb-2">Do you workout?</label>
+                  <label className="block text-sm text-white/60 mb-2">Do you workout?</label>
                   <div className="grid grid-cols-3 gap-2">
                     {(["yes", "sometimes", "no"] as const).map((o) => (
                       <button key={o} onClick={() => setDoesGym(o)} className={`py-2.5 rounded-xl text-sm font-medium transition-all capitalize ${doesGym === o ? "glass-toggle-active" : "glass-toggle"}`}>{o}</button>
@@ -177,7 +176,7 @@ export default function RegisterPage() {
 
                 {doesGym !== "no" && (
                   <div>
-                    <label className="block text-xs text-white/40 mb-2">How often?</label>
+                    <label className="block text-sm text-white/60 mb-2">How often?</label>
                     <div className="flex flex-wrap gap-2">
                       {["Never", "1-2/wk", "3-4/wk", "5-6/wk", "Daily"].map((f) => (
                         <button key={f} onClick={() => setGymFrequency(f)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${gymFrequency === f ? "glass-toggle-active" : "glass-toggle"}`}>{f}</button>
@@ -187,7 +186,7 @@ export default function RegisterPage() {
                 )}
 
                 <div>
-                  <label className="block text-xs text-white/40 mb-2">Activity Level</label>
+                  <label className="block text-sm text-white/60 mb-2">Activity Level</label>
                   <div className="flex flex-wrap gap-2">
                     {ACTIVITY_LEVELS.map((l) => (
                       <button key={l.id} onClick={() => setActivityLevel(l.id)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activityLevel === l.id ? "glass-toggle-active" : "glass-toggle"}`}>{l.label}</button>
@@ -197,7 +196,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">Exercise Types</p>
+                <p className="text-lg font-bold text-white">Exercise Types</p>
                 <div className="grid grid-cols-2 gap-2">
                   {EXERCISE_TYPES.map((e) => (
                     <button key={e.id} onClick={() => toggleExercise(e.id)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center gap-2 ${exerciseType.includes(e.id) ? "glass-toggle-active" : "glass-toggle"}`}>
@@ -208,7 +207,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="glass-card rounded-2xl p-5 space-y-3">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">Fitness Goal</p>
+                <p className="text-lg font-bold text-white">Fitness Goal</p>
                 <div className="flex flex-wrap gap-2">
                   {["Build Strength", "Lose Weight", "Stay Healthy", "Build Muscle", "Improve Endurance", "Flexibility"].map((g) => (
                     <button key={g} onClick={() => setFitnessGoal(g)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${fitnessGoal === g ? "glass-toggle-active" : "glass-toggle"}`}>{g}</button>
@@ -223,9 +222,11 @@ export default function RegisterPage() {
               {emailError}
             </div>
           )}
-          <button onClick={handleNext} disabled={!isValid || submitting} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg mt-6">
-            {submitting ? "Checking..." : "Next: Grip Test →"}
-          </button>
+          <div className="flex justify-center mt-8">
+            <button onClick={handleNext} disabled={!isValid || submitting} className="btn-primary py-4 px-12 rounded-full text-lg font-bold">
+              {submitting ? "Checking..." : "Next: Grip Test →"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
