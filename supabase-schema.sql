@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS events (
   description TEXT NOT NULL DEFAULT '',
   location TEXT NOT NULL DEFAULT '',
   duration TEXT NOT NULL DEFAULT '',
+  image_url TEXT NOT NULL DEFAULT '',
   admin_pin TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'live' CHECK (status IN ('live', 'ended')),
   created_at TIMESTAMPTZ DEFAULT now()

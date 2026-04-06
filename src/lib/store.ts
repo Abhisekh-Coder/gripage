@@ -60,16 +60,28 @@ export async function getEventByCode(code: string): Promise<GripEvent | null> {
   return data ? mapEvent(data) : null;
 }
 
-export async function createEvent(name: string, date: string, adminPin: string, description = "", location = "", duration = ""): Promise<GripEvent> {
+export async function createEvent(name: string, date: string, adminPin: string, description = "", location = "", duration = "", imageUrl = ""): Promise<GripEvent> {
   const supabase = createClient();
   const code = generateCode();
+  const row: Record<string, string> = { name, date, admin_pin: adminPin, code, status: "live", description, location, duration };
+  if (imageUrl) row.image_url = imageUrl;
   const { data, error } = await supabase
     .from("events")
-    .insert({ name, date, admin_pin: adminPin, code, status: "live", description, location, duration })
+    .insert(row)
     .select()
     .single();
   if (error) throw new Error(error.message);
   return mapEvent(data);
+}
+
+export async function uploadEventImage(file: File): Promise<string> {
+  const supabase = createClient();
+  const ext = file.name.split(".").pop();
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage.from("event-images").upload(path, file);
+  if (error) throw new Error(error.message);
+  const { data } = supabase.storage.from("event-images").getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export async function endEvent(eventId: string): Promise<void> {
@@ -210,6 +222,7 @@ function mapEvent(row: any): GripEvent {
     description: row.description || "",
     location: row.location || "",
     duration: row.duration || "",
+    imageUrl: row.image_url || "",
     adminPin: row.admin_pin,
     status: row.status,
     createdAt: new Date(row.created_at).getTime(),

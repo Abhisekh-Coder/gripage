@@ -36,6 +36,7 @@ export interface GripEvent {
   description: string;
   location: string;
   duration: string;
+  imageUrl: string;
   adminPin: string;
   status: "live" | "ended";
   createdAt: number;
