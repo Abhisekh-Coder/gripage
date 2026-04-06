@@ -98,8 +98,8 @@ export default function MeasurePage() {
 
   if (!reg) {
     return (
-      <div className="min-h-screen relative">
-        <div className="ambient-bg" />
+      <div className="min-h-screen relative" style={{ background: "#080e1a" }}>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 flex items-center justify-center min-h-screen">
           <p className="text-white/40">Loading...</p>
         </div>
@@ -108,8 +108,9 @@ export default function MeasurePage() {
   }
 
   return (
-    <div className="min-h-screen relative">
-      <div className="ambient-bg" />
+    <div className="min-h-screen relative" style={{ background: "#080e1a" }}>
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.05) 0%, transparent 60%)" }} />
 
       <div className="relative z-10 desktop-center p-4 min-h-screen flex items-center justify-center">
         <div className="page-enter w-full max-w-md md:desktop-card">

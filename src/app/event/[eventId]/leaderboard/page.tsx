@@ -54,7 +54,7 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-[#0a0a0a]">
+    <div className="min-h-screen relative bg-[#080e1a]">
       <div className="ambient-bg" />
 
       <div className="relative z-10 min-h-screen p-4 lg:p-8">
@@ -332,7 +332,7 @@ function ProjectorMode({
   }, [sorted.length]);
 
   return (
-    <div className="min-h-screen relative bg-[#0a0a0a] cursor-pointer" onClick={onExit}>
+    <div className="min-h-screen relative bg-[#080e1a] cursor-pointer" onClick={onExit}>
       <div className="ambient-bg" />
       <div ref={scrollRef} className="relative z-10 min-h-screen max-h-screen overflow-y-auto p-8 lg:p-16">
         <div className="max-w-5xl mx-auto">

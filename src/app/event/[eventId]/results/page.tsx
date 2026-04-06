@@ -95,8 +95,7 @@ function ResultsContent() {
   const norms = getGripNorms(participant.age, participant.gender);
   const percentile = getPercentile(participant.gripAvgKg, participant.age, participant.gender);
   const gripDiff = participant.gripAvgKg - participant.expectedGrip;
-  const vitality = Math.round(Math.max(0, Math.min(100, 50 + delta * 3.3)));
-  const circumference = 2 * Math.PI * 42;
+  // No vitality/superpower score — removed per user request
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={{ background: "#080e1a" }}>
@@ -115,8 +114,8 @@ function ResultsContent() {
           <p className="text-white/40 mt-1">Here are your GripAge results · <span className="text-white/25">#{rank} of {totalP}</span></p>
         </div>
 
-        {/* ═══ HERO STAT CARDS (3 columns) ═══ */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* ═══ HERO STAT CARDS (2 columns) ═══ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           {/* Bio Age */}
           <div className="rounded-2xl p-6 text-center relative overflow-hidden bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
@@ -127,6 +126,9 @@ function ResultsContent() {
               <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ color: stage.color, background: `${stage.color}18` }}>
                 {emoji} {stage.label}
               </div>
+              <p className="text-sm text-white/40 mt-2">
+                {delta > 0 ? `${delta} years younger biologically` : delta < 0 ? `${Math.abs(delta)} years older biologically` : "Right on track for your age"}
+              </p>
             </div>
           </div>
 
@@ -136,27 +138,7 @@ function ResultsContent() {
             <p className="text-6xl font-black text-[#d4845a]">{participant.gripAvgKg}</p>
             <p className="text-sm text-white/30 mt-1">kg</p>
             <p className="text-sm mt-3 font-medium" style={{ color: gripDiff >= 0 ? "#4ade80" : "#f87171" }}>
-              {gripDiff >= 0 ? "+" : ""}{gripDiff.toFixed(1)} kg vs expected
-            </p>
-          </div>
-
-          {/* Vitality Score — Circular */}
-          <div className="rounded-2xl p-6 text-center bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
-            <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3">Vitality Score</p>
-            <div className="relative inline-block">
-              <svg width="110" height="110" viewBox="0 0 110 110">
-                <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="7" />
-                <circle cx="55" cy="55" r="42" fill="none" stroke={stage.color} strokeWidth="7"
-                  strokeDasharray={`${(vitality / 100) * circumference} ${circumference}`}
-                  strokeLinecap="round" transform="rotate(-90 55 55)"
-                  className="meter-animate" />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-3xl font-black" style={{ color: stage.color }}>
-                {vitality}
-              </span>
-            </div>
-            <p className="text-sm text-white/40 mt-2">
-              {delta > 0 ? `${delta}y younger` : delta < 0 ? `${Math.abs(delta)}y older` : "On track"}
+              {gripDiff >= 0 ? "+" : ""}{gripDiff.toFixed(1)} kg vs expected ({participant.expectedGrip} kg)
             </p>
           </div>
         </div>
@@ -194,14 +176,14 @@ function ResultsContent() {
                 })()}
               </div>
             </div>
-            {/* Vitality bar */}
+            {/* Stage summary */}
             <div className="mt-5 pt-4 border-t border-white/5">
-              <div className="flex justify-between text-xs text-white/30 mb-1.5">
-                <span>Vitality Score</span>
-                <span className="font-medium" style={{ color: stage.color }}>{vitality}/100</span>
-              </div>
-              <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.max(5, vitality)}%`, background: `linear-gradient(90deg, ${stage.color}80, ${stage.color})` }} />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style={{ background: `${stage.color}15` }}>{emoji}</div>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: stage.color }}>{stage.label}</p>
+                  <p className="text-xs text-white/30">{stage.description}</p>
+                </div>
               </div>
             </div>
           </Card>
@@ -334,8 +316,8 @@ function ResultsContent() {
 
         {/* ═══ ACTIONS ═══ */}
         <div className={`space-y-3 max-w-lg mx-auto pb-8 ${revealed ? "page-enter" : "opacity-0"}`}>
-          <button onClick={handlePDF} className="w-full py-4 px-6 rounded-full font-semibold text-lg transition-all active:scale-[0.98] text-black"
-            style={{ background: "linear-gradient(135deg, #e8a03c, #f0a830)", boxShadow: "0 8px 32px rgba(232,160,60,0.25)" }}>
+          <button onClick={handlePDF} className="w-full py-4 px-6 rounded-full font-bold text-lg transition-all active:scale-[0.98] text-[#1a0800]"
+            style={{ background: "linear-gradient(135deg, #ffb691, #d4845a)", boxShadow: "0 8px 32px rgba(212,132,90,0.25)" }}>
             Download PDF Report
           </button>
           <div className="flex gap-3">

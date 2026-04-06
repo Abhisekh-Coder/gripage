@@ -26,22 +26,22 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden text-[#e5e2e1]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-[#080e1a] overflow-x-hidden text-[#e5e2e1]">
 
       {/* ═══ FULL-SCREEN HERO BACKGROUND ═══ */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/female-with-short-hair-doing-pull-ups-gym-club.jpg"
+          src="/bodybuilder-training-arm-with-resistance-band.jpg"
           alt="Fitness"
           fill
           className="object-cover"
-          style={{ objectPosition: "center 30%" }}
+          style={{ objectPosition: "center 25%" }}
           priority
         />
-        {/* Radial dark overlay */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.95) 100%)" }} />
+        {/* Radial dark overlay — lighter so image shows through */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center 40%, rgba(8,14,26,0.1) 0%, rgba(8,14,26,0.7) 70%, rgba(8,14,26,0.92) 100%)" }} />
         {/* Subtle copper radial pulse */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(circle, rgba(212,132,90,0.08) 0%, rgba(212,132,90,0) 70%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 35%, rgba(212,132,90,0.06) 0%, rgba(212,132,90,0) 60%)" }} />
       </div>
 
       {/* ═══ NAVBAR ═══ */}
@@ -83,13 +83,14 @@ export default function HomePage() {
 
           {/* Headline */}
           <h1 className="text-5xl md:text-8xl font-black leading-[0.9]" style={{ letterSpacing: "-0.05em" }}>
-            Grip strength <br />
-            <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #ffb691 0%, #d4845a 100%)" }}>reveals age</span>
+            The hand is the <br />
+            <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #ffb691 0%, #d4845a 100%)" }}>visible part</span> of <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #ffb691 0%, #d4845a 100%)" }}>the brain.</span>
           </h1>
 
           {/* Subtext */}
-          <p className="text-[#d9c2b8] text-lg md:text-xl max-w-xl mx-auto opacity-70 italic" style={{ fontFamily: "Georgia, serif" }}>
-            &ldquo;The hand is the visible part of the brain.&rdquo; Our precision sensors translate kinetic energy into biological insights.
+          <p className="text-[#d9c2b8] text-lg md:text-xl max-w-xl mx-auto opacity-80 leading-relaxed">
+            Our precision sensors translate kinetic energy into biological insights. Discover your true biological age through grip strength science.
           </p>
 
           {/* Join Event Input */}
@@ -166,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section id="how-it-works" className="relative z-10 py-32 px-6 bg-[#0a0a0a]/80 backdrop-blur-3xl">
+      <section id="how-it-works" className="relative z-10 py-32 px-6 bg-[#080e1a]/80 backdrop-blur-3xl">
         <div className="max-w-6xl mx-auto">
 
           {/* Section header */}
@@ -185,7 +186,7 @@ export default function HomePage() {
               {/* Image */}
               <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
                 <Image src="/beautiful-brunette-female-sportswear-doing-lunge-with-barbell-fitness-club-gym.jpg" alt="Grip strength measurement" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080e1a] via-[#080e1a]/30 to-transparent" />
                 <div className="absolute bottom-4 left-6">
                   <div className="w-12 h-12 rounded-full bg-[#d4845a]/15 border border-[#d4845a]/25 flex items-center justify-center backdrop-blur-sm">
                     <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
@@ -209,32 +210,20 @@ export default function HomePage() {
             <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">2</div>
 
-              {/* Photo + Score overlay */}
               <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
                 <Image src="/beautiful-girl-is-engaged-gym.jpg" alt="Bio analysis" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(180,100,50,0.4) 50%, rgba(180,100,50,0.25) 100%)" }} />
-                {/* Score overlay */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10">
-                  <p className="text-xs italic opacity-80 mb-2" style={{ fontFamily: "Georgia, serif" }}>superpower score</p>
-                  <div className="relative inline-block">
-                    <svg width="100" height="58" viewBox="0 0 120 70">
-                      <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="5" strokeLinecap="round" />
-                      <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="white" strokeWidth="5" strokeLinecap="round"
-                        strokeDasharray="157" strokeDashoffset={157 * (1 - 0.88)} />
-                    </svg>
-                    <div className="absolute inset-0 flex items-end justify-center pb-0">
-                      <span className="text-3xl font-black leading-none drop-shadow-lg">88</span>
-                    </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080e1a] via-[#080e1a]/30 to-transparent" />
+                <div className="absolute bottom-4 left-6">
+                  <div className="w-12 h-12 rounded-full bg-[#d4845a]/15 border border-[#d4845a]/25 flex items-center justify-center backdrop-blur-sm">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffb691" strokeWidth="2"><path d="M21 12h-4l-3 9L9 3l-3 9H2"/></svg>
                   </div>
-                  <p className="text-[10px] opacity-50 mt-1">out of 100</p>
-                  <p className="text-xs font-semibold mt-1.5 opacity-80">You&apos;re very healthy. Keep going!</p>
                 </div>
               </div>
 
               <div className="p-6">
                 <h3 className="text-xl font-black tracking-tight uppercase mb-2">Analyze</h3>
                 <p className="text-[#d9c2b8]/60 leading-relaxed text-sm">
-                  Our system instantly calculates your biological age and vitality score, comparing against a comprehensive longevity database.
+                  Our algorithm compares your grip against population norms for your age, gender, height, and weight — revealing your true biological age.
                 </p>
               </div>
             </div>
@@ -243,30 +232,13 @@ export default function HomePage() {
             <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">3</div>
 
-              {/* Photo + Trophy overlay */}
               <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
                 <Image src="/man-moving-giant-tire-wheel-gym.jpg" alt="Leaderboard ranking" fill className="object-cover object-center group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(90,60,140,0.45) 50%, rgba(90,60,140,0.3) 100%)" }} />
-                {/* Trophy + podium overlay */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                  {/* Trophy icon */}
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2" style={{ background: "linear-gradient(135deg, #f0d080, #d4a44a)", boxShadow: "0 8px 24px rgba(212,164,74,0.3)" }}>
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 15c3 0 5-2.5 5-6H7c0 3.5 2 6 5 6z" fill="#8b5e20"/>
-                      <path d="M7 9c-1 0-3 .5-3 3s2 3 3 3" stroke="#8b5e20" strokeWidth="1.5" fill="none"/>
-                      <path d="M17 9c1 0 3 .5 3 3s-2 3-3 3" stroke="#8b5e20" strokeWidth="1.5" fill="none"/>
-                      <rect x="10" y="15" width="4" height="3" rx="1" fill="#8b5e20"/>
-                      <rect x="8" y="18" width="8" height="2" rx="1" fill="#8b5e20"/>
-                      <path d="M10 11l2-2 2 2" stroke="#f0d080" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080e1a] via-[#080e1a]/30 to-transparent" />
+                <div className="absolute bottom-4 left-6">
+                  <div className="w-12 h-12 rounded-full bg-[#d4845a]/15 border border-[#d4845a]/25 flex items-center justify-center backdrop-blur-sm">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffb691" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
                   </div>
-                  {/* Podium bars */}
-                  <div className="flex items-end gap-1.5 mb-1">
-                    <div className="w-8 h-6 rounded-t bg-white/15 flex items-center justify-center text-[10px] font-bold text-white/50">2</div>
-                    <div className="w-10 h-10 rounded-t flex items-center justify-center text-xs font-black text-black/70" style={{ background: "linear-gradient(to bottom, #f0d080, #d4a44a)" }}>1</div>
-                    <div className="w-8 h-4 rounded-t bg-white/10 flex items-center justify-center text-[10px] font-bold text-white/40">3</div>
-                  </div>
-                  <p className="text-white/70 text-xs font-bold tracking-wide">#1 on Leaderboard</p>
                 </div>
               </div>
 
@@ -282,8 +254,8 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-10 py-12 px-6 bg-[#0a0a0a] border-t border-white/5">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="relative z-10 py-12 px-6 bg-[#080e1a] border-t border-white/5">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-5">
           <div className="flex items-center gap-2">
             <svg width="18" height="18" viewBox="0 0 40 40" fill="none">
               <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
@@ -292,7 +264,20 @@ export default function HomePage() {
             </svg>
             <span className="text-sm font-black tracking-tight">Grip<span className="text-[#d4845a]">Age</span></span>
           </div>
-          <p className="text-[10px] text-[#53433c] uppercase tracking-widest">Biological Precision Analysis</p>
+          <p className="text-xs text-white/30">
+            Powered by{" "}
+            <a href="https://foxo.club" target="_blank" rel="noopener noreferrer" className="text-[#d4845a] hover:text-[#ffb691] font-semibold transition-colors">
+              Foxo.club
+            </a>
+          </p>
+          <div className="flex items-center gap-4">
+            <a href="https://www.linkedin.com/company/foxoclub" target="_blank" rel="noopener noreferrer" className="text-white/25 hover:text-[#d4845a] transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/foxo.club/" target="_blank" rel="noopener noreferrer" className="text-white/25 hover:text-[#d4845a] transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+          </div>
         </div>
       </footer>
     </div>

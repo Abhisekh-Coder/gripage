@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "GripAge — Grip Strength & Biological Age",
-  description: "Measure your grip strength and discover your biological age",
+  description: "Discover your biological age through grip strength science. Backed by population-level research.",
 };
 
 export default function RootLayout({
@@ -13,7 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#0a0a0a] text-white antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+      </head>
+      <body className="min-h-screen bg-[#080e1a] text-[#e5e2e1] antialiased">
         {children}
       </body>
     </html>

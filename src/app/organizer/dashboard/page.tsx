@@ -51,6 +51,8 @@ export default function OrganizerDashboard() {
   const [newDesc, setNewDesc] = useState("");
   const [newLocation, setNewLocation] = useState("");
   const [newDuration, setNewDuration] = useState("");
+  const [newStartTime, setNewStartTime] = useState("10:00");
+  const [newEndTime, setNewEndTime] = useState("11:00");
   const [newImageFile, setNewImageFile] = useState<File | null>(null);
   const [newImagePreview, setNewImagePreview] = useState("");
   const [creating, setCreating] = useState(false);
@@ -86,6 +88,14 @@ export default function OrganizerDashboard() {
     reader.readAsDataURL(file);
   }
 
+  function formatTime12(t: string) {
+    if (!t) return "";
+    const [h, m] = t.split(":").map(Number);
+    const suffix = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    return m === 0 ? `${h12}:00 ${suffix}` : `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
+  }
+
   async function handleCreateEvent() {
     if (!newName.trim() || !newDate || !newPin) return;
     setCreating(true);
@@ -94,8 +104,10 @@ export default function OrganizerDashboard() {
       if (newImageFile) {
         try { imageUrl = await uploadEventImage(newImageFile); } catch { /* ignore upload errors */ }
       }
-      await createEvent(newName.trim(), newDate, newPin, newDesc.trim(), newLocation.trim(), newDuration.trim(), imageUrl);
+      const duration = newStartTime && newEndTime ? `${formatTime12(newStartTime)} – ${formatTime12(newEndTime)}` : newDuration.trim();
+      await createEvent(newName.trim(), newDate, newPin, newDesc.trim(), newLocation.trim(), duration, imageUrl);
       setNewName(""); setNewDate(""); setNewPin(""); setNewDesc(""); setNewLocation(""); setNewDuration("");
+      setNewStartTime("10:00"); setNewEndTime("11:00");
       setNewImageFile(null); setNewImagePreview("");
       setShowCreateModal(false);
       await loadEvents();
@@ -295,6 +307,10 @@ export default function OrganizerDashboard() {
                     <p className="text-white/15 text-xs mt-1">Optional</p>
                   </>
                 )}
+                {/* Camera icon — bottom-right */}
+                <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-black/50 border border-white/10 flex items-center justify-center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
               </div>
             </div>
 

@@ -11,7 +11,7 @@ export default function AdminPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+    <div className="min-h-screen bg-[#080e1a] flex items-center justify-center">
       <p className="text-white/30">Redirecting to organizer login...</p>
     </div>
   );
