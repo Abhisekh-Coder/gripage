@@ -31,7 +31,7 @@ export default function HomePage() {
       {/* ═══ FULL-SCREEN HERO BACKGROUND ═══ */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/female-with-short-hair-doing-pull-ups-gym-club.jpg"
+          src="/bodybuilder-training-arm-with-resistance-band.jpg"
           alt="Fitness"
           fill
           className="object-cover object-center"
@@ -244,14 +244,40 @@ export default function HomePage() {
             <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">3</div>
 
-              {/* Image */}
-              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl">
-                <Image src="/man-moving-giant-tire-wheel-gym.jpg" alt="Leaderboard ranking" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
-                <div className="absolute bottom-4 left-6">
-                  <div className="w-12 h-12 rounded-full bg-[#d4845a]/15 border border-[#d4845a]/25 flex items-center justify-center backdrop-blur-sm">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffb691" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                  </div>
+              {/* Trophy Card */}
+              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl flex items-center justify-center" style={{ background: "linear-gradient(145deg, #5b3f8c, #7b5ea7, #6a4d96)" }}>
+                <div className="relative text-center z-10">
+                  {/* Trophy SVG */}
+                  <svg width="100" height="100" viewBox="0 0 100 100" className="mx-auto drop-shadow-lg">
+                    {/* Base */}
+                    <ellipse cx="50" cy="88" rx="18" ry="4" fill="#c47a3a"/>
+                    <rect x="36" y="82" width="28" height="8" rx="2" fill="#d4945a"/>
+                    {/* Stem */}
+                    <rect x="44" y="60" width="12" height="24" rx="3" fill="url(#gold-stem)"/>
+                    {/* Cup */}
+                    <path d="M25 20 C25 50 40 60 50 60 C60 60 75 50 75 20 Z" fill="url(#gold-cup)" stroke="#e8c060" strokeWidth="1"/>
+                    {/* Handles */}
+                    <path d="M25 25 C15 25 12 35 18 42 C22 46 25 42 25 38" fill="none" stroke="#d4a44a" strokeWidth="3" strokeLinecap="round"/>
+                    <path d="M75 25 C85 25 88 35 82 42 C78 46 75 42 75 38" fill="none" stroke="#d4a44a" strokeWidth="3" strokeLinecap="round"/>
+                    {/* Star */}
+                    <polygon points="50,28 53,36 62,36 55,41 58,50 50,44 42,50 45,41 38,36 47,36" fill="#e87040" className="drop-shadow-sm"/>
+                    {/* Sparkles */}
+                    <path d="M20 15 L22 18 L20 21 L18 18 Z" fill="#f0d080" opacity="0.7"/>
+                    <path d="M80 50 L82 53 L80 56 L78 53 Z" fill="#f0d080" opacity="0.7"/>
+                    <path d="M30 55 L31.5 57 L30 59 L28.5 57 Z" fill="#f0d080" opacity="0.5"/>
+                    <defs>
+                      <linearGradient id="gold-cup" x1="25" y1="20" x2="75" y2="60">
+                        <stop offset="0%" stopColor="#f0d080"/>
+                        <stop offset="50%" stopColor="#d4a44a"/>
+                        <stop offset="100%" stopColor="#c49030"/>
+                      </linearGradient>
+                      <linearGradient id="gold-stem" x1="44" y1="60" x2="56" y2="84">
+                        <stop offset="0%" stopColor="#d4a44a"/>
+                        <stop offset="100%" stopColor="#c49030"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <p className="text-white/80 text-sm font-bold mt-2 tracking-wide">#1 on Leaderboard</p>
                 </div>
               </div>
 
