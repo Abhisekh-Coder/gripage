@@ -31,10 +31,11 @@ export default function HomePage() {
       {/* ═══ FULL-SCREEN HERO BACKGROUND ═══ */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/bodybuilder-training-arm-with-resistance-band.jpg"
+          src="/female-with-short-hair-doing-pull-ups-gym-club.jpg"
           alt="Fitness"
           fill
-          className="object-cover object-center"
+          className="object-cover"
+          style={{ objectPosition: "center 30%" }}
           priority
         />
         {/* Radial dark overlay */}
@@ -182,9 +183,9 @@ export default function HomePage() {
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">1</div>
 
               {/* Image */}
-              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl">
-                <Image src="/bodybuilder-training-arm-with-resistance-band.jpg" alt="Grip strength measurement" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
+              <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
+                <Image src="/beautiful-brunette-female-sportswear-doing-lunge-with-barbell-fitness-club-gym.jpg" alt="Grip strength measurement" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
                 <div className="absolute bottom-4 left-6">
                   <div className="w-12 h-12 rounded-full bg-[#d4845a]/15 border border-[#d4845a]/25 flex items-center justify-center backdrop-blur-sm">
                     <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
@@ -196,10 +197,10 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="p-8 pt-6">
-                <h3 className="text-2xl font-black tracking-tight uppercase mb-3">Squeeze</h3>
-                <p className="text-[#d9c2b8]/70 leading-relaxed text-sm">
-                  Participants use a professional dynamometer to measure their max grip strength. Our high-fidelity sensors capture kinetic data points at sub-millisecond intervals.
+              <div className="p-6">
+                <h3 className="text-xl font-black tracking-tight uppercase mb-2">Squeeze</h3>
+                <p className="text-[#d9c2b8]/60 leading-relaxed text-sm">
+                  Use a professional dynamometer to measure your max grip strength with sub-millisecond precision sensors.
                 </p>
               </div>
             </div>
@@ -208,34 +209,32 @@ export default function HomePage() {
             <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">2</div>
 
-              {/* Superpower Score Card */}
-              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl flex items-center justify-center" style={{ background: "linear-gradient(145deg, #c46a35, #d4845a, #b85c2a)" }}>
-                {/* Subtle hand silhouette bg */}
-                <div className="absolute inset-0 opacity-10">
-                  <Image src="/beautiful-girl-is-engaged-gym.jpg" alt="" fill className="object-cover blur-sm" />
-                </div>
-                <div className="relative text-center text-white z-10">
-                  <p className="text-sm italic font-medium opacity-90 mb-3" style={{ fontFamily: "Georgia, serif" }}>superpower score</p>
-                  {/* Arc gauge */}
-                  <div className="relative inline-block mb-1">
-                    <svg width="120" height="70" viewBox="0 0 120 70">
-                      <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="5" strokeLinecap="round" />
+              {/* Photo + Score overlay */}
+              <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
+                <Image src="/beautiful-girl-is-engaged-gym.jpg" alt="Bio analysis" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(180,100,50,0.4) 50%, rgba(180,100,50,0.25) 100%)" }} />
+                {/* Score overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10">
+                  <p className="text-xs italic opacity-80 mb-2" style={{ fontFamily: "Georgia, serif" }}>superpower score</p>
+                  <div className="relative inline-block">
+                    <svg width="100" height="58" viewBox="0 0 120 70">
+                      <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="5" strokeLinecap="round" />
                       <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="white" strokeWidth="5" strokeLinecap="round"
                         strokeDasharray="157" strokeDashoffset={157 * (1 - 0.88)} />
                     </svg>
                     <div className="absolute inset-0 flex items-end justify-center pb-0">
-                      <span className="text-4xl font-black leading-none">88</span>
+                      <span className="text-3xl font-black leading-none drop-shadow-lg">88</span>
                     </div>
                   </div>
-                  <p className="text-xs opacity-60">out of 100</p>
-                  <p className="text-sm font-medium mt-2 opacity-90">You&apos;re very healthy. Keep going!</p>
+                  <p className="text-[10px] opacity-50 mt-1">out of 100</p>
+                  <p className="text-xs font-semibold mt-1.5 opacity-80">You&apos;re very healthy. Keep going!</p>
                 </div>
               </div>
 
-              <div className="p-8 pt-6">
-                <h3 className="text-2xl font-black tracking-tight uppercase mb-3">Analyze</h3>
-                <p className="text-[#d9c2b8]/70 leading-relaxed text-sm">
-                  Our system instantly calculates your biological age and vitality score based on your unique biometric data, comparing it against the world&apos;s most comprehensive longevity database.
+              <div className="p-6">
+                <h3 className="text-xl font-black tracking-tight uppercase mb-2">Analyze</h3>
+                <p className="text-[#d9c2b8]/60 leading-relaxed text-sm">
+                  Our system instantly calculates your biological age and vitality score, comparing against a comprehensive longevity database.
                 </p>
               </div>
             </div>
@@ -244,47 +243,37 @@ export default function HomePage() {
             <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">3</div>
 
-              {/* Trophy Card */}
-              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl flex items-center justify-center" style={{ background: "linear-gradient(145deg, #5b3f8c, #7b5ea7, #6a4d96)" }}>
-                <div className="relative text-center z-10">
-                  {/* Trophy SVG */}
-                  <svg width="100" height="100" viewBox="0 0 100 100" className="mx-auto drop-shadow-lg">
-                    {/* Base */}
-                    <ellipse cx="50" cy="88" rx="18" ry="4" fill="#c47a3a"/>
-                    <rect x="36" y="82" width="28" height="8" rx="2" fill="#d4945a"/>
-                    {/* Stem */}
-                    <rect x="44" y="60" width="12" height="24" rx="3" fill="url(#gold-stem)"/>
-                    {/* Cup */}
-                    <path d="M25 20 C25 50 40 60 50 60 C60 60 75 50 75 20 Z" fill="url(#gold-cup)" stroke="#e8c060" strokeWidth="1"/>
-                    {/* Handles */}
-                    <path d="M25 25 C15 25 12 35 18 42 C22 46 25 42 25 38" fill="none" stroke="#d4a44a" strokeWidth="3" strokeLinecap="round"/>
-                    <path d="M75 25 C85 25 88 35 82 42 C78 46 75 42 75 38" fill="none" stroke="#d4a44a" strokeWidth="3" strokeLinecap="round"/>
-                    {/* Star */}
-                    <polygon points="50,28 53,36 62,36 55,41 58,50 50,44 42,50 45,41 38,36 47,36" fill="#e87040" className="drop-shadow-sm"/>
-                    {/* Sparkles */}
-                    <path d="M20 15 L22 18 L20 21 L18 18 Z" fill="#f0d080" opacity="0.7"/>
-                    <path d="M80 50 L82 53 L80 56 L78 53 Z" fill="#f0d080" opacity="0.7"/>
-                    <path d="M30 55 L31.5 57 L30 59 L28.5 57 Z" fill="#f0d080" opacity="0.5"/>
-                    <defs>
-                      <linearGradient id="gold-cup" x1="25" y1="20" x2="75" y2="60">
-                        <stop offset="0%" stopColor="#f0d080"/>
-                        <stop offset="50%" stopColor="#d4a44a"/>
-                        <stop offset="100%" stopColor="#c49030"/>
-                      </linearGradient>
-                      <linearGradient id="gold-stem" x1="44" y1="60" x2="56" y2="84">
-                        <stop offset="0%" stopColor="#d4a44a"/>
-                        <stop offset="100%" stopColor="#c49030"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  <p className="text-white/80 text-sm font-bold mt-2 tracking-wide">#1 on Leaderboard</p>
+              {/* Photo + Trophy overlay */}
+              <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
+                <Image src="/man-moving-giant-tire-wheel-gym.jpg" alt="Leaderboard ranking" fill className="object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(90,60,140,0.45) 50%, rgba(90,60,140,0.3) 100%)" }} />
+                {/* Trophy + podium overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                  {/* Trophy icon */}
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2" style={{ background: "linear-gradient(135deg, #f0d080, #d4a44a)", boxShadow: "0 8px 24px rgba(212,164,74,0.3)" }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 15c3 0 5-2.5 5-6H7c0 3.5 2 6 5 6z" fill="#8b5e20"/>
+                      <path d="M7 9c-1 0-3 .5-3 3s2 3 3 3" stroke="#8b5e20" strokeWidth="1.5" fill="none"/>
+                      <path d="M17 9c1 0 3 .5 3 3s-2 3-3 3" stroke="#8b5e20" strokeWidth="1.5" fill="none"/>
+                      <rect x="10" y="15" width="4" height="3" rx="1" fill="#8b5e20"/>
+                      <rect x="8" y="18" width="8" height="2" rx="1" fill="#8b5e20"/>
+                      <path d="M10 11l2-2 2 2" stroke="#f0d080" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  {/* Podium bars */}
+                  <div className="flex items-end gap-1.5 mb-1">
+                    <div className="w-8 h-6 rounded-t bg-white/15 flex items-center justify-center text-[10px] font-bold text-white/50">2</div>
+                    <div className="w-10 h-10 rounded-t flex items-center justify-center text-xs font-black text-black/70" style={{ background: "linear-gradient(to bottom, #f0d080, #d4a44a)" }}>1</div>
+                    <div className="w-8 h-4 rounded-t bg-white/10 flex items-center justify-center text-[10px] font-bold text-white/40">3</div>
+                  </div>
+                  <p className="text-white/70 text-xs font-bold tracking-wide">#1 on Leaderboard</p>
                 </div>
               </div>
 
-              <div className="p-8 pt-6">
-                <h3 className="text-2xl font-black tracking-tight uppercase mb-3">Rank</h3>
-                <p className="text-[#d9c2b8]/70 leading-relaxed text-sm">
-                  See where you stand on the live event leaderboard and download your detailed bio-age report. Share your metrics and track your performance against peers in real-time.
+              <div className="p-6">
+                <h3 className="text-xl font-black tracking-tight uppercase mb-2">Rank</h3>
+                <p className="text-[#d9c2b8]/60 leading-relaxed text-sm">
+                  See where you stand on the live event leaderboard and download your detailed bio-age report in real-time.
                 </p>
               </div>
             </div>
