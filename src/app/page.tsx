@@ -208,14 +208,27 @@ export default function HomePage() {
             <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">2</div>
 
-              {/* Image */}
-              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl">
-                <Image src="/beautiful-girl-is-engaged-gym.jpg" alt="Bio analysis" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
-                <div className="absolute bottom-4 left-6">
-                  <div className="w-12 h-12 rounded-full bg-[#d4845a]/15 border border-[#d4845a]/25 flex items-center justify-center backdrop-blur-sm">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffb691" strokeWidth="2"><path d="M21 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              {/* Superpower Score Card */}
+              <div className="relative w-full h-52 overflow-hidden rounded-t-2xl flex items-center justify-center" style={{ background: "linear-gradient(145deg, #c46a35, #d4845a, #b85c2a)" }}>
+                {/* Subtle hand silhouette bg */}
+                <div className="absolute inset-0 opacity-10">
+                  <Image src="/beautiful-girl-is-engaged-gym.jpg" alt="" fill className="object-cover blur-sm" />
+                </div>
+                <div className="relative text-center text-white z-10">
+                  <p className="text-sm italic font-medium opacity-90 mb-3" style={{ fontFamily: "Georgia, serif" }}>superpower score</p>
+                  {/* Arc gauge */}
+                  <div className="relative inline-block mb-1">
+                    <svg width="120" height="70" viewBox="0 0 120 70">
+                      <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="5" strokeLinecap="round" />
+                      <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="white" strokeWidth="5" strokeLinecap="round"
+                        strokeDasharray="157" strokeDashoffset={157 * (1 - 0.88)} />
+                    </svg>
+                    <div className="absolute inset-0 flex items-end justify-center pb-0">
+                      <span className="text-4xl font-black leading-none">88</span>
+                    </div>
                   </div>
+                  <p className="text-xs opacity-60">out of 100</p>
+                  <p className="text-sm font-medium mt-2 opacity-90">You&apos;re very healthy. Keep going!</p>
                 </div>
               </div>
 
