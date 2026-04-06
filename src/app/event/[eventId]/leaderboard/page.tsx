@@ -53,150 +53,143 @@ export default function LeaderboardPage() {
     return <ProjectorMode event={event} sorted={sorted} view={view} onExit={() => setIsProjector(false)} />;
   }
 
+  // Top 3 separate from rest
+  const top3 = sorted.slice(0, 3);
+  const rest = sorted.slice(3);
+
   return (
     <div className="min-h-screen bg-[#0B0B0F]">
 
-      <div className="relative z-10 min-h-screen p-4 lg:p-8">
-        <div className="page-enter max-w-5xl mx-auto">
+      {/* ═══ GRADIENT HERO BANNER with Top Rankers ═══ */}
+      <div className="relative overflow-hidden">
+        {/* Animated grain gradient background */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(135deg, #0a2818 0%, #0B0B0F 30%, #0f0a28 60%, #0B0B0F 100%)",
+        }} />
+        <div className="absolute inset-0 opacity-30" style={{
+          background: "radial-gradient(ellipse at 25% 50%, rgba(74,222,128,0.15) 0%, transparent 50%), radial-gradient(ellipse at 75% 30%, rgba(99,102,241,0.12) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(177,158,239,0.08) 0%, transparent 50%)",
+        }} />
+        {/* Noise grain overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "128px 128px",
+        }} />
 
-          {/* Header */}
-          <div className="mb-6">
-            <button onClick={() => router.push(`/event/${eventId}`)} aria-label="Back to event" className="text-white/30 hover:text-white/60 text-sm mb-4 inline-flex items-center gap-1.5 transition-colors">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
-              Back to Event
-            </button>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl lg:text-3xl font-black">Leaderboard</h1>
-                {event && <p className="text-white/30 text-sm mt-1">{event.name}</p>}
-              </div>
-              <button
-                onClick={() => setIsProjector(true)}
-                className="px-4 py-2 rounded-2xl text-sm bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.06] transition-all hidden sm:block"
-              >
-                Projector Mode
-              </button>
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-6 pb-8">
+          {/* Back + header */}
+          <button onClick={() => router.push(`/event/${eventId}`)} aria-label="Back" className="text-white/25 hover:text-white/50 text-[11px] inline-flex items-center gap-1 transition-colors mb-4">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+            Back to Event
+          </button>
+
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Leaderboard</h1>
+              {event && <p className="text-white/25 text-sm mt-0.5">{event.name} · {sorted.length} participants</p>}
             </div>
+            <button onClick={() => setIsProjector(true)} className="px-3 py-1.5 rounded-lg text-[11px] bg-white/[0.06] text-white/40 hover:text-white/70 transition-all hidden sm:block">
+              Projector
+            </button>
           </div>
 
-          {/* View tabs — minimal */}
-          <div className="flex gap-1 mb-4">
+          {/* ═══ TOP 3 PODIUM ═══ */}
+          {top3.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-2">
+              {/* 2nd place */}
+              <div className="order-1 self-end">
+                {top3[1] && (
+                  <div className="rounded-xl p-3 sm:p-4 bg-white/[0.04] border border-white/[0.08] text-center backdrop-blur-sm">
+                    <p className="text-[10px] text-white/20 font-bold">2ND</p>
+                    <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center text-sm font-bold text-white/40 mx-auto mt-2">
+                      {top3[1].name.charAt(0)}
+                    </div>
+                    <p className="font-semibold text-xs mt-2 truncate">{top3[1].name}</p>
+                    <p className="text-lg font-black text-white/60 mt-0.5">{getMetric(top3[1], view)}</p>
+                    <p className="text-[9px] text-white/15">{top3[1].bioStage}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* 1st place — tallest */}
+              <div className="order-2">
+                {top3[0] && (
+                  <div className="rounded-xl p-4 sm:p-5 bg-white/[0.06] border border-[#4ADE80]/15 text-center backdrop-blur-sm">
+                    <p className="text-[10px] text-[#4ADE80]/50 font-bold">1ST</p>
+                    <div className="w-12 h-12 rounded-full bg-[#4ADE80]/10 border border-[#4ADE80]/20 flex items-center justify-center text-base font-bold text-[#4ADE80]/70 mx-auto mt-2">
+                      {top3[0].name.charAt(0)}
+                    </div>
+                    <p className="font-bold text-sm mt-2 truncate">{top3[0].name}</p>
+                    <p className="text-2xl font-black text-[#4ADE80] mt-1">{getMetric(top3[0], view)}</p>
+                    <p className="text-[10px] text-white/20">{top3[0].bioStage} · Age {top3[0].age}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* 3rd place */}
+              <div className="order-3 self-end">
+                {top3[2] && (
+                  <div className="rounded-xl p-3 sm:p-4 bg-white/[0.04] border border-white/[0.08] text-center backdrop-blur-sm">
+                    <p className="text-[10px] text-white/20 font-bold">3RD</p>
+                    <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center text-sm font-bold text-white/40 mx-auto mt-2">
+                      {top3[2].name.charAt(0)}
+                    </div>
+                    <p className="font-semibold text-xs mt-2 truncate">{top3[2].name}</p>
+                    <p className="text-lg font-black text-white/60 mt-0.5">{getMetric(top3[2], view)}</p>
+                    <p className="text-[9px] text-white/15">{top3[2].bioStage}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ═══ LIST SECTION ═══ */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+
+        {/* Tabs + Filters */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-4">
+          <div className="flex gap-1">
             {views.map((v) => (
-              <button
-                key={v.key}
-                onClick={() => setView(v.key)}
-                className={`py-2 px-4 rounded-lg text-xs font-semibold transition-all ${
-                  view === v.key
-                    ? "bg-white/[0.08] text-white"
-                    : "text-white/25 hover:text-white/50"
-                }`}
-              >
+              <button key={v.key} onClick={() => setView(v.key)}
+                className={`py-2 px-4 rounded-lg text-xs font-semibold transition-all ${view === v.key ? "bg-white/[0.08] text-white" : "text-white/25 hover:text-white/50"}`}>
                 {v.label}
               </button>
             ))}
           </div>
+          <div className="flex gap-1.5 flex-wrap flex-1">
+            {(["all", "male", "female"] as const).map((g) => (
+              <FilterChip key={g} label={g === "all" ? "All" : g === "male" ? "Male" : "Female"} active={genderFilter === g} onClick={() => setGenderFilter(g)} />
+            ))}
+            <span className="w-px bg-white/5 mx-0.5" />
+            {(["all", "17-29", "30-39", "40-49", "50+"] as AgeGroup[]).map((ag) => (
+              <FilterChip key={ag} label={ag === "all" ? "All Ages" : ag} active={ageGroup === ag} onClick={() => setAgeGroup(ag)} />
+            ))}
+          </div>
+        </div>
 
-          {/* Search + Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <input
-              type="text"
-              placeholder="Search participant..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 py-2 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#4ADE80]/60 transition-all"
-            />
-            <div className="flex gap-2 overflow-x-auto pb-1 flex-wrap">
-              {(["all", "male", "female"] as const).map((g) => (
-                <FilterChip
-                  key={g}
-                  label={g === "all" ? "All" : g === "male" ? "Male" : "Female"}
-                  active={genderFilter === g}
-                  onClick={() => setGenderFilter(g)}
-                />
-              ))}
-              <span className="w-px bg-white/10 mx-1 self-stretch" />
-              {(["all", "17-29", "30-39", "40-49", "50+"] as AgeGroup[]).map((ag) => (
-                <FilterChip
-                  key={ag}
-                  label={ag === "all" ? "All Ages" : ag}
-                  active={ageGroup === ag}
-                  onClick={() => setAgeGroup(ag)}
-                />
-              ))}
+        {/* Search */}
+        <input type="text" placeholder="Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full py-2 px-4 bg-white/[0.03] border border-white/[0.05] rounded-lg text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/10 transition-all mb-4" />
+
+        {/* Participant list (4th onwards) */}
+        <div className="space-y-1.5">
+          {rest.map((p, i) => {
+            const isHighlighted = searchQuery && p.name.toLowerCase().includes(searchQuery.toLowerCase());
+            return <LeaderboardRow key={p.id} rank={i + 4} participant={p} view={view} highlighted={!!isHighlighted} />;
+          })}
+
+          {sorted.length === 0 && (
+            <div className="rounded-xl p-12 text-center bg-white/[0.02]">
+              <p className="text-white/30">No participants yet</p>
             </div>
-          </div>
+          )}
 
-          {/* Stats bar */}
-          <div className="rounded-lg px-4 py-2 mb-4 flex items-center justify-between bg-white/[0.02] border border-white/[0.04]">
-            <span className="text-white/30 text-xs">{sorted.length} participants</span>
-            {sorted.length > 0 && (
-              <span className="text-white/20 text-xs">Best: <span className="text-white/40 font-medium">{getMetric(sorted[0], view)}</span></span>
-            )}
-          </div>
-
-          {/* Desktop: side by side podium + list */}
-          <div className="lg:grid lg:grid-cols-[340px_1fr] lg:gap-6">
-
-            {/* Top 3 — clean, no emojis */}
-            {sorted.length >= 1 && (
-              <div className="mb-6 lg:mb-0">
-                <div className="rounded-2xl p-5 bg-white/[0.025] border border-white/[0.05] lg:sticky lg:top-8">
-                  <p className="text-[9px] text-white/20 font-semibold uppercase tracking-[0.1em] mb-4">Top 3</p>
-
-                  {sorted[0] && (
-                    <div className="rounded-xl p-4 bg-white/[0.03] border border-white/[0.06] text-center mb-3">
-                      <p className="text-[10px] text-white/15 font-bold mb-1">1ST</p>
-                      <p className="font-bold text-base">{sorted[0].name}</p>
-                      <p className="text-2xl font-black text-white/80 mt-1">{getMetric(sorted[0], view)}</p>
-                      <p className="text-[10px] text-white/20 mt-1">{sorted[0].bioStage} · Age {sorted[0].age}</p>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-2">
-                    {sorted[1] && (
-                      <div className="rounded-xl p-3 bg-white/[0.02] border border-white/[0.04] text-center">
-                        <p className="text-[9px] text-white/12 font-bold mb-1">2ND</p>
-                        <p className="font-semibold text-xs truncate">{sorted[1].name}</p>
-                        <p className="text-base font-black text-white/60 mt-1">{getMetric(sorted[1], view)}</p>
-                        <p className="text-[9px] text-white/15">{sorted[1].bioStage}</p>
-                      </div>
-                    )}
-                    {sorted[2] && (
-                      <div className="rounded-xl p-3 bg-white/[0.02] border border-white/[0.04] text-center">
-                        <p className="text-[9px] text-white/12 font-bold mb-1">3RD</p>
-                        <p className="font-semibold text-xs truncate">{sorted[2].name}</p>
-                        <p className="text-base font-black text-white/60 mt-1">{getMetric(sorted[2], view)}</p>
-                        <p className="text-[9px] text-white/15">{sorted[2].bioStage}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Full list */}
-            <div className="space-y-2">
-              {sorted.map((p, i) => {
-                const isHighlighted = searchQuery && p.name.toLowerCase().includes(searchQuery.toLowerCase());
-                return (
-                  <LeaderboardRow
-                    key={p.id}
-                    rank={i + 1}
-                    participant={p}
-                    view={view}
-                    highlighted={!!isHighlighted}
-                  />
-                );
-              })}
-
-              {sorted.length === 0 && (
-                <div className="glass-card rounded-2xl p-12 text-center">
-                  <p className="text-white/40 text-lg">No participants yet</p>
-                  <p className="text-white/20 text-sm mt-1">Be the first to take the grip test!</p>
-                </div>
-              )}
+          {sorted.length > 0 && rest.length === 0 && (
+            <div className="rounded-xl p-8 text-center bg-white/[0.02]">
+              <p className="text-white/20 text-sm">Only top {top3.length} participants so far</p>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
