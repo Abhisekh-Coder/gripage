@@ -1,169 +1,276 @@
 import { jsPDF } from "jspdf";
-import type { Participant } from "./types";
+import type { Participant, BioStage } from "./types";
 import { STAGE_MAP } from "./formula";
+
+function hexToRgb(hex: string): [number, number, number] {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return [r, g, b];
+}
 
 export function generateResultPDF(participant: Participant): void {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const w = doc.internal.pageSize.getWidth();
   const stage = STAGE_MAP[participant.bioStage];
+  const stageRgb = hexToRgb(stage.color);
   const delta = participant.age - participant.biologicalAge;
   const isYounger = delta > 0;
   const vitalityScore = Math.round(Math.max(0, Math.min(100, 50 + delta * 3.3)));
-
-  // Colors
-  const green = [74, 222, 128] as const;
-  const dark = [10, 15, 12] as const;
+  const copper: [number, number, number] = [212, 132, 90];
+  const bg: [number, number, number] = [12, 12, 12];
+  const cardBg: [number, number, number] = [20, 20, 20];
 
   // Background
-  doc.setFillColor(...dark);
+  doc.setFillColor(...bg);
   doc.rect(0, 0, w, 297, "F");
 
-  // Header band
-  doc.setFillColor(20, 30, 25);
-  doc.rect(0, 0, w, 50, "F");
+  // ─── HEADER ───
+  doc.setFillColor(16, 16, 16);
+  doc.rect(0, 0, w, 45, "F");
 
-  // Logo text
-  doc.setFontSize(28);
+  doc.setFontSize(24);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(255, 255, 255);
-  doc.text("GripAge", 20, 22);
-  doc.setFontSize(10);
-  doc.setTextColor(150, 150, 150);
-  doc.text("Grip Strength & Biological Age Report", 20, 30);
+  doc.setTextColor(...copper);
+  doc.text("GripAge", 20, 20);
 
-  // Date
   doc.setFontSize(9);
   doc.setTextColor(100, 100, 100);
-  doc.text(new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }), w - 20, 22, { align: "right" });
+  doc.text("Grip Strength & Biological Age Report", 20, 27);
 
-  // Participant name
-  doc.setFontSize(9);
-  doc.setTextColor(150, 150, 150);
-  doc.text("RESULTS FOR", 20, 45);
+  doc.setFontSize(8);
+  doc.text(new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }), w - 20, 20, { align: "right" });
 
-  doc.setFontSize(20);
+  doc.setFontSize(8);
+  doc.setTextColor(80, 80, 80);
+  doc.text("RESULTS FOR", 20, 40);
+
+  // ─── BIO AGE HERO ───
+  doc.setFillColor(...cardBg);
+  doc.roundedRect(15, 50, w - 30, 60, 3, 3, "F");
+
+  // Name
+  doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.text(participant.name, 20, 60);
+  doc.text(participant.name, 25, 64);
 
-  // Contact info
-  doc.setFontSize(9);
-  doc.setTextColor(120, 120, 120);
-  doc.text(`${participant.email}  |  ${participant.phone}`, 20, 67);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(100, 100, 100);
+  doc.text(`${participant.email}  |  ${participant.phone}`, 25, 70);
 
-  // ─── BIG BIO AGE ───
-  doc.setFillColor(15, 25, 20);
-  doc.roundedRect(20, 75, w - 40, 55, 4, 4, "F");
-
-  doc.setFontSize(60);
+  // Big bio age number
+  doc.setFontSize(48);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...green);
-  doc.text(`${participant.biologicalAge}`, 40, 112);
-
-  doc.setFontSize(14);
-  doc.setTextColor(200, 200, 200);
-  doc.text("years", 40 + doc.getTextWidth(`${participant.biologicalAge}`) + 3, 112);
+  doc.setTextColor(...stageRgb);
+  doc.text(`${participant.biologicalAge}`, w - 30, 72, { align: "right" });
 
   doc.setFontSize(10);
-  doc.text("Biological Age", 40, 120);
+  doc.setTextColor(180, 180, 180);
+  doc.text("Biological Age", w - 30, 78, { align: "right" });
 
-  // Stage badge
-  doc.setFontSize(12);
+  // Stage badge & delta
+  doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...green);
-  doc.text(participant.bioStage, w - 30, 95, { align: "right" });
+  doc.setTextColor(...stageRgb);
+  doc.text(participant.bioStage, 25, 85);
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(150, 150, 150);
-  doc.text(
-    isYounger ? `${Math.abs(delta)} years younger biologically` : delta < 0 ? `${Math.abs(delta)} years older biologically` : "On track for your age",
-    w - 30, 103, { align: "right" }
-  );
+  const deltaText = isYounger ? `${Math.abs(delta)} years younger biologically` : delta < 0 ? `${Math.abs(delta)} years older biologically` : "On track for your age";
+  doc.text(deltaText, 25, 91);
 
-  doc.setFontSize(10);
+  // Vitality score bar
+  doc.setFontSize(8);
+  doc.setTextColor(100, 100, 100);
+  doc.text(`Vitality Score: ${vitalityScore}/100`, 25, 102);
+  // Bar background
+  doc.setFillColor(30, 30, 30);
+  doc.roundedRect(25, 104, w - 80, 2.5, 1, 1, "F");
+  // Bar fill
+  doc.setFillColor(...stageRgb);
+  doc.roundedRect(25, 104, Math.max(2, (w - 80) * (vitalityScore / 100)), 2.5, 1, 1, "F");
+
+  // ─── AGE COMPARISON CARD ───
+  let y = 118;
+  doc.setFillColor(...cardBg);
+  doc.roundedRect(15, y, (w - 35) / 2, 35, 3, 3, "F");
+
+  doc.setFontSize(7);
+  doc.setTextColor(80, 80, 80);
+  doc.text("AGE COMPARISON", 25, y + 8);
+
+  // Actual | Delta | Bio
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(200, 200, 200);
+  doc.text(`${participant.age}`, 30, y + 22);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80, 80, 80);
+  doc.text("Actual", 30, y + 28);
+
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...stageRgb);
+  const deltaDisplay = delta > 0 ? `−${delta}` : delta < 0 ? `+${Math.abs(delta)}` : "=";
+  const midX = 15 + (w - 35) / 4;
+  doc.text(deltaDisplay, midX, y + 22, { align: "center" });
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80, 80, 80);
+  doc.text("Delta", midX, y + 28, { align: "center" });
+
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...stageRgb);
+  const rightX = 15 + (w - 35) / 2 - 15;
+  doc.text(`${participant.biologicalAge}`, rightX, y + 22);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80, 80, 80);
+  doc.text("Bio Age", rightX, y + 28);
+
+  // ─── GRIP STRENGTH CARD ───
+  const gripCardX = 15 + (w - 35) / 2 + 5;
+  doc.setFillColor(...cardBg);
+  doc.roundedRect(gripCardX, y, (w - 35) / 2, 35, 3, 3, "F");
+
+  doc.setFontSize(7);
+  doc.setTextColor(80, 80, 80);
+  doc.text("GRIP STRENGTH", gripCardX + 10, y + 8);
+
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...stageRgb);
+  doc.text(`${participant.gripAvgKg}`, gripCardX + 12, y + 22);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80, 80, 80);
+  doc.text("Your (kg)", gripCardX + 12, y + 28);
+
+  const gripDiff = participant.gripAvgKg - participant.expectedGrip;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(gripDiff >= 0 ? 74 : 248, gripDiff >= 0 ? 222 : 113, gripDiff >= 0 ? 128 : 113);
+  doc.text(`${gripDiff >= 0 ? "+" : ""}${gripDiff.toFixed(1)}`, gripCardX + (w - 35) / 4, y + 22, { align: "center" });
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80, 80, 80);
+  doc.text("vs expected", gripCardX + (w - 35) / 4, y + 28, { align: "center" });
+
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
   doc.setTextColor(120, 120, 120);
-  doc.text(`Vitality Score: ${vitalityScore}/100`, w - 30, 115, { align: "right" });
+  doc.text(`${participant.expectedGrip}`, gripCardX + (w - 35) / 2 - 25, y + 22);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80, 80, 80);
+  doc.text("Expected (kg)", gripCardX + (w - 35) / 2 - 25, y + 28);
 
   // ─── METRICS TABLE ───
-  let y = 140;
+  y = 160;
+  doc.setFillColor(...cardBg);
+  doc.roundedRect(15, y, w - 30, 45, 3, 3, "F");
 
-  doc.setFillColor(15, 25, 20);
-  doc.roundedRect(20, y, w - 40, 50, 4, 4, "F");
+  doc.setFontSize(7);
+  doc.setTextColor(80, 80, 80);
+  doc.text("DETAILS", 25, y + 8);
 
   const metrics = [
     ["Chronological Age", `${participant.age} years`],
     ["Height / Weight", `${participant.heightCm} cm / ${participant.weightKg} kg`],
-    ["Grip Strength (Avg)", `${participant.gripAvgKg} kg`],
+    ["Grip Avg", `${participant.gripAvgKg} kg`],
     ["Expected Grip", `${participant.expectedGrip} kg`],
     ...(participant.gripLeftKg !== null ? [["Left Hand", `${participant.gripLeftKg} kg`]] : []),
     ...(participant.gripRightKg !== null ? [["Right Hand", `${participant.gripRightKg} kg`]] : []),
   ];
 
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   metrics.forEach(([label, value], i) => {
-    const rowY = y + 10 + i * 7;
-    doc.setTextColor(120, 120, 120);
-    doc.text(label, 30, rowY);
-    doc.setTextColor(220, 220, 220);
+    const rowY = y + 15 + i * 5.5;
+    doc.setTextColor(100, 100, 100);
+    doc.text(label, 25, rowY);
+    doc.setTextColor(200, 200, 200);
     doc.setFont("helvetica", "bold");
-    doc.text(value, w - 30, rowY, { align: "right" });
+    doc.text(value, w - 25, rowY, { align: "right" });
     doc.setFont("helvetica", "normal");
   });
 
   // ─── FITNESS PROFILE ───
-  y = 200;
-  doc.setFillColor(15, 25, 20);
-  doc.roundedRect(20, y, w - 40, 55, 4, 4, "F");
+  y = 210;
+  doc.setFillColor(...cardBg);
+  doc.roundedRect(15, y, w - 30, 40, 3, 3, "F");
 
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...green);
-  doc.text("FITNESS PROFILE", 30, y + 10);
+  doc.setFontSize(7);
+  doc.setTextColor(...copper);
+  doc.text("FITNESS PROFILE", 25, y + 8);
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   const fa = participant.fitnessAnswers;
   const fitnessInfo = [
     ["Gym / Workout", fa.doesGym === "yes" ? "Yes" : fa.doesGym === "sometimes" ? "Sometimes" : "No"],
     ["Frequency", fa.gymFrequency],
     ["Activity Level", fa.activityLevel.charAt(0).toUpperCase() + fa.activityLevel.slice(1).replace("_", " ")],
-    ["Exercises", fa.exerciseType.length > 0 ? fa.exerciseType.join(", ").replace(/_/g, " ") : "None specified"],
+    ["Exercises", fa.exerciseType.length > 0 ? fa.exerciseType.join(", ").replace(/_/g, " ") : "None"],
     ["Fitness Goal", fa.fitnessGoal],
   ];
 
   fitnessInfo.forEach(([label, value], i) => {
-    const rowY = y + 20 + i * 7;
-    doc.setTextColor(120, 120, 120);
-    doc.text(label, 30, rowY);
-    doc.setTextColor(220, 220, 220);
-    doc.text(value, w - 30, rowY, { align: "right" });
+    const rowY = y + 15 + i * 5;
+    doc.setTextColor(100, 100, 100);
+    doc.text(label, 25, rowY);
+    doc.setTextColor(200, 200, 200);
+    doc.text(value, w - 25, rowY, { align: "right" });
   });
 
-  // ─── RECOMMENDATION ───
-  y = 265;
-  doc.setFontSize(8);
-  doc.setTextColor(80, 80, 80);
-  doc.text(stage.description + ". " + getRecommendation(participant.bioStage), 20, y, { maxWidth: w - 40 });
-
-  // Footer
+  // ─── STAGE REFERENCE TABLE ───
+  y = 255;
   doc.setFontSize(7);
-  doc.setTextColor(60, 60, 60);
-  doc.text("Generated by GripAge — Grip Strength & Biological Age Game", w / 2, 290, { align: "center" });
-  doc.text("Formula anchored to Indian population norms (LASI). For informational purposes only.", w / 2, 294, { align: "center" });
+  doc.setTextColor(80, 80, 80);
+  doc.text("STAGE REFERENCE", 25, y);
+
+  const stages: { range: string; label: BioStage }[] = [
+    { range: ">+10", label: "Elite Vitality" },
+    { range: "+6 to +10", label: "Peak Fitness" },
+    { range: "+3 to +5", label: "Above Average" },
+    { range: "-2 to +2", label: "On Track" },
+    { range: "-5 to -3", label: "Below Average" },
+    { range: "-10 to -6", label: "Needs Attention" },
+    { range: "<-10", label: "Critical Gap" },
+  ];
+
+  doc.setFontSize(6);
+  stages.forEach((s, i) => {
+    const rowY = y + 5 + i * 3.5;
+    const info = STAGE_MAP[s.label];
+    const rgb = hexToRgb(info.color);
+    const isCurrent = s.label === participant.bioStage;
+
+    doc.setFillColor(...rgb);
+    doc.circle(27, rowY - 0.8, 1, "F");
+
+    doc.setTextColor(80, 80, 80);
+    doc.text(s.range, 31, rowY);
+
+    if (isCurrent) {
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...rgb);
+      doc.text(`${s.label} ← You`, 52, rowY);
+      doc.setFont("helvetica", "normal");
+    } else {
+      doc.setTextColor(100, 100, 100);
+      doc.text(s.label, 52, rowY);
+    }
+  });
+
+  // ─── FOOTER ───
+  doc.setFontSize(6);
+  doc.setTextColor(50, 50, 50);
+  doc.text("Generated by GripAge — Grip Strength & Biological Age", w / 2, 291, { align: "center" });
+  doc.text("Formula anchored to population norms. For informational purposes only.", w / 2, 294, { align: "center" });
 
   doc.save(`GripAge_${participant.name.replace(/\s+/g, "_")}_Report.pdf`);
-}
-
-function getRecommendation(stage: string): string {
-  switch (stage) {
-    case "Elite Vitality": return "Exceptional fitness! Keep up your training regimen and inspire others.";
-    case "Peak Fitness": return "Your grip strength indicates excellent biological health. Maintain your current fitness routine.";
-    case "Above Average": return "You're doing well! Consider adding grip-specific exercises to further improve.";
-    case "On Track": return "Age-appropriate strength. Regular exercise and a balanced diet will help maintain this level.";
-    case "Below Average": return "Consider incorporating strength training 2-3 times per week. Focus on compound exercises.";
-    case "Needs Attention": return "We recommend consulting a fitness professional. Start with light resistance training and build up gradually.";
-    case "Critical Gap": return "Please consult a healthcare provider. Begin with guided rehabilitation exercises under professional supervision.";
-    default: return "";
-  }
 }

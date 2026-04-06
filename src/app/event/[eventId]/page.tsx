@@ -14,6 +14,7 @@ export default function EventLandingPage() {
   const [count, setCount] = useState(0);
   const [showQR, setShowQR] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [savedResult, setSavedResult] = useState<{ pid: string; name: string } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -24,6 +25,12 @@ export default function EventLandingPage() {
         setCount(c);
       }
       setLoading(false);
+
+      // Check for saved result
+      try {
+        const saved = localStorage.getItem(`gripage_result_${eventId}`);
+        if (saved) setSavedResult(JSON.parse(saved));
+      } catch {}
     })();
   }, [eventId]);
 
@@ -95,6 +102,14 @@ export default function EventLandingPage() {
             {isLive && (
               <button onClick={() => router.push(`/event/${event.id}/register`)} className="btn-primary w-full py-5 px-6 rounded-2xl text-lg">
                 💪 Take the Grip Test
+              </button>
+            )}
+            {savedResult && (
+              <button
+                onClick={() => router.push(`/event/${event.id}/results?pid=${savedResult.pid}`)}
+                className="w-full py-4 px-6 rounded-2xl text-lg font-semibold bg-[#d4845a]/10 border border-[#d4845a]/30 text-[#d4845a] hover:bg-[#d4845a]/20 transition-all"
+              >
+                📄 View My Results ({savedResult.name})
               </button>
             )}
             <button onClick={() => router.push(`/event/${event.id}/leaderboard`)} className="btn-secondary w-full py-4 px-6 rounded-2xl text-lg">
