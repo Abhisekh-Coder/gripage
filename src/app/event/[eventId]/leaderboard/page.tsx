@@ -54,9 +54,9 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-[#080e1a] overflow-hidden">
+    <div className="min-h-screen relative bg-[#0B0B0F] overflow-hidden">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.05) 0%, transparent 60%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(74,222,128,0.05) 0%, transparent 60%)" }} />
 
       <div className="relative z-10 min-h-screen p-4 lg:p-8">
         <div className="page-enter max-w-5xl mx-auto">
@@ -106,7 +106,7 @@ export default function LeaderboardPage() {
               placeholder="Search participant..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 py-2 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#d4845a]/60 transition-all"
+              className="flex-1 py-2 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#4ADE80]/60 transition-all"
             />
             <div className="flex gap-2 overflow-x-auto pb-1 flex-wrap">
               {(["all", "male", "female"] as const).map((g) => (
@@ -134,7 +134,7 @@ export default function LeaderboardPage() {
             <span className="text-white/40 text-sm">{sorted.length} participants</span>
             {sorted.length > 0 && (
               <span className="text-white/30 text-xs">
-                Best: <span className="text-[#d4845a] font-medium">{getMetric(sorted[0], view)}</span>
+                Best: <span className="text-[#4ADE80] font-medium">{getMetric(sorted[0], view)}</span>
               </span>
             )}
           </div>
@@ -247,7 +247,7 @@ function LeaderboardRow({ rank, participant: p, view, highlighted }: { rank: num
 
   return (
     <div
-      className={`glass-card-hover rounded-xl p-3 lg:p-4 flex items-center gap-3 transition-all ${highlighted ? "ring-2 ring-[#d4845a]/50 bg-[#d4845a]/5" : ""}`}
+      className={`glass-card-hover rounded-xl p-3 lg:p-4 flex items-center gap-3 transition-all ${highlighted ? "ring-2 ring-[#4ADE80]/50 bg-[#4ADE80]/5" : ""}`}
     >
       <span className="w-10 text-center font-bold text-sm flex-shrink-0">
         {medal || <span className="text-white/30">#{rank}</span>}
@@ -331,19 +331,19 @@ function ProjectorMode({
   }, [sorted.length]);
 
   return (
-    <div className="min-h-screen relative bg-[#080e1a] cursor-pointer overflow-hidden" onClick={onExit}>
+    <div className="min-h-screen relative bg-[#0B0B0F] cursor-pointer overflow-hidden" onClick={onExit}>
       <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
       <div ref={scrollRef} className="relative z-10 min-h-screen max-h-screen overflow-y-auto p-8 lg:p-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-3">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
-                <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
-                <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
               </svg>
               <h1 className="text-5xl lg:text-6xl font-black">
-                Grip<span className="text-[#d4845a]">Age</span>
+                Grip<span className="text-[#4ADE80]">Age</span>
               </h1>
             </div>
             {event && <p className="text-2xl text-white/30 mt-2">{event.name}</p>}

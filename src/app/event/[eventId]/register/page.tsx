@@ -90,9 +90,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen relative" style={{ background: "#080e1a" }}>
+    <div className="min-h-screen relative" style={{ background: "#0B0B0F" }}>
       <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.05) 0%, transparent 60%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(74,222,128,0.05) 0%, transparent 60%)" }} />
       <div className="relative z-10 p-4 py-8">
         <div className="page-enter max-w-4xl mx-auto">
 

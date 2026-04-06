@@ -166,7 +166,7 @@ export default function OrganizerDashboard() {
   participants.forEach((p) => { stageCounts[p.bioStage] = (stageCounts[p.bioStage] || 0) + 1; });
 
   return (
-    <div className="min-h-screen bg-[#080e1a] p-4 sm:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-[#0B0B0F] p-4 sm:p-8 relative overflow-hidden">
       <div className="max-w-3xl mx-auto page-enter">
 
         {/* HEADER */}
@@ -196,13 +196,13 @@ export default function OrganizerDashboard() {
         {dateGroups.map((group) => (
           <div key={group.date} className="mb-8">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-1 h-5 rounded-full bg-[#d4845a]" />
+              <div className="w-1 h-5 rounded-full bg-[#4ADE80]" />
               <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider">{group.label}</h3>
             </div>
             <div className="space-y-3 ml-4 border-l border-white/5 pl-5">
               {group.events.map((evt) => (
                 <div key={evt.id}>
-                  <div className={`bg-white/[0.03] border rounded-xl p-4 transition-all ${expandedEvent === evt.id ? "border-[#d4845a]/30" : "border-white/[0.06] hover:border-white/10"}`}>
+                  <div className={`bg-white/[0.03] border rounded-xl p-4 transition-all ${expandedEvent === evt.id ? "border-[#4ADE80]/30" : "border-white/[0.06] hover:border-white/10"}`}>
                     <div className="flex items-center gap-4">
                       <div className="flex-shrink-0">
                         {evt.status === "live" ? (
@@ -217,7 +217,7 @@ export default function OrganizerDashboard() {
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {evt.status === "live" && (<button onClick={() => router.push(`/event/${evt.id}`)} className="btn-primary px-4 py-2 rounded-lg text-sm">Check In</button>)}
-                        <button onClick={() => handleExpandEvent(evt.id)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${expandedEvent === evt.id ? "bg-[#d4845a]/15 text-[#d4845a]" : "bg-white/5 text-white/50 hover:text-white/70"}`}>
+                        <button onClick={() => handleExpandEvent(evt.id)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${expandedEvent === evt.id ? "bg-[#4ADE80]/15 text-[#4ADE80]" : "bg-white/5 text-white/50 hover:text-white/70"}`}>
                           {expandedEvent === evt.id ? "Close" : "Manage"}
                         </button>
                       </div>
@@ -289,7 +289,7 @@ export default function OrganizerDashboard() {
               <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageSelect} className="hidden" />
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-white/10 hover:border-[#d4845a]/40 flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group"
+                className="w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-white/10 hover:border-[#4ADE80]/40 flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group"
               >
                 {newImagePreview ? (
                   <>
@@ -317,7 +317,7 @@ export default function OrganizerDashboard() {
             {/* Form fields */}
             <div className="p-6 space-y-4">
               <input type="text" placeholder="Event Name" value={newName} onChange={(e) => setNewName(e.target.value)}
-                className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-lg font-semibold placeholder:text-white/20 placeholder:font-normal focus:outline-none focus:border-[#d4845a]/60 transition-all" />
+                className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-lg font-semibold placeholder:text-white/20 placeholder:font-normal focus:outline-none focus:border-[#4ADE80]/60 transition-all" />
 
               <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl overflow-hidden">
                 <div className="flex items-center px-4 py-3 gap-3">
@@ -358,7 +358,7 @@ export default function OrganizerDashboard() {
 
               <button onClick={handleCreateEvent} disabled={!newName.trim() || !newDate || newPin.length !== 4 || creating}
                 className="w-full py-4 rounded-xl text-base font-semibold disabled:opacity-30 transition-all"
-                style={{ background: "linear-gradient(135deg, #ffb691, #d4845a)", color: "#000" }}>
+                style={{ background: "linear-gradient(135deg, #4ADE80, #4ADE80)", color: "#000" }}>
                 {creating ? "Creating..." : "Create Event"}
               </button>
             </div>

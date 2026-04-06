@@ -62,14 +62,14 @@ export default function EventLandingPage() {
     navigator.clipboard.writeText(event.code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: "#080e1a" }}><p className="text-white/30">Loading...</p></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B0B0F" }}><p className="text-white/30">Loading...</p></div>;
 
   if (!event) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#080e1a" }}>
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#0B0B0F" }}>
         <div className="text-center">
           <p className="text-xl mb-4 text-white/50">Event not found</p>
-          <button onClick={() => router.push("/")} className="text-[#d4845a] hover:underline text-sm">← Go Home</button>
+          <button onClick={() => router.push("/")} className="text-[#4ADE80] hover:underline text-sm">← Go Home</button>
         </div>
       </div>
     );
@@ -80,14 +80,14 @@ export default function EventLandingPage() {
   const eventUrl = typeof window !== "undefined" ? `${window.location.origin}/event/${event.id}` : "";
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#080e1a" }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#0B0B0F" }}>
       {/* Ambient light beams */}
       <div className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.1) 0%, rgba(56,189,248,0.02) 40%, transparent 70%)" }} />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.06) 0%, transparent 60%)" }} />
 
       {/* Copied toast */}
       {copied && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 text-sm font-medium rounded-full shadow-lg page-enter text-black" style={{ background: "linear-gradient(135deg, #ffb691, #d4845a)" }}>
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 text-sm font-medium rounded-full shadow-lg page-enter text-black" style={{ background: "linear-gradient(135deg, #4ADE80, #4ADE80)" }}>
           Copied to clipboard
         </div>
       )}
@@ -110,10 +110,10 @@ export default function EventLandingPage() {
               {event.imageUrl ? (
                 <div className="relative w-full aspect-[4/3]">
                   <img src={event.imageUrl} alt={event.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#080e1a] via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-transparent" />
                 </div>
               ) : (
-                <div className="relative w-full aspect-[4/3] flex flex-col items-center justify-center overflow-hidden" style={{ background: "linear-gradient(160deg, #0f2035, #d4845a20, #0f1a30)" }}>
+                <div className="relative w-full aspect-[4/3] flex flex-col items-center justify-center overflow-hidden" style={{ background: "linear-gradient(160deg, #0f2035, #4ADE8020, #0f1a30)" }}>
                   {/* Grid pattern overlay */}
                   <div className="absolute inset-0 opacity-10" style={{
                     backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
@@ -122,11 +122,11 @@ export default function EventLandingPage() {
                   {/* GripAge branded logo */}
                   <div className="absolute top-5 left-5 flex items-center gap-2">
                     <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
-                      <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#ffb691" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#ffb691" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#ffb691" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
                     </svg>
-                    <span className="text-sm font-bold text-[#ffb691]/80">GripAge</span>
+                    <span className="text-sm font-bold text-[#4ADE80]/80">GripAge</span>
                   </div>
                   {/* Status badge */}
                   <div className="absolute top-5 right-5">
@@ -141,7 +141,7 @@ export default function EventLandingPage() {
                   <div className="mt-4 flex items-center gap-2">
                     <div className="bg-white/[0.06] border border-white/[0.1] rounded-xl px-4 py-2 flex items-center gap-3">
                       <div className="text-center">
-                        <span className="text-[10px] font-bold text-[#d4845a] block leading-none">{date.month}</span>
+                        <span className="text-[10px] font-bold text-[#4ADE80] block leading-none">{date.month}</span>
                         <span className="text-2xl font-black leading-none mt-0.5 block">{date.day}</span>
                       </div>
                       <div className="w-px h-8 bg-white/10" />
@@ -159,7 +159,7 @@ export default function EventLandingPage() {
                 {event.imageUrl && (
                   <>
                     <p className="text-sm text-white/40">{date.full}</p>
-                    {event.duration && <p className="text-sm text-[#d4845a]/70">{event.duration}</p>}
+                    {event.duration && <p className="text-sm text-[#4ADE80]/70">{event.duration}</p>}
                   </>
                 )}
 
@@ -171,7 +171,7 @@ export default function EventLandingPage() {
                   </div>
                   <div className="w-px h-8 bg-white/10" />
                   <div className="flex-1 text-center">
-                    <p className="text-2xl font-black font-mono tracking-wider text-[#d4845a]">{event.code}</p>
+                    <p className="text-2xl font-black font-mono tracking-wider text-[#4ADE80]">{event.code}</p>
                     <p className="text-[10px] text-white/30 uppercase tracking-wider">Event Code</p>
                   </div>
                 </div>
@@ -226,7 +226,7 @@ export default function EventLandingPage() {
             <div className="space-y-3 mb-8">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4845a" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                 </div>
                 <div>
                   <p className="font-semibold text-sm sm:text-base">{date.full}</p>
@@ -237,7 +237,7 @@ export default function EventLandingPage() {
               {event.location && (
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4845a" strokeWidth="1.5"><path d="M12 13a3 3 0 100-6 3 3 0 000 6z"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="1.5"><path d="M12 13a3 3 0 100-6 3 3 0 000 6z"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
                   </div>
                   <p className="text-sm text-white/60">{event.location}</p>
                 </div>
@@ -249,7 +249,7 @@ export default function EventLandingPage() {
               {isLive && (
                 <button onClick={() => router.push(`/event/${event.id}/register`)}
                   className="w-full py-5 px-8 rounded-2xl text-lg font-black transition-all active:scale-[0.98] text-[#1a0800] uppercase tracking-wider"
-                  style={{ background: "linear-gradient(135deg, #ffb691, #d4845a)", boxShadow: "0 8px 32px rgba(212,132,90,0.3)" }}>
+                  style={{ background: "linear-gradient(135deg, #4ADE80, #4ADE80)", boxShadow: "0 8px 32px rgba(212,132,90,0.3)" }}>
                   Take the Grip Test
                 </button>
               )}
@@ -273,12 +273,12 @@ export default function EventLandingPage() {
                   <input type="email" placeholder="your@email.com" value={lookupEmail}
                     onChange={(e) => { setLookupEmail(e.target.value); setLookupError(""); }}
                     onKeyDown={(e) => e.key === "Enter" && handleLookupResult()}
-                    className="w-full py-3.5 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4845a]/50 transition-all mb-3" />
+                    className="w-full py-3.5 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#4ADE80]/50 transition-all mb-3" />
                   {lookupError && <p className="text-red-400 text-sm mb-3">{lookupError}</p>}
                   <div className="flex gap-2">
                     <button onClick={handleLookupResult} disabled={!lookupEmail.trim() || lookingUp}
                       className="flex-1 py-3.5 px-4 rounded-xl font-bold text-[#1a0800] disabled:opacity-30 transition-all"
-                      style={{ background: "linear-gradient(135deg, #ffb691, #d4845a)" }}>
+                      style={{ background: "linear-gradient(135deg, #4ADE80, #4ADE80)" }}>
                       {lookingUp ? "Searching..." : "Find Results"}
                     </button>
                     <button onClick={() => { setShowResultLookup(false); setLookupEmail(""); setLookupError(""); }}
@@ -325,15 +325,15 @@ export default function EventLandingPage() {
               <div className="flex items-start gap-4">
                 <div className="space-y-3 text-sm text-white/50">
                   <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#d4845a]/15 text-[#d4845a] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
-                    <p>Click &quot;Take the Grip Test&quot; above or share the event code <button onClick={handleCopyCode} className="font-mono font-bold text-[#d4845a] hover:text-[#ffb691] transition-colors">{event.code}</button> with participants</p>
+                    <span className="w-6 h-6 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                    <p>Click &quot;Take the Grip Test&quot; above or share the event code <button onClick={handleCopyCode} className="font-mono font-bold text-[#4ADE80] hover:text-[#4ADE80] transition-colors">{event.code}</button> with participants</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#d4845a]/15 text-[#d4845a] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                    <span className="w-6 h-6 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
                     <p>Fill in your details and complete the grip strength measurement</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#d4845a]/15 text-[#d4845a] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                    <span className="w-6 h-6 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
                     <p>Get your biological age result instantly and check the leaderboard</p>
                   </div>
                 </div>

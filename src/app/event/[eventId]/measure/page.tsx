@@ -98,7 +98,7 @@ export default function MeasurePage() {
 
   if (!reg) {
     return (
-      <div className="min-h-screen relative" style={{ background: "#080e1a" }}>
+      <div className="min-h-screen relative" style={{ background: "#0B0B0F" }}>
         <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 flex items-center justify-center min-h-screen">
           <p className="text-white/40">Loading...</p>
@@ -108,9 +108,9 @@ export default function MeasurePage() {
   }
 
   return (
-    <div className="min-h-screen relative" style={{ background: "#080e1a" }}>
+    <div className="min-h-screen relative" style={{ background: "#0B0B0F" }}>
       <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.05) 0%, transparent 60%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(74,222,128,0.05) 0%, transparent 60%)" }} />
 
       <div className="relative z-10 desktop-center p-4 min-h-screen flex items-center justify-center">
         <div className="page-enter w-full max-w-md md:desktop-card">
@@ -133,7 +133,7 @@ export default function MeasurePage() {
 
           {/* Participant summary */}
           <div className="glass-card rounded-2xl p-4 mb-6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4845a]/20 to-[#b86d42]/20 border border-[#d4845a]/20 flex items-center justify-center text-sm font-bold text-[#d4845a]">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4ADE80]/20 to-[#16A34A]/20 border border-[#4ADE80]/20 flex items-center justify-center text-sm font-bold text-[#4ADE80]">
               {reg.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
@@ -218,7 +218,7 @@ export default function MeasurePage() {
           {previewGrip !== null && (
             <div className="glass-card-strong rounded-2xl p-4 mb-6 text-center">
               <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Average Grip Strength</p>
-              <p className="text-3xl font-black text-[#d4845a]">
+              <p className="text-3xl font-black text-[#4ADE80]">
                 {previewGrip} <span className="text-lg text-white/30 font-normal">kg</span>
               </p>
             </div>

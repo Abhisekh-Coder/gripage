@@ -29,11 +29,11 @@ function pctl(grip: number, age: number, gender: Gender): number {
 }
 
 // Single accent color for this page — use the stage color only for key highlights
-const C = { card: "bg-white/[0.03] border border-white/[0.06]", accent: "#d4845a", dim: "text-white/30", muted: "text-white/45" };
+const C = { card: "bg-white/[0.03] border border-white/[0.06]", accent: "#4ADE80", dim: "text-white/30", muted: "text-white/45" };
 
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#080e1a]"><p className="text-white/30 text-sm">Loading...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0B0B0F]"><p className="text-white/30 text-sm">Loading...</p></div>}>
       <Content />
     </Suspense>
   );
@@ -72,7 +72,7 @@ function Content() {
 
   const pdf = useCallback(() => { if (p) generateResultPDF(p); }, [p]);
 
-  if (!p) return <div className="min-h-screen flex items-center justify-center bg-[#080e1a]"><p className="text-white/30 text-sm">Result not found</p></div>;
+  if (!p) return <div className="min-h-screen flex items-center justify-center bg-[#0B0B0F]"><p className="text-white/30 text-sm">Result not found</p></div>;
 
   const delta = p.age - p.biologicalAge;
   const stage = STAGE_MAP[p.bioStage];
@@ -84,7 +84,7 @@ function Content() {
   const gripPos = Math.min(98, Math.max(2, ((p.gripAvgKg - n.low) / (n.high - n.low)) * 100));
 
   return (
-    <div className="min-h-screen bg-[#080e1a]">
+    <div className="min-h-screen bg-[#0B0B0F]">
       <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
 
         {/* Header */}
@@ -96,7 +96,7 @@ function Content() {
           <div className="flex items-end justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-                Hello, <span className="text-[#d4845a]">{p.name.split(" ")[0]}</span>
+                Hello, <span className="text-[#4ADE80]">{p.name.split(" ")[0]}</span>
               </h1>
               <p className="text-white/30 text-sm mt-0.5">Here are your GripAge results</p>
             </div>
@@ -108,17 +108,17 @@ function Content() {
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className={`rounded-2xl p-5 text-center ${C.card}`}>
             <p className="text-[10px] text-white/25 uppercase tracking-[0.15em] mb-2">Biological Age</p>
-            <p className="text-5xl sm:text-6xl font-black leading-none text-[#d4845a]">{bioAge}</p>
-            <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold text-[#d4845a] bg-[#d4845a]/10">
+            <p className="text-5xl sm:text-6xl font-black leading-none text-[#4ADE80]">{bioAge}</p>
+            <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold text-[#4ADE80] bg-[#4ADE80]/10">
               {emoji} {stage.label}
             </div>
             <p className="text-xs text-white/35 mt-1.5">
               {delta > 0 ? `${delta}y younger` : delta < 0 ? `${Math.abs(delta)}y older` : "On track"} biologically
             </p>
           </div>
-          <div className="rounded-2xl p-5 text-center bg-[#d4845a]/[0.06] border border-[#d4845a]/15">
-            <p className="text-[10px] text-[#d4845a]/40 uppercase tracking-[0.15em] mb-2">Grip Strength</p>
-            <p className="text-5xl sm:text-6xl font-black leading-none text-[#d4845a]">{p.gripAvgKg}</p>
+          <div className="rounded-2xl p-5 text-center bg-[#4ADE80]/[0.06] border border-[#4ADE80]/15">
+            <p className="text-[10px] text-[#4ADE80]/40 uppercase tracking-[0.15em] mb-2">Grip Strength</p>
+            <p className="text-5xl sm:text-6xl font-black leading-none text-[#4ADE80]">{p.gripAvgKg}</p>
             <p className="text-xs text-white/25 mt-1">kg average</p>
             <p className="text-xs mt-1.5" style={{ color: gDiff >= 0 ? "#6ee7a0" : "#f87171" }}>
               {gDiff >= 0 ? "+" : ""}{gDiff.toFixed(1)} kg vs expected
@@ -133,32 +133,32 @@ function Content() {
             <p className="text-[10px] text-white/25 uppercase tracking-[0.15em] mb-3">Age Comparison</p>
             <div className="grid grid-cols-3 text-center mb-4">
               <div><p className="text-2xl font-bold text-white/55">{p.age}</p><p className="text-[10px] text-white/20">Actual</p></div>
-              <div><span className="text-lg font-black px-2 py-0.5 rounded-lg inline-block text-[#d4845a] bg-[#d4845a]/10">{delta > 0 ? `−${delta}` : delta < 0 ? `+${Math.abs(delta)}` : "="}</span><p className="text-[10px] text-white/20 mt-0.5">Delta</p></div>
-              <div><p className="text-2xl font-bold text-[#d4845a]">{p.biologicalAge}</p><p className="text-[10px] text-white/20">Bio Age</p></div>
+              <div><span className="text-lg font-black px-2 py-0.5 rounded-lg inline-block text-[#4ADE80] bg-[#4ADE80]/10">{delta > 0 ? `−${delta}` : delta < 0 ? `+${Math.abs(delta)}` : "="}</span><p className="text-[10px] text-white/20 mt-0.5">Delta</p></div>
+              <div><p className="text-2xl font-bold text-[#4ADE80]">{p.biologicalAge}</p><p className="text-[10px] text-white/20">Bio Age</p></div>
             </div>
             <div className="flex justify-between text-[9px] text-white/15 mb-1"><span>Older</span><span>Your Age</span><span>Younger</span></div>
             <div className="relative h-2 rounded-full bg-white/[0.04]">
-              <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to right, #d4845a30, #d4845a15, #6ee7a030)" }} />
+              <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to right, #4ADE8030, #4ADE8015, #6ee7a030)" }} />
               <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/10" />
-              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5 shadow" style={{ left: `${gaugePos}%`, backgroundColor: "#d4845a" }} />
+              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5 shadow" style={{ left: `${gaugePos}%`, backgroundColor: "#4ADE80" }} />
             </div>
           </div>
 
           {/* Grip Details */}
-          <div className="rounded-2xl p-4 bg-[#d4845a]/[0.04] border border-[#d4845a]/10">
-            <p className="text-[10px] text-[#d4845a]/35 uppercase tracking-[0.15em] mb-3">Grip Details</p>
+          <div className="rounded-2xl p-4 bg-[#4ADE80]/[0.04] border border-[#4ADE80]/10">
+            <p className="text-[10px] text-[#4ADE80]/35 uppercase tracking-[0.15em] mb-3">Grip Details</p>
             <div className="grid grid-cols-3 text-center mb-4">
-              <div><p className="text-2xl font-black text-[#d4845a]">{p.gripAvgKg}</p><p className="text-[10px] text-white/20">Your (kg)</p></div>
+              <div><p className="text-2xl font-black text-[#4ADE80]">{p.gripAvgKg}</p><p className="text-[10px] text-white/20">Your (kg)</p></div>
               <div><span className="text-sm font-bold px-2 py-0.5 rounded-lg inline-block" style={{ color: gDiff >= 0 ? "#6ee7a0" : "#f87171", background: gDiff >= 0 ? "rgba(110,231,160,0.08)" : "rgba(248,113,113,0.08)" }}>{gDiff >= 0 ? "+" : ""}{gDiff.toFixed(1)}</span><p className="text-[10px] text-white/20 mt-0.5">vs expected</p></div>
               <div><p className="text-2xl font-bold text-white/25">{p.expectedGrip}</p><p className="text-[10px] text-white/20">Expected</p></div>
             </div>
             <div className="flex justify-between text-[9px] text-white/15 mb-1"><span>{n.low}kg</span><span>{n.avg} avg</span><span>{n.high}kg</span></div>
             <div className="relative h-2 rounded-full bg-white/[0.04]">
-              <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to right, #d4845a20, #d4845a10, #6ee7a020)" }} />
-              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5 shadow" style={{ left: `${gripPos}%`, backgroundColor: "#d4845a" }} />
+              <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to right, #4ADE8020, #4ADE8010, #6ee7a020)" }} />
+              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5 shadow" style={{ left: `${gripPos}%`, backgroundColor: "#4ADE80" }} />
             </div>
             <div className="flex items-center gap-2 mt-3 p-2 rounded-lg bg-white/[0.03]">
-              <span className="text-[10px] font-black text-[#d4845a] bg-[#d4845a]/10 px-1.5 py-0.5 rounded">P{percentile}</span>
+              <span className="text-[10px] font-black text-[#4ADE80] bg-[#4ADE80]/10 px-1.5 py-0.5 rounded">P{percentile}</span>
               <p className="text-xs text-white/40">Stronger than <span className="text-white/60 font-medium">{percentile}%</span> of {p.gender === "male" ? "men" : "women"} aged {n.group}</p>
             </div>
           </div>
@@ -176,7 +176,7 @@ function Content() {
                   <p className="text-[10px] text-white/25 uppercase tracking-[0.15em] mb-3">Hand Balance</p>
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-center flex-1"><p className="text-xl font-bold text-white/40">{p.gripLeftKg}</p><p className="text-[9px] text-white/15">Left</p></div>
-                    <div className="text-center px-2"><p className="text-base font-black" style={{ color: diff <= 2 ? "#6ee7a0" : "#d4845a" }}>{diff.toFixed(1)}</p><p className="text-[9px] text-white/15">kg diff</p></div>
+                    <div className="text-center px-2"><p className="text-base font-black" style={{ color: diff <= 2 ? "#6ee7a0" : "#4ADE80" }}>{diff.toFixed(1)}</p><p className="text-[9px] text-white/15">kg diff</p></div>
                     <div className="text-center flex-1"><p className="text-xl font-bold text-white/40">{p.gripRightKg}</p><p className="text-[9px] text-white/15">Right</p></div>
                   </div>
                   <p className="text-[10px] text-white/25 text-center bg-white/[0.02] rounded-lg py-1.5">{diff <= 2 ? "Well balanced grip strength" : `${diff.toFixed(1)} kg imbalance`}</p>
@@ -188,11 +188,11 @@ function Content() {
 
         {/* Stage row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-2xl p-4 bg-[#d4845a]/[0.04] border border-[#d4845a]/10">
-            <p className="text-[10px] text-[#d4845a]/35 uppercase tracking-[0.15em] mb-3">Your Stage</p>
+          <div className="rounded-2xl p-4 bg-[#4ADE80]/[0.04] border border-[#4ADE80]/10">
+            <p className="text-[10px] text-[#4ADE80]/35 uppercase tracking-[0.15em] mb-3">Your Stage</p>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-[#d4845a]/10">{emoji}</div>
-              <div><p className="font-bold text-[#d4845a]">{stage.label}</p><p className="text-xs text-white/30">{stage.description}</p></div>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-[#4ADE80]/10">{emoji}</div>
+              <div><p className="font-bold text-[#4ADE80]">{stage.label}</p><p className="text-xs text-white/30">{stage.description}</p></div>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="p-2 rounded-lg bg-white/[0.03]"><p className="text-[9px] text-white/20">Expected</p><p className="text-xs font-medium text-white/50">{p.expectedGrip} kg</p></div>
@@ -227,7 +227,7 @@ function Content() {
         <div className={`space-y-2 ${ready ? "page-enter" : "opacity-0"}`}>
           <button onClick={pdf} className="btn-primary w-full py-3.5 rounded-2xl font-bold text-sm">Download PDF Report</button>
           <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="py-3 rounded-2xl text-sm font-medium border border-[#d4845a]/30 text-[#d4845a] hover:bg-[#d4845a]/5 transition-all">Leaderboard</button>
+            <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="py-3 rounded-2xl text-sm font-medium border border-[#4ADE80]/30 text-[#4ADE80] hover:bg-[#4ADE80]/5 transition-all">Leaderboard</button>
             <button onClick={() => router.push(`/event/${eventId}/register`)} className="py-3 rounded-2xl text-sm font-medium border border-white/[0.08] text-white/50 hover:bg-white/[0.03] transition-all">Next Player →</button>
           </div>
         </div>
@@ -242,7 +242,7 @@ function HandCard({ label, grip, expected }: { label: string; grip: number; expe
     <div className={`rounded-2xl p-4 ${C.card}`}>
       <p className="text-[10px] text-white/25 uppercase tracking-[0.15em] mb-2">{label}</p>
       <div className="flex items-baseline gap-1.5 mb-2">
-        <p className="text-2xl font-black text-[#d4845a]">{grip}</p>
+        <p className="text-2xl font-black text-[#4ADE80]">{grip}</p>
         <span className="text-xs text-white/20">kg</span>
       </div>
       <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden mb-1.5">
