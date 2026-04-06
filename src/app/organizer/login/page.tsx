@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { validateOrganizerCode } from "../actions";
 
 export default function OrganizerLoginPage() {
   const router = useRouter();
@@ -15,7 +14,12 @@ export default function OrganizerLoginPage() {
     setError("");
     setLoading(true);
     try {
-      const valid = await validateOrganizerCode(code.trim());
+      const res = await fetch("/api/organizer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code.trim() }),
+      });
+      const { valid } = await res.json();
       if (valid) {
         sessionStorage.setItem("gripage_organizer", "true");
         router.push("/organizer/dashboard");
