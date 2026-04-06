@@ -43,7 +43,7 @@ function ageGroupLabel(age: number): string {
 
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-[#1a1a3e]/40">Loading...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"><p className="text-white/40">Loading...</p></div>}>
       <ResultsContent />
     </Suspense>
   );
@@ -87,229 +87,271 @@ function ResultsContent() {
 
   const handlePDF = useCallback(() => { if (participant) generateResultPDF(participant); }, [participant]);
 
-  if (!participant) return <div className="min-h-screen flex items-center justify-center"><p className="text-[#1a1a3e]/40">Result not found</p></div>;
+  if (!participant) return <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"><p className="text-white/40">Result not found</p></div>;
 
   const delta = participant.age - participant.biologicalAge;
   const stage = STAGE_MAP[participant.bioStage];
+  const emoji = STAGE_EMOJI[participant.bioStage];
   const norms = getGripNorms(participant.age, participant.gender);
   const percentile = getPercentile(participant.gripAvgKg, participant.age, participant.gender);
   const gripDiff = participant.gripAvgKg - participant.expectedGrip;
   const vitality = Math.round(Math.max(0, Math.min(100, 50 + delta * 3.3)));
-
-  // Arc calculations
-  const gripArcRadius = 50;
-  const gripArcCirc = Math.PI * gripArcRadius;
-  const gripArcPct = Math.min(100, (participant.gripAvgKg / (participant.expectedGrip * 1.5)) * 100);
-
-  const vitalityArcRadius = 46;
-  const vitalityArcCirc = 2 * Math.PI * vitalityArcRadius;
-  const vitalityPct = vitality / 100;
+  const circumference = 2 * Math.PI * 42;
 
   return (
-    <div className="min-h-screen relative">
-      <div className="ambient-bg" />
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-6 space-y-5">
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
 
-        {/* ═══ GREETING + BIO AGE CARD ═══ */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <button onClick={() => router.push(`/event/${eventId}`)} className="text-[#6b5ce7]/50 hover:text-[#6b5ce7] text-sm mb-3 block transition-colors">← Back to Event</button>
-            <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-              Hello,<br />
-              <span className="text-[#1a1a3e] font-black">{participant.name.split(" ")[0].toUpperCase()}</span>
-            </h1>
-            <p className="text-[#6b6b8a] mt-2">#{rank} of {totalP} participants</p>
-          </div>
-
-          {/* Bio Age floating card */}
-          <div className="result-card flex items-center gap-4 min-w-[200px]">
-            <div className="w-12 h-12 rounded-xl bg-[#f07068]/15 flex items-center justify-center flex-shrink-0">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f07068" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7"/></svg>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider">Biological Age</p>
-              <p className="text-4xl font-black" style={{ color: stage.color }}>{animatedAge}</p>
-              <p className="text-xs font-medium" style={{ color: stage.color }}>{stage.label}</p>
-            </div>
-          </div>
+        {/* ═══ GREETING HEADER ═══ */}
+        <div>
+          <button onClick={() => router.push(`/event/${eventId}`)} className="text-white/30 hover:text-white/60 text-sm mb-4 block transition-colors">← Back to Event</button>
+          <h1 className="text-3xl sm:text-4xl font-bold">
+            Hello, <span style={{ color: stage.color }}>{participant.name.split(" ")[0]}</span>
+          </h1>
+          <p className="text-white/40 mt-1">Here are your GripAge results · <span className="text-white/25">#{rank} of {totalP}</span></p>
         </div>
 
-        {/* ═══ THREE STAT CARDS ═══ */}
+        {/* ═══ HERO STAT CARDS (3 columns) ═══ */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-          {/* Grip Strength — Half arc */}
-          <div className="result-card text-center">
-            <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-4">Grip Strength</p>
-            <div className="relative inline-block mb-2">
-              <svg width="140" height="80" viewBox="0 0 140 80">
-                <path d="M 15 75 A 55 55 0 0 1 125 75" fill="none" stroke="#e8e0f4" strokeWidth="8" strokeLinecap="round" />
-                <path d="M 15 75 A 55 55 0 0 1 125 75" fill="none" stroke="#6b5ce7" strokeWidth="8" strokeLinecap="round"
-                  strokeDasharray={`${gripArcPct * 1.73} 173`} />
-              </svg>
-              <div className="absolute inset-0 flex items-end justify-center pb-1">
-                <span className="text-3xl font-black text-[#6b5ce7]">{participant.gripAvgKg}<span className="text-sm font-normal text-[#6b6b8a] ml-1">kg</span></span>
+          {/* Bio Age */}
+          <div className="rounded-2xl p-6 text-center relative overflow-hidden bg-white/[0.03] border border-white/[0.06]">
+            <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 50% 0%, ${stage.color}12, transparent 70%)` }} />
+            <div className="relative">
+              <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3">Biological Age</p>
+              <p className="text-7xl font-black leading-none" style={{ color: stage.color }}>{animatedAge}</p>
+              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ color: stage.color, background: `${stage.color}18` }}>
+                {emoji} {stage.label}
               </div>
             </div>
-            <p className="text-sm text-[#6b6b8a]">
-              <span style={{ color: gripDiff >= 0 ? "#22c55e" : "#f07068" }}>{gripDiff >= 0 ? "+" : ""}{gripDiff.toFixed(1)} kg</span> vs expected
+          </div>
+
+          {/* Grip Strength */}
+          <div className="rounded-2xl p-6 text-center bg-[#d4845a]/8 border border-[#d4845a]/15">
+            <p className="text-[10px] text-[#d4845a]/60 uppercase tracking-wider mb-3">Grip Strength</p>
+            <p className="text-6xl font-black text-[#d4845a]">{participant.gripAvgKg}</p>
+            <p className="text-sm text-white/30 mt-1">kg</p>
+            <p className="text-sm mt-3 font-medium" style={{ color: gripDiff >= 0 ? "#4ade80" : "#f87171" }}>
+              {gripDiff >= 0 ? "+" : ""}{gripDiff.toFixed(1)} kg vs expected
             </p>
           </div>
 
-          {/* Vitality Score — Circle */}
-          <div className="result-card text-center">
-            <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-4">Vitality Score</p>
-            <div className="relative inline-block mb-2">
+          {/* Vitality Score — Circular */}
+          <div className="rounded-2xl p-6 text-center bg-white/[0.03] border border-white/[0.06]">
+            <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3">Vitality Score</p>
+            <div className="relative inline-block">
               <svg width="110" height="110" viewBox="0 0 110 110">
-                <circle cx="55" cy="55" r={vitalityArcRadius} fill="none" stroke="#f0e8f4" strokeWidth="8" />
-                <circle cx="55" cy="55" r={vitalityArcRadius} fill="none" stroke="#f07068" strokeWidth="8"
-                  strokeDasharray={`${vitalityPct * vitalityArcCirc} ${vitalityArcCirc}`}
-                  strokeLinecap="round" transform="rotate(-90 55 55)" className="meter-animate" />
+                <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="7" />
+                <circle cx="55" cy="55" r="42" fill="none" stroke={stage.color} strokeWidth="7"
+                  strokeDasharray={`${(vitality / 100) * circumference} ${circumference}`}
+                  strokeLinecap="round" transform="rotate(-90 55 55)"
+                  className="meter-animate" />
               </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-4xl font-black text-[#f07068]">{vitality}</span>
+              <span className="absolute inset-0 flex items-center justify-center text-3xl font-black" style={{ color: stage.color }}>
+                {vitality}
+              </span>
             </div>
-            <p className="text-sm text-[#6b6b8a]">
+            <p className="text-sm text-white/40 mt-2">
               {delta > 0 ? `${delta}y younger` : delta < 0 ? `${Math.abs(delta)}y older` : "On track"}
             </p>
           </div>
-
-          {/* Age Comparison */}
-          <div className="result-card text-center">
-            <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-4">Age Comparison</p>
-            {/* Delta circle */}
-            <div className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-xl font-black text-white"
-              style={{ backgroundColor: stage.color }}>
-              {delta > 0 ? `+${delta}` : delta}
-            </div>
-            {/* Actual vs Bio */}
-            <div className="flex items-center justify-center gap-6 mb-3">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-[#1a1a3e]">{participant.age}</p>
-                <p className="text-xs text-[#6b6b8a]">Actual</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold" style={{ color: stage.color }}>{participant.biologicalAge}</p>
-                <p className="text-xs text-[#6b6b8a]">Bio age</p>
-              </div>
-            </div>
-            {/* Mini bar chart */}
-            <div className="flex items-end justify-center gap-1 h-8">
-              {Array.from({ length: 7 }, (_, i) => {
-                const h = 8 + i * 4;
-                const isLast = i === 6;
-                return <div key={i} className="w-3 rounded-sm" style={{ height: `${h}px`, backgroundColor: isLast ? stage.color : "#d8d0e8" }} />;
-              })}
-              <span className="text-[10px] text-[#6b6b8a] ml-1 self-end">{participant.biologicalAge}</span>
-            </div>
-          </div>
         </div>
 
-        {/* ═══ GRIP DETAILS + PERCENTILE ═══ */}
-        <div className="result-card">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-            <div className="flex-1">
-              <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-4">Grip Details</p>
-              {/* Your grip bar */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-sm text-[#6b6b8a] w-20 text-right">Your (kg)</span>
-                <div className="flex-1 relative h-3 rounded-full bg-[#e8e0f4]">
-                  <div className="h-full rounded-full" style={{
-                    width: `${Math.min(100, (participant.gripAvgKg / (norms.high * 1.2)) * 100)}%`,
-                    background: gripDiff >= 0 ? "linear-gradient(90deg, #6b5ce7, #8b7cf0)" : "linear-gradient(90deg, #f07068, #f09088)"
-                  }} />
-                  <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-2 shadow-sm" style={{
-                    left: `${Math.min(96, (participant.gripAvgKg / (norms.high * 1.2)) * 100)}%`,
-                    borderColor: gripDiff >= 0 ? "#6b5ce7" : "#f07068"
-                  }} />
-                </div>
-              </div>
-              {/* Expected bar */}
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-[#6b6b8a] w-20 text-right">Expected</span>
-                <div className="flex-1 relative h-3 rounded-full bg-[#e8e0f4]">
-                  <div className="h-full rounded-full bg-[#a8b8d8]" style={{
-                    width: `${Math.min(100, (participant.expectedGrip / (norms.high * 1.2)) * 100)}%`,
-                  }} />
-                  <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-2 border-[#7888a8] shadow-sm" style={{
-                    left: `${Math.min(96, (participant.expectedGrip / (norms.high * 1.2)) * 100)}%`,
-                  }} />
-                </div>
-              </div>
-            </div>
+        {/* ═══ DETAIL GRID ═══ */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-            {/* Percentile badge */}
-            <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#1a1a3e] text-white min-w-fit">
-              <span className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black" style={{ backgroundColor: stage.color }}>P{percentile}</span>
-              <p className="text-sm">Stronger than <span className="font-bold" style={{ color: stage.color }}>{percentile}%</span> of {participant.gender === "male" ? "men" : "women"} aged {ageGroupLabel(participant.age)}</p>
+          {/* Age Comparison */}
+          <Card title="Age Comparison">
+            <div className="grid grid-cols-3 gap-4 text-center mb-5">
+              <div>
+                <p className="text-3xl font-bold text-white/70">{participant.age}</p>
+                <p className="text-xs text-white/25 mt-1">Actual</p>
+              </div>
+              <div>
+                <p className="text-2xl font-black px-3 py-1 rounded-xl inline-block" style={{ color: stage.color, background: `${stage.color}15` }}>
+                  {delta > 0 ? `−${delta}` : delta < 0 ? `+${Math.abs(delta)}` : "="}
+                </p>
+                <p className="text-xs text-white/25 mt-1">Delta</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold" style={{ color: stage.color }}>{participant.biologicalAge}</p>
+                <p className="text-xs text-white/25 mt-1">Bio Age</p>
+              </div>
             </div>
-          </div>
+            {/* Gauge */}
+            <div className="mb-2">
+              <div className="flex justify-between text-[10px] text-white/20 mb-1"><span>Older</span><span>Your Age</span><span>Younger</span></div>
+              <div className="relative h-3 rounded-full bg-white/5">
+                <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to right, #ef444440, #f59e0b40, #4ade8040)" }} />
+                <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/20" />
+                {(() => {
+                  const pos = Math.min(100, Math.max(0, ((participant.age + 15 - participant.biologicalAge) / 30) * 100));
+                  return <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white -ml-2" style={{ left: `${pos}%`, backgroundColor: stage.color }} />;
+                })()}
+              </div>
+            </div>
+            {/* Vitality bar */}
+            <div className="mt-5 pt-4 border-t border-white/5">
+              <div className="flex justify-between text-xs text-white/30 mb-1.5">
+                <span>Vitality Score</span>
+                <span className="font-medium" style={{ color: stage.color }}>{vitality}/100</span>
+              </div>
+              <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.max(5, vitality)}%`, background: `linear-gradient(90deg, ${stage.color}80, ${stage.color})` }} />
+              </div>
+            </div>
+          </Card>
+
+          {/* Grip Details */}
+          <Card title="Grip Details" variant="accent">
+            <div className="grid grid-cols-3 gap-3 text-center mb-4">
+              <div>
+                <p className="text-3xl font-black" style={{ color: stage.color }}>{participant.gripAvgKg}</p>
+                <p className="text-xs text-white/25 mt-1">Your (kg)</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium px-2 py-1 rounded-full inline-block" style={{ color: gripDiff >= 0 ? "#4ade80" : "#f87171", background: gripDiff >= 0 ? "rgba(74,222,128,0.1)" : "rgba(248,113,113,0.1)" }}>
+                  {gripDiff >= 0 ? "+" : ""}{gripDiff.toFixed(1)}
+                </p>
+                <p className="text-xs text-white/25 mt-1">vs expected</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-white/35">{participant.expectedGrip}</p>
+                <p className="text-xs text-white/25 mt-1">Expected</p>
+              </div>
+            </div>
+            {/* Range */}
+            <div className="mb-4">
+              <div className="flex justify-between text-[10px] text-white/20 mb-1"><span>{norms.low}kg</span><span>{norms.avg} avg</span><span>{norms.high}kg</span></div>
+              <div className="relative h-3 rounded-full bg-white/5">
+                <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to right, #ef444430, #f59e0b30, #4ade8030)" }} />
+                <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-white -ml-[7px]" style={{
+                  left: `${Math.min(98, Math.max(2, ((participant.gripAvgKg - norms.low) / (norms.high - norms.low)) * 100))}%`,
+                  backgroundColor: stage.color,
+                }} />
+              </div>
+            </div>
+            {/* Percentile */}
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03]">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black" style={{ background: `${stage.color}15`, color: stage.color }}>P{percentile}</div>
+              <p className="text-sm text-white/60">Stronger than <span className="font-semibold" style={{ color: stage.color }}>{percentile}%</span> of {participant.gender === "male" ? "men" : "women"} aged {ageGroupLabel(participant.age)}</p>
+            </div>
+          </Card>
         </div>
 
         {/* ═══ HAND DETAILS ═══ */}
         {(participant.gripLeftKg !== null || participant.gripRightKg !== null) && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {participant.gripLeftKg !== null && (
-              <div className="result-card">
-                <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-3">Left Hand</p>
-                <p className="text-4xl font-black text-[#6b5ce7]">{participant.gripLeftKg}<span className="text-sm font-normal text-[#6b6b8a] ml-1">kg</span></p>
-                <div className="mt-3 relative h-2 rounded-full bg-[#e8e0f4]">
-                  <div className="h-full rounded-full bg-[#6b5ce7]/40" style={{ width: `${Math.min(100, (participant.gripLeftKg / (norms.high * 1.2)) * 100)}%` }} />
-                  <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white border-2 border-[#6b5ce7] shadow-sm" style={{
-                    left: `${Math.min(96, (participant.gripLeftKg / (norms.high * 1.2)) * 100)}%`
-                  }} />
+              <Card title="Left Hand">
+                <div className="flex items-baseline gap-2 mb-3">
+                  <p className="text-3xl font-black" style={{ color: stage.color }}>{participant.gripLeftKg}</p>
+                  <span className="text-sm text-white/25">kg</span>
                 </div>
-              </div>
+                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${Math.min(100, (participant.gripLeftKg / (participant.expectedGrip * 1.3)) * 100)}%`, backgroundColor: participant.gripLeftKg >= participant.expectedGrip ? "#4ade80" : "#f87171" }} />
+                </div>
+                <p className="text-xs text-white/25 mt-2">{participant.gripLeftKg >= participant.expectedGrip ? "Above" : "Below"} expected ({participant.expectedGrip} kg)</p>
+              </Card>
             )}
             {participant.gripRightKg !== null && (
-              <div className="result-card">
-                <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-3">Right Hand</p>
-                <p className="text-4xl font-black text-[#6b5ce7]">{participant.gripRightKg}<span className="text-sm font-normal text-[#6b6b8a] ml-1">kg</span></p>
-                <div className="mt-3 relative h-2 rounded-full bg-[#e8e0f4]">
-                  <div className="h-full rounded-full bg-[#6b5ce7]/40" style={{ width: `${Math.min(100, (participant.gripRightKg / (norms.high * 1.2)) * 100)}%` }} />
-                  <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white border-2 border-[#6b5ce7] shadow-sm" style={{
-                    left: `${Math.min(96, (participant.gripRightKg / (norms.high * 1.2)) * 100)}%`
-                  }} />
+              <Card title="Right Hand">
+                <div className="flex items-baseline gap-2 mb-3">
+                  <p className="text-3xl font-black" style={{ color: stage.color }}>{participant.gripRightKg}</p>
+                  <span className="text-sm text-white/25">kg</span>
                 </div>
-              </div>
+                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${Math.min(100, (participant.gripRightKg / (participant.expectedGrip * 1.3)) * 100)}%`, backgroundColor: participant.gripRightKg >= participant.expectedGrip ? "#4ade80" : "#f87171" }} />
+                </div>
+                <p className="text-xs text-white/25 mt-2">{participant.gripRightKg >= participant.expectedGrip ? "Above" : "Below"} expected ({participant.expectedGrip} kg)</p>
+              </Card>
             )}
-            {participant.gripLeftKg !== null && participant.gripRightKg !== null && (() => {
-              const diff = Math.abs(participant.gripLeftKg - participant.gripRightKg);
-              const ok = diff <= 2;
-              return (
-                <div className="result-card">
-                  <p className="text-xs font-bold text-[#6b6b8a] uppercase tracking-wider mb-3">Hand Balance</p>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="text-center flex-1">
-                      <p className="text-2xl font-black text-[#6b5ce7]">{participant.gripLeftKg}<span className="text-xs font-normal text-[#6b6b8a] ml-0.5">kg</span></p>
-                      <p className="text-xs text-[#6b6b8a]">Left</p>
+            {participant.gripLeftKg !== null && participant.gripRightKg !== null && (
+              <Card title="Hand Balance">
+                {(() => {
+                  const diff = Math.abs(participant.gripLeftKg - participant.gripRightKg);
+                  const ok = diff <= 2;
+                  return (<>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-center flex-1"><p className="text-2xl font-bold text-white/50">{participant.gripLeftKg}</p><p className="text-[10px] text-white/20">Left</p></div>
+                      <div className="text-center px-3"><p className="text-lg font-bold" style={{ color: ok ? "#4ade80" : "#f59e0b" }}>{diff.toFixed(1)} kg</p><p className="text-[10px] text-white/20">diff</p></div>
+                      <div className="text-center flex-1"><p className="text-2xl font-bold text-white/50">{participant.gripRightKg}</p><p className="text-[10px] text-white/20">Right</p></div>
                     </div>
-                    <div className="text-center px-3">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${ok ? "bg-[#22c55e]/15 text-[#22c55e]" : "bg-[#f59e0b]/15 text-[#f59e0b]"}`}>{diff.toFixed(1)} kg diff</span>
-                    </div>
-                    <div className="text-center flex-1">
-                      <p className="text-2xl font-black text-[#6b5ce7]">{participant.gripRightKg}<span className="text-xs font-normal text-[#6b6b8a] ml-0.5">kg</span></p>
-                      <p className="text-xs text-[#6b6b8a]">Right</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#6b6b8a] text-center">{ok ? "Well balanced" : `${diff.toFixed(1)} kg imbalance`}</p>
-                </div>
-              );
-            })()}
+                    <p className="text-xs text-white/30">{ok ? "Well balanced" : `${diff.toFixed(1)} kg imbalance`}</p>
+                  </>);
+                })()}
+              </Card>
+            )}
           </div>
         )}
 
+        {/* ═══ STAGE ROW ═══ */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card title="Your Stage" variant="accent">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ background: `${stage.color}15` }}>{emoji}</div>
+              <div>
+                <p className="font-bold text-lg" style={{ color: stage.color }}>{stage.label}</p>
+                <p className="text-white/35 text-sm">{stage.description}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="p-3 rounded-xl bg-white/[0.03]"><p className="text-[10px] text-white/25 mb-0.5">Expected</p><p className="text-sm font-medium text-white/60">{participant.expectedGrip} kg</p></div>
+              <div className="p-3 rounded-xl bg-white/[0.03]"><p className="text-[10px] text-white/25 mb-0.5">Performance</p><p className="text-sm font-medium" style={{ color: gripDiff >= 0 ? "#4ade80" : "#f87171" }}>{gripDiff >= 0 ? "+" : ""}{gripDiff.toFixed(1)} kg</p></div>
+              <div className="p-3 rounded-xl bg-white/[0.03]"><p className="text-[10px] text-white/25 mb-0.5">Standing</p><p className="text-sm font-medium text-white/60">Top {100 - percentile}%</p></div>
+            </div>
+          </Card>
+
+          <Card title="Stage Reference">
+            <div className="space-y-1.5">
+              {([
+                { range: "> +10", label: "Elite Vitality" as const },
+                { range: "+6 to +10", label: "Peak Fitness" as const },
+                { range: "+3 to +5", label: "Above Average" as const },
+                { range: "-2 to +2", label: "On Track" as const },
+                { range: "-5 to -3", label: "Below Average" as const },
+                { range: "-10 to -6", label: "Needs Attention" as const },
+                { range: "< -10", label: "Critical Gap" as const },
+              ]).map((r) => {
+                const info = STAGE_MAP[r.label];
+                const cur = r.label === participant.bioStage;
+                return (
+                  <div key={r.label} className={`flex items-center gap-3 py-1.5 px-3 rounded-lg text-sm ${cur ? "bg-white/5" : ""}`}>
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: info.color }} />
+                    <span className="font-mono text-[11px] text-white/25 w-16 flex-shrink-0">{r.range}</span>
+                    <span className={`flex-1 ${cur ? "font-semibold" : "text-white/40"}`} style={cur ? { color: info.color } : {}}>{r.label}{cur ? " ← You" : ""}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-white/15 mt-3">Delta = Chronological − Biological Age</p>
+          </Card>
+        </div>
+
         {/* ═══ ACTIONS ═══ */}
-        <div className={`flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto pb-8 ${revealed ? "page-enter" : "opacity-0"}`}>
-          <button onClick={handlePDF} className="btn-primary flex-1 py-4 px-6 rounded-2xl font-semibold text-lg transition-all active:scale-[0.98]">
+        <div className={`space-y-3 max-w-lg mx-auto pb-8 ${revealed ? "page-enter" : "opacity-0"}`}>
+          <button onClick={handlePDF} className="w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all active:scale-[0.98]"
+            style={{ background: `linear-gradient(135deg, ${stage.color}, ${stage.color}cc)`, color: "#000", boxShadow: `0 8px 32px ${stage.color}30` }}>
             Download PDF Report
           </button>
-          <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-4 px-6 bg-white/60 border border-white/80 rounded-2xl font-semibold text-lg text-[#1a1a3e]/70 hover:bg-white/80 transition-all active:scale-[0.98] shadow-sm">
+          <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="w-full py-4 px-6 bg-white/5 border border-white/[0.08] rounded-2xl font-semibold text-lg text-white/70 hover:bg-white/8 transition-all active:scale-[0.98]">
             View Leaderboard
           </button>
-          <button onClick={() => router.push(`/event/${eventId}/register`)} className="py-4 px-6 bg-white/40 border border-white/60 rounded-2xl font-semibold text-[#6b6b8a] hover:text-[#1a1a3e] transition-all active:scale-[0.98]">
-            Next Player →
-          </button>
+          <div className="flex gap-3">
+            <button onClick={() => router.push(`/event/${eventId}/register`)} className="flex-1 py-4 px-6 bg-white/5 border border-white/[0.08] rounded-2xl font-semibold text-white/50 hover:text-white/70 transition-all active:scale-[0.98]">Next Player →</button>
+            <button onClick={() => router.push(`/event/${eventId}`)} className="py-4 px-6 rounded-2xl text-white/25 hover:text-white/50 transition-colors text-sm">Event Home</button>
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Card({ title, children, variant = "dark" }: { title: string; children: React.ReactNode; variant?: "dark" | "accent" }) {
+  return (
+    <div className={`rounded-2xl p-5 ${variant === "dark" ? "bg-white/[0.03] border border-white/[0.06]" : "bg-[#d4845a]/8 border border-[#d4845a]/15"}`}>
+      <p className={`text-[10px] uppercase tracking-wider font-medium mb-4 ${variant === "dark" ? "text-white/25" : "text-[#d4845a]/60"}`}>{title}</p>
+      {children}
     </div>
   );
 }

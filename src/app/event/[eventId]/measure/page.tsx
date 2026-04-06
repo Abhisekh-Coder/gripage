@@ -101,7 +101,7 @@ export default function MeasurePage() {
       <div className="min-h-screen relative">
         <div className="ambient-bg" />
         <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <p className="text-[#6b6b8a]">Loading...</p>
+          <p className="text-white/40">Loading...</p>
         </div>
       </div>
     );
@@ -116,25 +116,25 @@ export default function MeasurePage() {
 
           {/* Header */}
           <div className="mb-8">
-            <button onClick={() => router.back()} className="text-[#6b5ce7]/50 hover:text-[#6b5ce7] text-sm mb-4 inline-flex items-center gap-1 transition-colors">← Back</button>
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#1a1a3e]">Grip Strength Assessment</h1>
+            <button onClick={() => router.back()} className="text-white/30 hover:text-white/60 text-sm mb-4 inline-flex items-center gap-1 transition-colors">← Back</button>
+            <h1 className="text-3xl sm:text-4xl font-bold">Grip Strength Assessment</h1>
             <div className="flex items-center gap-3 mt-3">
               <div className="flex items-center gap-2">
                 <div className="step-dot step-dot-done" />
                 <div className="step-dot step-dot-active" />
               </div>
-              <p className="text-[#6b6b8a] text-sm">Step 2 of 2</p>
+              <p className="text-white/30 text-sm">Step 2 of 2</p>
             </div>
           </div>
 
           {/* Participant summary */}
           <div className="glass-card rounded-2xl p-4 mb-6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#6b5ce7]/10 border border-[#6b5ce7]/20 flex items-center justify-center text-sm font-bold text-[#6b5ce7]">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4845a]/20 to-[#b86d42]/20 border border-[#d4845a]/20 flex items-center justify-center text-sm font-bold text-[#d4845a]">
               {reg.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium truncate text-[#1a1a3e]">{reg.name}</p>
-              <p className="text-[#6b6b8a] text-xs">{reg.gender} · {reg.age}y · {reg.heightCm}cm · {reg.weightKg}kg</p>
+              <p className="font-medium truncate">{reg.name}</p>
+              <p className="text-white/30 text-xs">{reg.gender} · {reg.age}y · {reg.heightCm}cm · {reg.weightKg}kg</p>
             </div>
           </div>
 
@@ -143,8 +143,8 @@ export default function MeasurePage() {
             <div className="flex items-start gap-3">
               <span className="text-2xl">🤜</span>
               <div>
-                <p className="font-medium text-sm text-[#1a1a3e]">Squeeze the dynamometer</p>
-                <p className="text-[#6b6b8a] text-xs mt-1">
+                <p className="font-medium text-sm">Squeeze the dynamometer</p>
+                <p className="text-white/30 text-xs mt-1">
                   Grip as hard as you can and enter the reading from the device.
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function MeasurePage() {
 
           {/* Hand mode selector */}
           <div className="mb-5">
-            <label className="block text-sm text-[#1a1a3e]/60 mb-2 font-medium">Which hand(s)?</label>
+            <label className="block text-sm text-white/60 mb-2 font-medium">Which hand(s)?</label>
             <div className="grid grid-cols-3 gap-2">
               {(["both", "left", "right"] as HandMode[]).map((m) => (
                 <button
@@ -173,7 +173,7 @@ export default function MeasurePage() {
           <div className={`${handMode === "both" ? "form-grid-2" : ""} mb-6`}>
             {handMode !== "right" && (
               <div className="glass-card rounded-2xl p-5 text-center mb-3 sm:mb-0">
-                <label className="block text-sm text-[#1a1a3e]/60 font-medium mb-3">
+                <label className="block text-sm text-white/60 font-medium mb-3">
                   🤛 Left Hand
                 </label>
                 <input
@@ -186,13 +186,13 @@ export default function MeasurePage() {
                   max={100}
                   className="glass-input grip-input w-full py-5 px-4 rounded-2xl text-4xl text-center font-black"
                 />
-                <p className="text-[#6b6b8a] text-xs mt-2">kilograms</p>
+                <p className="text-white/20 text-xs mt-2">kilograms</p>
               </div>
             )}
 
             {handMode !== "left" && (
               <div className="glass-card rounded-2xl p-5 text-center">
-                <label className="block text-sm text-[#1a1a3e]/60 font-medium mb-3">
+                <label className="block text-sm text-white/60 font-medium mb-3">
                   🤜 Right Hand
                 </label>
                 <input
@@ -205,7 +205,7 @@ export default function MeasurePage() {
                   max={100}
                   className="glass-input grip-input w-full py-5 px-4 rounded-2xl text-4xl text-center font-black"
                 />
-                <p className="text-[#6b6b8a] text-xs mt-2">kilograms</p>
+                <p className="text-white/20 text-xs mt-2">kilograms</p>
               </div>
             )}
           </div>
@@ -213,9 +213,9 @@ export default function MeasurePage() {
           {/* Live preview */}
           {previewGrip !== null && (
             <div className="glass-card-strong rounded-2xl p-4 mb-6 text-center">
-              <p className="text-xs text-[#6b6b8a] uppercase tracking-wider mb-1">Average Grip Strength</p>
-              <p className="text-3xl font-black text-[#6b5ce7]">
-                {previewGrip} <span className="text-lg text-[#6b6b8a] font-normal">kg</span>
+              <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Average Grip Strength</p>
+              <p className="text-3xl font-black text-[#d4845a]">
+                {previewGrip} <span className="text-lg text-white/30 font-normal">kg</span>
               </p>
             </div>
           )}

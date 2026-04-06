@@ -49,13 +49,13 @@ export default function HomePage() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
-              <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
-              <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
-              <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
-              <path d="M14 10c2-.5 4-1 6-1s4 .5 6 1" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M14 10c2-.5 4-1 6-1s4 .5 6 1" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
             <span className="text-lg font-black tracking-tight">
-              Grip<span className="text-[#6b5ce7]">Age</span>
+              Grip<span className="text-[#d4845a]">Age</span>
             </span>
           </div>
 
@@ -67,7 +67,7 @@ export default function HomePage() {
           {/* CTA */}
           <a
             href="/organizer/login"
-            className="text-sm font-semibold text-white bg-[#6b5ce7] hover:bg-[#5a4bd6] transition-colors px-5 py-2 rounded-full"
+            className="text-sm font-semibold text-white bg-[#d4845a] hover:bg-[#c27548] transition-colors px-5 py-2 rounded-full"
           >
             Organizer
           </a>
@@ -76,7 +76,7 @@ export default function HomePage() {
         {/* Mobile menu */}
         {mobileMenu && (
           <div className="sm:hidden bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 mx-4 rounded-2xl p-4 space-y-1 mt-2">
-            <a href="/organizer/login" className="block px-4 py-3 text-[#6b5ce7] rounded-xl">Organizer Login</a>
+            <a href="/organizer/login" className="block px-4 py-3 text-[#d4845a] rounded-xl">Organizer Login</a>
           </div>
         )}
       </nav>
@@ -93,7 +93,7 @@ export default function HomePage() {
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6 max-w-3xl">
           Grip strength
           <br />
-          reveals <em className="not-italic font-black italic text-[#6b5ce7]" style={{ fontFamily: "Georgia, serif" }}>age</em>
+          reveals <em className="not-italic font-black italic text-[#d4845a]" style={{ fontFamily: "Georgia, serif" }}>age</em>
         </h1>
 
         {/* Subtext */}
@@ -113,12 +113,12 @@ export default function HomePage() {
             }}
             onKeyDown={(e) => e.key === "Enter" && handleJoin()}
             maxLength={6}
-            className="flex-1 py-4 px-5 bg-white/8 backdrop-blur-sm border border-white/15 rounded-full text-white text-center text-lg tracking-[0.3em] uppercase placeholder:tracking-normal placeholder:text-white/25 focus:outline-none focus:border-[#6b5ce7]/60 transition-all"
+            className="flex-1 py-4 px-5 bg-white/8 backdrop-blur-sm border border-white/15 rounded-full text-white text-center text-lg tracking-[0.3em] uppercase placeholder:tracking-normal placeholder:text-white/25 focus:outline-none focus:border-[#d4845a]/60 transition-all"
           />
           <button
             onClick={handleJoin}
             disabled={!joinCode.trim() || loading}
-            className="py-4 px-8 bg-[#6b5ce7] hover:bg-[#5a4bd6] disabled:bg-white/10 disabled:text-white/20 text-white font-semibold rounded-full transition-all text-lg whitespace-nowrap"
+            className="py-4 px-8 bg-[#d4845a] hover:bg-[#c27548] disabled:bg-white/10 disabled:text-white/20 text-white font-semibold rounded-full transition-all text-lg whitespace-nowrap"
           >
             {loading ? "..." : "Join Event →"}
           </button>
