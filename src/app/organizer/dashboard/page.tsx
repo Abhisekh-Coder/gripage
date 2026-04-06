@@ -59,6 +59,9 @@ export default function OrganizerDashboard() {
   const [newName, setNewName] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newPin, setNewPin] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const [newLocation, setNewLocation] = useState("");
+  const [newDuration, setNewDuration] = useState("");
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
@@ -87,8 +90,8 @@ export default function OrganizerDashboard() {
     if (!newName.trim() || !newDate || !newPin) return;
     setCreating(true);
     try {
-      await createEvent(newName.trim(), newDate, newPin);
-      setNewName(""); setNewDate(""); setNewPin("");
+      await createEvent(newName.trim(), newDate, newPin, newDesc.trim(), newLocation.trim(), newDuration.trim());
+      setNewName(""); setNewDate(""); setNewPin(""); setNewDesc(""); setNewLocation(""); setNewDuration("");
       setShowCreateModal(false);
       await loadEvents();
     } finally { setCreating(false); }
@@ -217,7 +220,11 @@ export default function OrganizerDashboard() {
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold truncate">{evt.name}</h4>
-                        <p className="text-sm text-white/30">{counts[evt.id] || 0} participants · Code: <span className="font-mono text-white/50">{evt.code}</span></p>
+                        <p className="text-sm text-white/30">
+                          {counts[evt.id] || 0} participants · Code: <span className="font-mono text-white/50">{evt.code}</span>
+                          {evt.location && <> · {evt.location}</>}
+                          {evt.duration && <> · {evt.duration}</>}
+                        </p>
                       </div>
 
                       {/* Actions */}
@@ -335,24 +342,35 @@ export default function OrganizerDashboard() {
             <div className="space-y-4">
               <div>
                 <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Event Name</label>
-                <input
-                  type="text" placeholder="e.g. Fitness Expo 2026" value={newName} onChange={(e) => setNewName(e.target.value)}
-                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4845a]/60 transition-all"
-                />
+                <input type="text" placeholder="e.g. Fitness Expo 2026" value={newName} onChange={(e) => setNewName(e.target.value)}
+                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4845a]/60 transition-all" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Date</label>
+                  <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
+                    className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#d4845a]/60 transition-all" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Duration</label>
+                  <input type="text" placeholder="e.g. 6–8 PM" value={newDuration} onChange={(e) => setNewDuration(e.target.value)}
+                    className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4845a]/60 transition-all" />
+                </div>
               </div>
               <div>
-                <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Date</label>
-                <input
-                  type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
-                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#d4845a]/60 transition-all"
-                />
+                <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Location</label>
+                <input type="text" placeholder="e.g. HSR Layout, Bengaluru" value={newLocation} onChange={(e) => setNewLocation(e.target.value)}
+                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4845a]/60 transition-all" />
+              </div>
+              <div>
+                <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Description</label>
+                <textarea placeholder="About this event..." value={newDesc} onChange={(e) => setNewDesc(e.target.value)} rows={3}
+                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4845a]/60 transition-all resize-none" />
               </div>
               <div>
                 <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5 block">Admin PIN (4 digits)</label>
-                <input
-                  type="text" placeholder="1234" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))} maxLength={4}
-                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-lg tracking-[0.3em] placeholder:text-white/20 placeholder:tracking-normal focus:outline-none focus:border-[#d4845a]/60 transition-all"
-                />
+                <input type="text" placeholder="1234" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))} maxLength={4}
+                  className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-lg tracking-[0.3em] placeholder:text-white/20 placeholder:tracking-normal focus:outline-none focus:border-[#d4845a]/60 transition-all" />
               </div>
             </div>
 

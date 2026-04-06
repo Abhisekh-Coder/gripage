@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS events (
   code TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
   date DATE NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  location TEXT NOT NULL DEFAULT '',
+  duration TEXT NOT NULL DEFAULT '',
   admin_pin TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'live' CHECK (status IN ('live', 'ended')),
   created_at TIMESTAMPTZ DEFAULT now()

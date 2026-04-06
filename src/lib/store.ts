@@ -60,12 +60,12 @@ export async function getEventByCode(code: string): Promise<GripEvent | null> {
   return data ? mapEvent(data) : null;
 }
 
-export async function createEvent(name: string, date: string, adminPin: string): Promise<GripEvent> {
+export async function createEvent(name: string, date: string, adminPin: string, description = "", location = "", duration = ""): Promise<GripEvent> {
   const supabase = createClient();
   const code = generateCode();
   const { data, error } = await supabase
     .from("events")
-    .insert({ name, date, admin_pin: adminPin, code, status: "live" })
+    .insert({ name, date, admin_pin: adminPin, code, status: "live", description, location, duration })
     .select()
     .single();
   if (error) throw new Error(error.message);
@@ -194,6 +194,9 @@ function mapEvent(row: any): GripEvent {
     code: row.code,
     name: row.name,
     date: row.date,
+    description: row.description || "",
+    location: row.location || "",
+    duration: row.duration || "",
     adminPin: row.admin_pin,
     status: row.status,
     createdAt: new Date(row.created_at).getTime(),

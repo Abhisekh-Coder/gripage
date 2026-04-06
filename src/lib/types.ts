@@ -33,6 +33,9 @@ export interface GripEvent {
   code: string;
   name: string;
   date: string;
+  description: string;
+  location: string;
+  duration: string;
   adminPin: string;
   status: "live" | "ended";
   createdAt: number;
