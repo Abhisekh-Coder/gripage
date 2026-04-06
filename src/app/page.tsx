@@ -1,37 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { createEvent, getLiveEvents, getPastEvents, getEventByCode } from "@/lib/store";
-import type { GripEvent } from "@/lib/types";
+import { getEventByCode } from "@/lib/store";
 
 export default function HomePage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"home" | "create" | "join">("home");
-  const [eventName, setEventName] = useState("");
-  const [eventDate, setEventDate] = useState(new Date().toISOString().split("T")[0]);
-  const [adminPin, setAdminPin] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [liveEvents, setLiveEvents] = useState<GripEvent[]>([]);
-  const [pastEvents, setPastEvents] = useState<GripEvent[]>([]);
-
-  useEffect(() => {
-    getLiveEvents().then(setLiveEvents);
-    getPastEvents().then(setPastEvents);
-  }, []);
-
-  async function handleCreate() {
-    if (!eventName.trim() || adminPin.length !== 4) return;
-    setLoading(true);
-    try {
-      const event = await createEvent(eventName.trim(), eventDate, adminPin);
-      router.push(`/event/${event.id}`);
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  }
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   async function handleJoin() {
     const code = joinCode.trim().toUpperCase();
@@ -42,263 +21,222 @@ export default function HomePage() {
       const event = await getEventByCode(code);
       if (event) router.push(`/event/${event.id}`);
       else setJoinError("Event not found. Check the code and try again.");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function scrollTo(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMobileMenu(false);
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#050a08]">
+    <div className="min-h-screen bg-[#0a0a0a] overflow-hidden">
 
-      {/* ─── HERO SECTION ─── */}
-      <section className="relative min-h-screen">
+      {/* ═══════════ NAVBAR ═══════════ */}
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+                <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M14 10c2-.5 4-1 6-1s4 .5 6 1" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              </svg>
+              <span className="text-xl font-black tracking-tight">
+                Grip<span className="text-[#d4845a]">Age</span>
+              </span>
+            </div>
 
-        {/* Background image with overlay */}
+            {/* Desktop nav links */}
+            <div className="hidden md:flex items-center gap-8 text-sm text-white/50">
+              <button onClick={() => scrollTo("how-it-works")} className="hover:text-white transition-colors">How it works</button>
+              <button onClick={() => scrollTo("join")} className="hover:text-white transition-colors">Join Event</button>
+            </div>
+
+            {/* Right side */}
+            <div className="flex items-center gap-3">
+              <a
+                href="/organizer/login"
+                className="hidden sm:block text-sm font-semibold text-white bg-[#d4845a] hover:bg-[#c27548] transition-colors px-5 py-2.5 rounded-full"
+              >
+                Organizer Login
+              </a>
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileMenu(!mobileMenu)}
+                className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10"
+              >
+                <span className="text-white/60">{mobileMenu ? "✕" : "☰"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile menu dropdown */}
+        {mobileMenu && (
+          <div className="md:hidden bg-[#1a1a1a] border border-white/10 mx-4 rounded-2xl p-4 space-y-1 mt-1">
+            <button onClick={() => scrollTo("how-it-works")} className="block w-full text-left px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors">How it works</button>
+            <button onClick={() => scrollTo("join")} className="block w-full text-left px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors">Join Event</button>
+            <a href="/organizer/login" className="block w-full text-left px-4 py-3 text-[#d4845a] hover:bg-white/5 rounded-xl transition-colors">Organizer Login</a>
+          </div>
+        )}
+      </nav>
+
+      {/* ═══════════ HERO SECTION ═══════════ */}
+      <section className="relative min-h-screen flex items-center">
+        {/* Background image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/hero-gym.jpg"
+            src="/female-with-short-hair-doing-pull-ups-gym-club.jpg"
             alt="Fitness"
             fill
             className="object-cover object-center"
             priority
           />
-          {/* Dark gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#050a08] via-[#050a08]/85 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050a08] via-transparent to-[#050a08]/40" />
-          {/* Green accent glow */}
-          <div className="absolute bottom-0 left-[30%] w-[500px] h-[300px] bg-green-500/8 blur-[120px] rounded-full" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/60" />
         </div>
-
-        {/* Nav bar */}
-        <nav className="relative z-20 flex items-center justify-between px-6 lg:px-16 py-5">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">💪</span>
-            <span className="text-xl font-black">Grip<span className="text-green-400">Age</span></span>
-          </div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-white/50">
-            <span className="hover:text-white/80 cursor-pointer transition-colors">How it works</span>
-            <span className="hover:text-white/80 cursor-pointer transition-colors">Leaderboard</span>
-          </div>
-        </nav>
 
         {/* Hero content */}
-        <div className="relative z-10 flex flex-col lg:flex-row min-h-[calc(100vh-80px)]">
-
-          {/* Left: Text + CTA */}
-          <div className="flex-1 flex items-center px-6 lg:px-16 py-12 lg:py-0">
-            <div className="page-enter w-full max-w-xl">
-
-              {/* Tag pills */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {[
-                  { dot: "bg-green-400", label: "Grip Strength" },
-                  { dot: "bg-blue-400", label: "Biological Age" },
-                  { dot: "bg-amber-400", label: "Fitness Analysis" },
-                ].map((t) => (
-                  <span key={t.label} className="glass-card px-4 py-1.5 rounded-full text-xs text-white/60 flex items-center gap-2">
-                    <span className={`w-1.5 h-1.5 rounded-full ${t.dot}`} />{t.label}
-                  </span>
-                ))}
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black leading-[0.9] mb-6 tracking-tight">
-                <span className="text-white">TRAIN YOUR</span>
-                <br />
-                <span className="text-white">GRIP.</span>
-                <br />
-                <span className="bg-gradient-to-r from-green-400 via-emerald-300 to-green-400 bg-clip-text text-transparent">
-                  KNOW YOUR AGE.
-                </span>
-              </h1>
-
-              <p className="text-white/40 text-lg lg:text-xl mb-10 max-w-md leading-relaxed">
-                Measure your grip strength, discover your biological age, and compete on the leaderboard.
-              </p>
-
-              {/* Feature pills - horizontal on desktop */}
-              <div className="flex flex-wrap gap-3 mb-10">
-                {[
-                  { icon: "💪", text: "Grip Test" },
-                  { icon: "🧬", text: "Bio Age" },
-                  { icon: "🏆", text: "Leaderboard" },
-                  { icon: "📄", text: "PDF Report" },
-                ].map((f) => (
-                  <div key={f.text} className="glass-card rounded-full px-5 py-2.5 flex items-center gap-2">
-                    <span>{f.icon}</span>
-                    <span className="text-white/60 text-sm font-medium">{f.text}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA / Forms */}
-              {mode === "home" && (
-                <div>
-                  <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                    <button onClick={() => setMode("create")} className="btn-primary py-4 px-10 rounded-2xl text-lg font-bold">
-                      Create Event
-                    </button>
-                    <button onClick={() => setMode("join")} className="btn-secondary py-4 px-10 rounded-2xl text-lg">
-                      Join Event
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {mode === "create" && (
-                <div className="space-y-4 max-w-md">
-                  <div className="flex items-center gap-3 mb-2">
-                    <button onClick={() => setMode("home")} className="glass-card w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-colors">←</button>
-                    <h2 className="text-xl font-bold">Create New Event</h2>
-                  </div>
-                  <div className="glass-card rounded-2xl p-5 space-y-4">
-                    <div>
-                      <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">Event Name</label>
-                      <input type="text" placeholder="e.g. Annual Wellness Day" value={eventName} onChange={(e) => setEventName(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl text-lg" />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">Event Date</label>
-                      <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl text-lg" />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">Admin PIN</label>
-                      <input type="text" placeholder="4-digit PIN" value={adminPin} onChange={(e) => setAdminPin(e.target.value.replace(/\D/g, "").slice(0, 4))} maxLength={4} className="glass-input w-full py-3 px-4 rounded-xl text-2xl text-center tracking-[0.5em] font-mono" />
-                    </div>
-                  </div>
-                  <button onClick={handleCreate} disabled={!eventName.trim() || adminPin.length !== 4 || loading} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg">
-                    {loading ? "Creating..." : "Create Event"}
-                  </button>
-                </div>
-              )}
-
-              {mode === "join" && (
-                <div className="space-y-4 max-w-md">
-                  <div className="flex items-center gap-3 mb-2">
-                    <button onClick={() => { setMode("home"); setJoinError(""); }} className="glass-card w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-colors">←</button>
-                    <h2 className="text-xl font-bold">Join Event</h2>
-                  </div>
-                  <div className="glass-card rounded-2xl p-5 space-y-3">
-                    <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">Event Code</label>
-                    <input
-                      type="text" placeholder="e.g. A3B7XK" value={joinCode}
-                      onChange={(e) => { setJoinCode(e.target.value.toUpperCase()); setJoinError(""); }}
-                      onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-                      className="glass-input w-full py-4 px-4 rounded-xl text-2xl text-center font-mono tracking-[0.3em] uppercase"
-                    />
-                    {joinError && <p className="text-red-400/80 text-sm text-center">{joinError}</p>}
-                  </div>
-                  <button onClick={handleJoin} disabled={!joinCode.trim() || loading} className="btn-primary w-full py-4 px-6 rounded-2xl text-lg">
-                    {loading ? "Searching..." : "Join Event"}
-                  </button>
-                </div>
-              )}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-24 pb-16 w-full">
+          <div className="max-w-xl">
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-white/50 mb-6">
+              <span className="w-2 h-2 rounded-full bg-[#d4845a]" />
+              Science-backed grip testing
             </div>
+
+            {/* Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6">
+              Your grip reveals
+              <br />
+              your <em className="not-italic text-[#d4845a]">biological age</em>
+            </h1>
+
+            {/* Subtext */}
+            <p className="text-lg text-white/50 max-w-md mb-10 leading-relaxed">
+              Grip strength is one of the strongest predictors of longevity. Test yours and discover how your body is really aging.
+            </p>
+
+            {/* Join Event CTA */}
+            <div id="join" className="flex flex-col sm:flex-row gap-3 max-w-md">
+              <input
+                type="text"
+                placeholder="Enter event code"
+                value={joinCode}
+                onChange={(e) => {
+                  setJoinCode(e.target.value.toUpperCase());
+                  setJoinError("");
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+                maxLength={6}
+                className="flex-1 py-4 px-5 bg-white/5 border border-white/15 rounded-2xl text-white text-center text-lg tracking-[0.3em] uppercase placeholder:tracking-normal placeholder:text-white/25 focus:outline-none focus:border-[#d4845a]/60 focus:bg-white/8 transition-all"
+              />
+              <button
+                onClick={handleJoin}
+                disabled={!joinCode.trim() || loading}
+                className="py-4 px-8 bg-[#d4845a] hover:bg-[#c27548] disabled:bg-white/5 disabled:text-white/20 text-white font-semibold rounded-2xl transition-all text-lg whitespace-nowrap"
+              >
+                {loading ? "..." : "Join Event"}
+              </button>
+            </div>
+            {joinError && (
+              <p className="text-red-400 text-sm mt-3">{joinError}</p>
+            )}
           </div>
-
-          {/* Right: Image side (desktop) — the overlaid photos */}
-          <div className="hidden lg:flex flex-1 items-end justify-center relative">
-            {/* Floating stat cards over the image */}
-            <div className="absolute top-[15%] right-[15%] z-20 glass-card-strong px-5 py-3 rounded-2xl text-center hero-orbit-1">
-              <p className="text-xs text-white/40">Bio Age</p>
-              <p className="text-2xl font-black text-green-400">31</p>
-              <p className="text-[10px] text-white/30">years</p>
-            </div>
-            <div className="absolute top-[40%] right-[5%] z-20 glass-card-strong px-5 py-3 rounded-2xl text-center hero-orbit-2">
-              <p className="text-xs text-white/40">Grip</p>
-              <p className="text-2xl font-black text-blue-400">45</p>
-              <p className="text-[10px] text-white/30">kg</p>
-            </div>
-            <div className="absolute bottom-[25%] right-[20%] z-20 glass-card-strong px-5 py-3 rounded-2xl text-center hero-orbit-3">
-              <p className="text-xs text-white/40">Rank</p>
-              <p className="text-2xl font-black text-amber-400">#1</p>
-            </div>
-
-            {/* Green accent line behind images */}
-            <div className="absolute bottom-0 right-[25%] w-1 h-[70%] bg-gradient-to-t from-green-400/0 via-green-400/30 to-green-400/0 z-10" />
-
-            {/* Person images */}
-            <div className="relative z-10 flex items-end gap-0 mr-8">
-              <div className="relative w-[240px] h-[500px] -mr-8">
-                <Image
-                  src="/hero-man.jpg"
-                  alt="Male athlete"
-                  fill
-                  className="object-cover object-top rounded-t-3xl"
-                  style={{ maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)" }}
-                />
-                {/* Green glow outline */}
-                <div className="absolute inset-0 rounded-t-3xl ring-2 ring-green-400/20" />
-              </div>
-              <div className="relative w-[220px] h-[460px]">
-                <Image
-                  src="/hero-woman.jpg"
-                  alt="Female athlete"
-                  fill
-                  className="object-cover object-top rounded-t-3xl"
-                  style={{ maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)" }}
-                />
-                <div className="absolute inset-0 rounded-t-3xl ring-2 ring-green-400/10" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile: small hero image peek */}
-        <div className="lg:hidden relative h-48 -mt-4 overflow-hidden">
-          <Image src="/hero-gym.jpg" alt="Fitness" fill className="object-cover object-center opacity-40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050a08] to-transparent" />
         </div>
       </section>
 
-      {/* ─── EVENTS SECTION ─── */}
-      {(liveEvents.length > 0 || pastEvents.length > 0) && (
-        <section className="relative z-10 px-6 lg:px-16 py-12 max-w-5xl mx-auto">
-          {/* Live Events */}
-          {liveEvents.length > 0 && (
-            <div className="mb-8">
-              <p className="text-xs text-green-400/60 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />Live Events
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {liveEvents.map((e) => (
-                  <a key={e.id} href={`/event/${e.id}`} className="glass-card-hover rounded-2xl p-5 block">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <p className="font-bold text-lg">{e.name}</p>
-                        <p className="text-white/30 text-sm">{e.date}</p>
-                      </div>
-                      <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse mt-2" />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="glass-card px-3 py-1 rounded-lg text-xs text-green-400 font-mono tracking-wider">{e.code}</span>
-                      <span className="text-xs text-white/30">Join now →</span>
-                    </div>
-                  </a>
-                ))}
+      {/* ═══════════ HOW IT WORKS ═══════════ */}
+      <section id="how-it-works" className="relative z-10 py-24 px-6 lg:px-12">
+        <div className="max-w-6xl mx-auto">
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <p className="text-[#d4845a] text-sm font-semibold tracking-widest uppercase mb-3">How it works</p>
+            <h2 className="text-3xl sm:text-4xl font-bold">Three simple steps</h2>
+          </div>
+
+          {/* Steps grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="relative group">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 border border-white/5">
+                <Image
+                  src="/beautiful-brunette-female-sportswear-doing-lunge-with-barbell-fitness-club-gym.jpg"
+                  alt="Register"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 !relative"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl font-black text-[#d4845a]/30">01</span>
+                <div>
+                  <h3 className="text-lg font-bold mb-1">Register</h3>
+                  <p className="text-white/40 text-sm leading-relaxed">Enter your details — age, height, weight, and fitness background.</p>
+                </div>
               </div>
             </div>
-          )}
 
-          {/* Past Events */}
-          {pastEvents.length > 0 && (
-            <div>
-              <p className="text-xs text-white/20 uppercase tracking-wider mb-4">Past Events</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {pastEvents.slice(0, 6).map((e) => (
-                  <a key={e.id} href={`/event/${e.id}`} className="glass-card rounded-2xl p-5 block opacity-50 hover:opacity-70 transition-opacity">
-                    <p className="font-medium">{e.name}</p>
-                    <p className="text-white/30 text-sm">{e.date}</p>
-                  </a>
-                ))}
+            {/* Step 2 */}
+            <div className="relative group">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 border border-white/5">
+                <Image
+                  src="/bodybuilder-training-arm-with-resistance-band.jpg"
+                  alt="Grip test"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 !relative"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl font-black text-[#d4845a]/30">02</span>
+                <div>
+                  <h3 className="text-lg font-bold mb-1">Grip test</h3>
+                  <p className="text-white/40 text-sm leading-relaxed">Squeeze the dynamometer. We measure your grip strength in kilograms.</p>
+                </div>
               </div>
             </div>
-          )}
-        </section>
-      )}
 
-      {/* Footer */}
-      <footer className="relative z-10 px-6 lg:px-16 py-8 border-t border-white/5">
-        <div className="max-w-5xl mx-auto flex items-center justify-between text-white/20 text-xs">
-          <span>GripAge — Grip Strength & Biological Age Game</span>
-          <span>Powered by Indian Population Norms (LASI)</span>
+            {/* Step 3 */}
+            <div className="relative group">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 border border-white/5">
+                <Image
+                  src="/man-moving-giant-tire-wheel-gym.jpg"
+                  alt="Get results"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 !relative"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl font-black text-[#d4845a]/30">03</span>
+                <div>
+                  <h3 className="text-lg font-bold mb-1">Get results</h3>
+                  <p className="text-white/40 text-sm leading-relaxed">See your biological age, delta score, and how you compare — instantly.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ FOOTER ═══════════ */}
+      <footer className="relative z-10 border-t border-white/5 py-8 px-6">
+        <div className="max-w-6xl mx-auto flex items-center justify-between text-sm text-white/25">
+          <div className="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 40 40" fill="none">
+              <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
+            <span>GripAge</span>
+          </div>
+          <span>Science-backed biological age testing</span>
         </div>
       </footer>
     </div>

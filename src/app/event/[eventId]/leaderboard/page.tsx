@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getEvent, getParticipants } from "@/lib/store";
 import { STAGE_MAP } from "@/lib/formula";
@@ -13,10 +13,11 @@ export default function LeaderboardPage() {
 
   const [event, setEvent] = useState<GripEvent | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [view, setView] = useState<LeaderboardView>("youngest");
+  const [view, setView] = useState<LeaderboardView>("delta");
   const [genderFilter, setGenderFilter] = useState<Gender | "all">("all");
   const [ageGroup, setAgeGroup] = useState<AgeGroup>("all");
   const [isProjector, setIsProjector] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getEvent(eventId).then((e) => setEvent(e));
@@ -39,13 +40,11 @@ export default function LeaderboardPage() {
   });
 
   const sorted = [...filtered].sort((a, b) => {
-    if (view === "youngest") return a.biologicalAge - b.biologicalAge;
     if (view === "delta") return (b.age - b.biologicalAge) - (a.age - a.biologicalAge);
     return b.gripAvgKg - a.gripAvgKg;
   });
 
   const views: { key: LeaderboardView; label: string; icon: string }[] = [
-    { key: "youngest", label: "Youngest Bio Age", icon: "🧬" },
     { key: "delta", label: "Biggest Delta", icon: "⚡" },
     { key: "strongest", label: "Strongest Grip", icon: "💪" },
   ];
@@ -55,7 +54,7 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative bg-[#0a0a0a]">
       <div className="ambient-bg" />
 
       <div className="relative z-10 min-h-screen p-4 lg:p-8">
@@ -71,7 +70,7 @@ export default function LeaderboardPage() {
                 ←
               </button>
               <div>
-                <h1 className="text-2xl lg:text-3xl font-black">🏆 Leaderboard</h1>
+                <h1 className="text-2xl lg:text-3xl font-black">Leaderboard</h1>
                 {event && <p className="text-white/30 text-sm">{event.name}</p>}
               </div>
             </div>
@@ -79,7 +78,7 @@ export default function LeaderboardPage() {
               onClick={() => setIsProjector(true)}
               className="glass-card px-4 py-2 rounded-xl text-sm text-white/50 hover:text-white transition-colors hidden sm:block"
             >
-              📺 Projector Mode
+              Projector Mode
             </button>
           </div>
 
@@ -101,25 +100,34 @@ export default function LeaderboardPage() {
             ))}
           </div>
 
-          {/* Filters */}
-          <div className="flex gap-2 mb-6 overflow-x-auto pb-1 flex-wrap">
-            {(["all", "male", "female"] as const).map((g) => (
-              <FilterChip
-                key={g}
-                label={g === "all" ? "All" : g === "male" ? "🙋‍♂️ Male" : "🙋‍♀️ Female"}
-                active={genderFilter === g}
-                onClick={() => setGenderFilter(g)}
-              />
-            ))}
-            <span className="w-px bg-white/10 mx-1 self-stretch" />
-            {(["all", "17-29", "30-39", "40-49", "50+"] as AgeGroup[]).map((ag) => (
-              <FilterChip
-                key={ag}
-                label={ag === "all" ? "All Ages" : ag}
-                active={ageGroup === ag}
-                onClick={() => setAgeGroup(ag)}
-              />
-            ))}
+          {/* Search + Filters */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <input
+              type="text"
+              placeholder="Search participant..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 py-2 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#d4845a]/60 transition-all"
+            />
+            <div className="flex gap-2 overflow-x-auto pb-1 flex-wrap">
+              {(["all", "male", "female"] as const).map((g) => (
+                <FilterChip
+                  key={g}
+                  label={g === "all" ? "All" : g === "male" ? "Male" : "Female"}
+                  active={genderFilter === g}
+                  onClick={() => setGenderFilter(g)}
+                />
+              ))}
+              <span className="w-px bg-white/10 mx-1 self-stretch" />
+              {(["all", "17-29", "30-39", "40-49", "50+"] as AgeGroup[]).map((ag) => (
+                <FilterChip
+                  key={ag}
+                  label={ag === "all" ? "All Ages" : ag}
+                  active={ageGroup === ag}
+                  onClick={() => setAgeGroup(ag)}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Stats bar */}
@@ -127,7 +135,7 @@ export default function LeaderboardPage() {
             <span className="text-white/40 text-sm">{sorted.length} participants</span>
             {sorted.length > 0 && (
               <span className="text-white/30 text-xs">
-                Best: <span className="text-green-400 font-medium">{getMetric(sorted[0], view)}</span>
+                Best: <span className="text-[#d4845a] font-medium">{getMetric(sorted[0], view)}</span>
               </span>
             )}
           </div>
@@ -185,13 +193,21 @@ export default function LeaderboardPage() {
 
             {/* Full list */}
             <div className="space-y-2">
-              {sorted.map((p, i) => (
-                <LeaderboardRow key={p.id} rank={i + 1} participant={p} view={view} />
-              ))}
+              {sorted.map((p, i) => {
+                const isHighlighted = searchQuery && p.name.toLowerCase().includes(searchQuery.toLowerCase());
+                return (
+                  <LeaderboardRow
+                    key={p.id}
+                    rank={i + 1}
+                    participant={p}
+                    view={view}
+                    highlighted={!!isHighlighted}
+                  />
+                );
+              })}
 
               {sorted.length === 0 && (
                 <div className="glass-card rounded-2xl p-12 text-center">
-                  <span className="text-4xl block mb-3">🏋️</span>
                   <p className="text-white/40 text-lg">No participants yet</p>
                   <p className="text-white/20 text-sm mt-1">Be the first to take the grip test!</p>
                 </div>
@@ -218,7 +234,6 @@ function FilterChip({ label, active, onClick }: { label: string; active: boolean
 }
 
 function getMetric(p: Participant, view: LeaderboardView): string {
-  if (view === "youngest") return `Bio Age: ${p.biologicalAge}`;
   if (view === "delta") {
     const d = p.age - p.biologicalAge;
     return d >= 0 ? `${d}y younger` : `${Math.abs(d)}y older`;
@@ -226,12 +241,15 @@ function getMetric(p: Participant, view: LeaderboardView): string {
   return `${p.gripAvgKg} kg`;
 }
 
-function LeaderboardRow({ rank, participant: p, view }: { rank: number; participant: Participant; view: LeaderboardView }) {
+function LeaderboardRow({ rank, participant: p, view, highlighted }: { rank: number; participant: Participant; view: LeaderboardView; highlighted: boolean }) {
   const stage = STAGE_MAP[p.bioStage];
   const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
+  const delta = p.age - p.biologicalAge;
 
   return (
-    <div className="glass-card-hover rounded-xl p-3 lg:p-4 flex items-center gap-3">
+    <div
+      className={`glass-card-hover rounded-xl p-3 lg:p-4 flex items-center gap-3 transition-all ${highlighted ? "ring-2 ring-[#d4845a]/50 bg-[#d4845a]/5" : ""}`}
+    >
       <span className="w-10 text-center font-bold text-sm flex-shrink-0">
         {medal || <span className="text-white/30">#{rank}</span>}
       </span>
@@ -251,11 +269,21 @@ function LeaderboardRow({ rank, participant: p, view }: { rank: number; particip
 
       <div className="text-right flex-shrink-0">
         <p className="font-bold text-sm" style={{ color: stage.color }}>
-          {getMetric(p, view)}
+          {view === "delta" ? (
+            <>{delta > 0 ? `${delta}y younger` : delta < 0 ? `${Math.abs(delta)}y older` : "On track"}</>
+          ) : (
+            <>{p.gripAvgKg} kg</>
+          )}
         </p>
         <p className="text-xs" style={{ color: stage.color, opacity: 0.6 }}>
           {p.bioStage}
         </p>
+        {view === "strongest" && (
+          <p className="text-xs text-white/30">Bio: {p.biologicalAge}</p>
+        )}
+        {view === "delta" && (
+          <p className="text-xs text-white/30">{p.gripAvgKg}kg grip</p>
+        )}
       </div>
     </div>
   );
@@ -272,16 +300,57 @@ function ProjectorMode({
   view: LeaderboardView;
   onExit: () => void;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || sorted.length <= 10) return;
+
+    let scrollPos = 0;
+    const speed = 0.5; // pixels per frame
+    let animId: number;
+
+    function scroll() {
+      scrollPos += speed;
+      if (scrollPos >= el!.scrollHeight - el!.clientHeight) {
+        scrollPos = 0;
+      }
+      el!.scrollTop = scrollPos;
+      animId = requestAnimationFrame(scroll);
+    }
+
+    // Start after 3 seconds
+    const timeout = setTimeout(() => {
+      animId = requestAnimationFrame(scroll);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(animId);
+    };
+  }, [sorted.length]);
+
   return (
-    <div className="min-h-screen relative cursor-pointer" onClick={onExit}>
+    <div className="min-h-screen relative bg-[#0a0a0a] cursor-pointer" onClick={onExit}>
       <div className="ambient-bg" />
-      <div className="relative z-10 min-h-screen p-8 lg:p-16">
+      <div ref={scrollRef} className="relative z-10 min-h-screen max-h-screen overflow-y-auto p-8 lg:p-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-6xl font-black">
-              Grip<span className="text-green-400">Age</span>
-            </h1>
-            {event && <p className="text-2xl text-white/30 mt-3">{event.name}</p>}
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              </svg>
+              <h1 className="text-5xl lg:text-6xl font-black">
+                Grip<span className="text-[#d4845a]">Age</span>
+              </h1>
+            </div>
+            {event && <p className="text-2xl text-white/30 mt-2">{event.name}</p>}
+            <p className="text-lg text-white/20 mt-1">
+              {view === "delta" ? "Biggest Delta" : "Strongest Grip"} Leaderboard
+            </p>
           </div>
 
           {/* Top 3 large */}
@@ -311,8 +380,8 @@ function ProjectorMode({
 
           {/* Rest */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {sorted.slice(3, 20).map((p, i) => (
-              <LeaderboardRow key={p.id} rank={i + 4} participant={p} view={view} />
+            {sorted.slice(3, 30).map((p, i) => (
+              <LeaderboardRow key={p.id} rank={i + 4} participant={p} view={view} highlighted={false} />
             ))}
           </div>
 

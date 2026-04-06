@@ -136,7 +136,7 @@ export default function MeasurePage() {
 
           {/* Participant summary */}
           <div className="glass-card rounded-2xl p-4 mb-6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400/20 to-emerald-600/20 border border-green-500/20 flex items-center justify-center text-sm font-bold text-green-400">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4845a]/20 to-[#b86d42]/20 border border-[#d4845a]/20 flex items-center justify-center text-sm font-bold text-[#d4845a]">
               {reg.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
@@ -221,7 +221,7 @@ export default function MeasurePage() {
           {previewGrip !== null && (
             <div className="glass-card-strong rounded-2xl p-4 mb-6 text-center">
               <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Average Grip Strength</p>
-              <p className="text-3xl font-black text-green-400">
+              <p className="text-3xl font-black text-[#d4845a]">
                 {previewGrip} <span className="text-lg text-white/30 font-normal">kg</span>
               </p>
             </div>

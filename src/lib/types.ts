@@ -54,5 +54,5 @@ export interface BioStageInfo {
   description: string;
 }
 
-export type LeaderboardView = "youngest" | "delta" | "strongest";
+export type LeaderboardView = "delta" | "strongest";
 export type AgeGroup = "all" | "17-29" | "30-39" | "40-49" | "50+";

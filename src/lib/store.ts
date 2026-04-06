@@ -77,6 +77,21 @@ export async function endEvent(eventId: string): Promise<void> {
   await supabase.from("events").update({ status: "ended" }).eq("id", eventId);
 }
 
+export async function reopenEvent(eventId: string): Promise<void> {
+  const supabase = createClient();
+  await supabase.from("events").update({ status: "live" }).eq("id", eventId);
+}
+
+export async function deleteEvent(eventId: string): Promise<void> {
+  const supabase = createClient();
+  await supabase.from("events").delete().eq("id", eventId);
+}
+
+export async function deleteParticipant(participantId: string): Promise<void> {
+  const supabase = createClient();
+  await supabase.from("participants").delete().eq("id", participantId);
+}
+
 // ─── Participants ───
 
 export async function getParticipants(eventId: string): Promise<Participant[]> {

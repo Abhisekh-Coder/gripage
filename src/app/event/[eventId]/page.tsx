@@ -45,7 +45,7 @@ export default function EventLandingPage() {
         <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
           <div className="text-center">
             <p className="text-2xl mb-4 text-white/60">Event not found</p>
-            <button onClick={() => router.push("/")} className="text-green-400 hover:underline">Go Home</button>
+            <button onClick={() => router.push("/")} className="text-[#d4845a] hover:underline">Go Home</button>
           </div>
         </div>
       </div>
@@ -68,14 +68,19 @@ export default function EventLandingPage() {
             </button>
           </div>
 
-          <div className="logo-glow inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-green-400/20 to-emerald-600/20 border border-green-500/20 mb-5">
-            <span className="text-4xl">💪</span>
+          <div className="logo-glow inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-[#d4845a]/20 to-[#b86d42]/20 border border-[#d4845a]/20 mb-5">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M14 10c2-.5 4-1 6-1s4 .5 6 1" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
           </div>
           <h1 className="text-3xl font-black">{event.name}</h1>
           <div className="flex items-center justify-center gap-3 mt-3 flex-wrap">
             <span className="glass-card px-3 py-1 rounded-full text-sm text-white/50">{event.date}</span>
-            <span className="glass-card px-3 py-1 rounded-full text-sm text-green-400/80">{count} participants</span>
-            <span className={`glass-card px-3 py-1 rounded-full text-sm font-mono ${isLive ? "text-green-400" : "text-white/30"}`}>
+            <span className="glass-card px-3 py-1 rounded-full text-sm text-[#d4845a]/80">{count} participants</span>
+            <span className={`glass-card px-3 py-1 rounded-full text-sm font-mono ${isLive ? "text-[#d4845a]" : "text-white/30"}`}>
               {isLive ? "LIVE" : "ENDED"}
             </span>
           </div>
@@ -83,7 +88,7 @@ export default function EventLandingPage() {
           {/* Event code */}
           <div className="glass-card-strong rounded-xl px-4 py-2 mt-4 inline-block">
             <p className="text-xs text-white/40">Event Code</p>
-            <p className="text-2xl font-mono font-black text-green-400 tracking-wider">{event.code}</p>
+            <p className="text-2xl font-mono font-black text-[#d4845a] tracking-wider">{event.code}</p>
           </div>
 
           <div className="space-y-3 mt-8 mb-6">
