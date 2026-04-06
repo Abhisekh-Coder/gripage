@@ -163,8 +163,9 @@ export default function OrganizerDashboard() {
   participants.forEach((p) => { stageCounts[p.bioStage] = (stageCounts[p.bioStage] || 0) + 1; });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-4 sm:p-8">
-      <div className="max-w-3xl mx-auto page-enter">
+    <div className="min-h-screen relative p-4 sm:p-8">
+      <div className="ambient-bg" />
+      <div className="relative z-10 max-w-3xl mx-auto page-enter">
 
         {/* ═══ HEADER ═══ */}
         <div className="flex items-center justify-between mb-8">
@@ -175,19 +176,19 @@ export default function OrganizerDashboard() {
             <button onClick={() => setShowCreateModal(true)} className="btn-primary px-5 py-2.5 rounded-xl text-sm font-semibold">
               + Create Event
             </button>
-            <button onClick={() => { sessionStorage.removeItem("gripage_organizer"); router.push("/"); }} className="text-white/30 hover:text-white/60 text-sm transition-colors">
+            <button onClick={() => { sessionStorage.removeItem("gripage_organizer"); router.push("/"); }} className="text-[#6b6b8a] hover:text-[#1a1a3e] text-sm transition-colors">
               Logout
             </button>
           </div>
         </div>
 
         {/* ═══ TABS ═══ */}
-        <div className="flex gap-1 p-1 bg-white/5 rounded-xl mb-8 max-w-xs">
+        <div className="flex gap-1 p-1 bg-white/40 rounded-xl mb-8 max-w-xs backdrop-blur-sm">
           {(["upcoming", "past"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all capitalize ${activeTab === tab ? "glass-toggle-active" : "text-white/40 hover:text-white/60"}`}
+              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all capitalize ${activeTab === tab ? "glass-toggle-active" : "text-[#6b6b8a] hover:text-[#1a1a3e]"}`}
             >
               {tab} {tab === "upcoming" ? `(${upcomingEvents.length})` : `(${pastEvents.length})`}
             </button>
@@ -197,7 +198,7 @@ export default function OrganizerDashboard() {
         {/* ═══ TIMELINE ═══ */}
         {dateGroups.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-white/30 text-lg">
+            <p className="text-[#6b6b8a] text-lg">
               {activeTab === "upcoming" ? "No active events. Create one to get started." : "No past events yet."}
             </p>
           </div>
@@ -207,34 +208,34 @@ export default function OrganizerDashboard() {
           <div key={group.date} className="mb-8">
             {/* Date label */}
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-1 h-5 rounded-full bg-[#d4845a]" />
-              <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider">{group.label}</h3>
+              <div className="w-1 h-5 rounded-full bg-[#6b5ce7]" />
+              <h3 className="text-sm font-semibold text-[#6b6b8a] uppercase tracking-wider">{group.label}</h3>
             </div>
 
             {/* Event cards */}
-            <div className="space-y-3 ml-4 border-l border-white/5 pl-5">
+            <div className="space-y-3 ml-4 border-l border-[#6b5ce7]/15 pl-5">
               {group.events.map((evt) => (
                 <div key={evt.id}>
                   {/* Event card */}
-                  <div className={`bg-white/[0.03] border rounded-xl p-4 transition-all ${expandedEvent === evt.id ? "border-[#d4845a]/30" : "border-white/[0.06] hover:border-white/10"}`}>
+                  <div className={`bg-white/60 backdrop-blur-xl border rounded-xl p-4 transition-all shadow-sm ${expandedEvent === evt.id ? "border-[#6b5ce7]/30" : "border-white/80 hover:border-[#6b5ce7]/20"}`}>
                     <div className="flex items-center gap-4">
                       {/* Status */}
                       <div className="flex-shrink-0">
                         {evt.status === "live" ? (
-                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-500/15 text-green-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-500/15 text-green-600">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                             LIVE
                           </span>
                         ) : (
-                          <span className="text-xs text-white/30 px-2.5 py-1">Ended</span>
+                          <span className="text-xs text-[#6b6b8a] px-2.5 py-1">Ended</span>
                         )}
                       </div>
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold truncate">{evt.name}</h4>
-                        <p className="text-sm text-white/30">
-                          {counts[evt.id] || 0} participants · Code: <span className="font-mono text-white/50">{evt.code}</span>
+                        <p className="text-sm text-[#6b6b8a]">
+                          {counts[evt.id] || 0} participants · Code: <span className="font-mono text-[#6b5ce7]">{evt.code}</span>
                           {evt.location && <> · {evt.location}</>}
                           {evt.duration && <> · {evt.duration}</>}
                         </p>
@@ -249,7 +250,7 @@ export default function OrganizerDashboard() {
                         )}
                         <button
                           onClick={() => handleExpandEvent(evt.id)}
-                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${expandedEvent === evt.id ? "bg-[#d4845a]/15 text-[#d4845a]" : "bg-white/5 text-white/50 hover:text-white/70"}`}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${expandedEvent === evt.id ? "bg-[#6b5ce7]/15 text-[#6b5ce7]" : "bg-white/40 text-[#6b6b8a] hover:text-[#1a1a3e]"}`}
                         >
                           {expandedEvent === evt.id ? "Close" : "Manage"}
                         </button>
@@ -259,19 +260,19 @@ export default function OrganizerDashboard() {
 
                   {/* ─── EXPANDED MANAGE PANEL ─── */}
                   {expandedEvent === evt.id && (
-                    <div className="mt-2 bg-white/[0.02] border border-white/[0.06] rounded-xl p-5 page-enter">
+                    <div className="mt-2 bg-white/50 border border-white/80 rounded-xl p-5 page-enter backdrop-blur-xl shadow-sm">
                       {loadingParticipants ? (
-                        <p className="text-white/30 text-center py-6">Loading...</p>
+                        <p className="text-[#6b6b8a] text-center py-6">Loading...</p>
                       ) : (
                         <>
                           {/* Action bar */}
                           <div className="flex items-center gap-2 mb-5 flex-wrap">
-                            <button onClick={() => router.push(`/event/${evt.id}/leaderboard`)} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 text-white/50 hover:text-white/70 transition-all">Leaderboard</button>
-                            <button onClick={() => handleExport(evt.id, evt.name)} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 text-white/50 hover:text-white/70 transition-all">Export CSV</button>
-                            <button onClick={() => handleToggleStatus(evt)} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 text-white/50 hover:text-white/70 transition-all">
+                            <button onClick={() => router.push(`/event/${evt.id}/leaderboard`)} className="text-xs px-3 py-1.5 rounded-lg bg-white/40 text-[#6b6b8a] hover:text-[#1a1a3e] transition-all">Leaderboard</button>
+                            <button onClick={() => handleExport(evt.id, evt.name)} className="text-xs px-3 py-1.5 rounded-lg bg-white/40 text-[#6b6b8a] hover:text-[#1a1a3e] transition-all">Export CSV</button>
+                            <button onClick={() => handleToggleStatus(evt)} className="text-xs px-3 py-1.5 rounded-lg bg-white/40 text-[#6b6b8a] hover:text-[#1a1a3e] transition-all">
                               {evt.status === "live" ? "End Event" : "Reopen"}
                             </button>
-                            <button onClick={() => handleDeleteEvent(evt.id)} className="text-xs text-red-400/50 hover:text-red-400 px-3 py-1.5 rounded-lg hover:bg-red-500/5 ml-auto transition-all">
+                            <button onClick={() => handleDeleteEvent(evt.id)} className="text-xs text-red-500/50 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-500/5 ml-auto transition-all">
                               Delete
                             </button>
                           </div>
@@ -288,7 +289,7 @@ export default function OrganizerDashboard() {
 
                           {/* Stage distribution */}
                           <div className="mb-5">
-                            <p className="text-[10px] text-white/25 uppercase tracking-wider mb-2">Stage Distribution</p>
+                            <p className="text-[10px] text-[#6b6b8a] uppercase tracking-wider mb-2">Stage Distribution</p>
                             <div className="space-y-1.5">
                               {Object.entries(STAGE_MAP).map(([label, info]) => {
                                 const count = stageCounts[label] || 0;
@@ -296,9 +297,9 @@ export default function OrganizerDashboard() {
                                 return (
                                   <div key={label} className="flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: info.color }} />
-                                    <span className="text-xs text-white/40 flex-1 truncate">{label}</span>
-                                    <span className="text-xs text-white/25 w-6 text-right">{count}</span>
-                                    <div className="w-16 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <span className="text-xs text-[#6b6b8a] flex-1 truncate">{label}</span>
+                                    <span className="text-xs text-[#6b6b8a] w-6 text-right">{count}</span>
+                                    <div className="w-16 h-1.5 bg-[#e8e0f4] rounded-full overflow-hidden">
                                       <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: info.color }} />
                                     </div>
                                   </div>
@@ -309,7 +310,7 @@ export default function OrganizerDashboard() {
 
                           {/* Participant list */}
                           <div>
-                            <p className="text-[10px] text-white/25 uppercase tracking-wider mb-2">Participants ({total})</p>
+                            <p className="text-[10px] text-[#6b6b8a] uppercase tracking-wider mb-2">Participants ({total})</p>
                             <div className="space-y-1 max-h-64 overflow-y-auto">
                               {participants.map((p) => {
                                 const st = STAGE_MAP[p.bioStage];
@@ -321,17 +322,17 @@ export default function OrganizerDashboard() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-sm font-medium truncate">{p.name}</p>
-                                      <p className="text-[10px] text-white/25">{p.gender} · {p.age}y · {p.gripAvgKg}kg</p>
+                                      <p className="text-[10px] text-[#6b6b8a]">{p.gender} · {p.age}y · {p.gripAvgKg}kg</p>
                                     </div>
                                     <div className="text-right">
                                       <p className="text-sm font-bold" style={{ color: st.color }}>Bio: {p.biologicalAge}</p>
-                                      <p className="text-[10px] text-white/30">{d > 0 ? `${d}y younger` : d < 0 ? `${Math.abs(d)}y older` : "On track"}</p>
+                                      <p className="text-[10px] text-[#6b6b8a]">{d > 0 ? `${d}y younger` : d < 0 ? `${Math.abs(d)}y older` : "On track"}</p>
                                     </div>
-                                    <button onClick={() => handleDeleteParticipant(p.id)} className="opacity-0 group-hover:opacity-100 text-red-400/50 hover:text-red-400 text-xs px-1 transition-all">✕</button>
+                                    <button onClick={() => handleDeleteParticipant(p.id)} className="opacity-0 group-hover:opacity-100 text-red-500/50 hover:text-red-600 text-xs px-1 transition-all">✕</button>
                                   </div>
                                 );
                               })}
-                              {total === 0 && <p className="text-white/20 text-sm text-center py-4">No participants yet</p>}
+                              {total === 0 && <p className="text-[#6b6b8a] text-sm text-center py-4">No participants yet</p>}
                             </div>
                           </div>
                         </>
@@ -348,13 +349,13 @@ export default function OrganizerDashboard() {
       {/* ═══ CREATE EVENT MODAL — Luma Style ═══ */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-          <div className="relative bg-[#1a1a2e] border border-white/10 rounded-3xl w-full max-w-4xl page-enter overflow-hidden">
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
+          <div className="relative bg-white border border-white/80 rounded-3xl w-full max-w-4xl page-enter overflow-hidden shadow-2xl">
             <div className="flex flex-col lg:flex-row">
 
               {/* ─── LEFT: Poster Card ─── */}
-              <div className="lg:w-[340px] flex-shrink-0 p-6 lg:p-8 flex items-center justify-center bg-gradient-to-br from-[#8b5cf6]/20 via-[#1a1a2e] to-[#d4845a]/10">
-                <div className="w-full aspect-[3/4] max-h-[400px] rounded-2xl bg-gradient-to-br from-[#a78bfa]/30 via-[#7c3aed]/20 to-[#d4845a]/20 border border-white/[0.08] flex flex-col items-center justify-center relative overflow-hidden">
+              <div className="lg:w-[340px] flex-shrink-0 p-6 lg:p-8 flex items-center justify-center bg-gradient-to-br from-[#6b5ce7]/10 via-[#e8e0f4] to-[#f07068]/5">
+                <div className="w-full aspect-[3/4] max-h-[400px] rounded-2xl bg-gradient-to-br from-[#a78bfa]/20 via-[#6b5ce7]/10 to-[#f07068]/10 border border-[#6b5ce7]/15 flex flex-col items-center justify-center relative overflow-hidden">
                   {/* Decorative blobs */}
                   <div className="absolute inset-0">
                     <div className="absolute top-8 left-6 w-12 h-16 bg-[#e74c8b]/40 rounded-full rotate-[-20deg] blur-[1px]" />
@@ -367,11 +368,11 @@ export default function OrganizerDashboard() {
                   {/* GripAge branding */}
                   <div className="relative z-10 text-center">
                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="mx-auto mb-3 opacity-60">
-                      <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#d4845a" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#6b5ce7" strokeWidth="2.5" strokeLinecap="round"/>
                     </svg>
-                    <p className="text-xs font-bold text-white/40 tracking-wider">GRIPAGE</p>
+                    <p className="text-xs font-bold text-[#6b6b8a] tracking-wider">GRIPAGE</p>
                   </div>
                 </div>
               </div>
@@ -380,13 +381,13 @@ export default function OrganizerDashboard() {
               <div className="flex-1 p-6 lg:p-8 overflow-y-auto max-h-[85vh]">
                 {/* Top bar: Public badge */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2 text-xs text-white/30">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/30">
+                  <div className="flex items-center gap-2 text-xs text-[#6b6b8a]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#6b6b8a]">
                       <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
                     </svg>
                     Public
                   </div>
-                  <button onClick={() => setShowCreateModal(false)} className="text-white/30 hover:text-white/60 transition-colors p-1">
+                  <button onClick={() => setShowCreateModal(false)} className="text-[#6b6b8a] hover:text-[#6b6b8a] transition-colors p-1">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                   </button>
                 </div>
@@ -397,34 +398,34 @@ export default function OrganizerDashboard() {
                   placeholder="Event Name"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="w-full text-3xl lg:text-4xl font-light text-white placeholder:text-white/20 bg-transparent border-none outline-none mb-8 focus:ring-0"
+                  className="w-full text-3xl lg:text-4xl font-light text-[#1a1a3e] placeholder:text-[#6b6b8a]/50 bg-transparent border-none outline-none mb-8 focus:ring-0"
                   style={{ fontFamily: "serif" }}
                 />
 
                 {/* Start / End date-time */}
-                <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl mb-4 overflow-hidden">
+                <div className="bg-[#f5f0fa] border border-[#6b5ce7]/10 rounded-2xl mb-4 overflow-hidden">
                   {/* Start row */}
                   <div className="flex items-center px-5 py-4 gap-4">
                     <div className="flex items-center gap-2 w-14 flex-shrink-0">
                       <span className="w-2.5 h-2.5 rounded-full bg-white/30" />
-                      <span className="text-sm text-white/50">Start</span>
+                      <span className="text-sm text-[#6b6b8a]">Start</span>
                     </div>
                     <div className="flex-1 flex items-center gap-3">
                       <input
                         type="date"
                         value={newDate}
                         onChange={(e) => setNewDate(e.target.value)}
-                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#d4845a]/50 transition-all"
+                        className="bg-white border border-[#6b5ce7]/15 rounded-lg px-3 py-2 text-sm text-[#1a1a3e] focus:outline-none focus:border-[#6b5ce7]/40 transition-all"
                       />
                       <input
                         type="time"
                         value={newStartTime}
                         onChange={(e) => setNewStartTime(e.target.value)}
-                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#d4845a]/50 transition-all"
+                        className="bg-white border border-[#6b5ce7]/15 rounded-lg px-3 py-2 text-sm text-[#1a1a3e] focus:outline-none focus:border-[#6b5ce7]/40 transition-all"
                       />
                     </div>
-                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-white/25 flex-shrink-0">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/25">
+                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#6b6b8a] flex-shrink-0">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#1a1a3e]/25">
                         <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
                       </svg>
                       <span>{Intl.DateTimeFormat().resolvedOptions().timeZone.split("/").pop()}</span>
@@ -441,20 +442,20 @@ export default function OrganizerDashboard() {
                   <div className="flex items-center px-5 py-4 gap-4">
                     <div className="flex items-center gap-2 w-14 flex-shrink-0">
                       <span className="w-2.5 h-2.5 rounded-full border border-white/30" />
-                      <span className="text-sm text-white/50">End</span>
+                      <span className="text-sm text-[#6b6b8a]">End</span>
                     </div>
                     <div className="flex-1 flex items-center gap-3">
                       <input
                         type="date"
                         value={newEndDate || newDate}
                         onChange={(e) => setNewEndDate(e.target.value)}
-                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#d4845a]/50 transition-all"
+                        className="bg-white border border-[#6b5ce7]/15 rounded-lg px-3 py-2 text-sm text-[#1a1a3e] focus:outline-none focus:border-[#6b5ce7]/40 transition-all"
                       />
                       <input
                         type="time"
                         value={newEndTime}
                         onChange={(e) => setNewEndTime(e.target.value)}
-                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#d4845a]/50 transition-all"
+                        className="bg-white border border-[#6b5ce7]/15 rounded-lg px-3 py-2 text-sm text-[#1a1a3e] focus:outline-none focus:border-[#6b5ce7]/40 transition-all"
                       />
                     </div>
                   </div>
@@ -462,10 +463,10 @@ export default function OrganizerDashboard() {
 
                 {/* Location */}
                 <div
-                  className="bg-white/[0.04] border border-white/[0.08] rounded-2xl px-5 py-4 mb-4 flex items-center gap-3 cursor-text group hover:border-white/[0.12] transition-all"
+                  className="bg-[#f5f0fa] border border-[#6b5ce7]/10 rounded-2xl px-5 py-4 mb-4 flex items-center gap-3 cursor-text group hover:border-[#6b5ce7]/20 transition-all"
                   onClick={() => document.getElementById("create-location-input")?.focus()}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30 flex-shrink-0">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#6b6b8a] flex-shrink-0">
                     <path d="M12 13a3 3 0 100-6 3 3 0 000 6z"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
                   </svg>
                   <input
@@ -474,16 +475,16 @@ export default function OrganizerDashboard() {
                     placeholder="Add Event Location"
                     value={newLocation}
                     onChange={(e) => setNewLocation(e.target.value)}
-                    className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
+                    className="flex-1 bg-transparent text-sm text-[#1a1a3e] placeholder:text-[#6b6b8a] outline-none"
                   />
                 </div>
 
                 {/* Description */}
                 <div
-                  className="bg-white/[0.04] border border-white/[0.08] rounded-2xl px-5 py-4 mb-4 flex items-start gap-3 cursor-text group hover:border-white/[0.12] transition-all"
+                  className="bg-[#f5f0fa] border border-[#6b5ce7]/10 rounded-2xl px-5 py-4 mb-4 flex items-start gap-3 cursor-text group hover:border-[#6b5ce7]/20 transition-all"
                   onClick={() => document.getElementById("create-desc-input")?.focus()}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30 flex-shrink-0 mt-0.5">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#6b6b8a] flex-shrink-0 mt-0.5">
                     <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/>
                   </svg>
                   <textarea
@@ -492,13 +493,13 @@ export default function OrganizerDashboard() {
                     value={newDesc}
                     onChange={(e) => setNewDesc(e.target.value)}
                     rows={3}
-                    className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 outline-none resize-none"
+                    className="flex-1 bg-transparent text-sm text-[#1a1a3e] placeholder:text-[#6b6b8a] outline-none resize-none"
                   />
                 </div>
 
                 {/* Admin PIN */}
-                <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl px-5 py-4 mb-6 flex items-center gap-3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30 flex-shrink-0">
+                <div className="bg-[#f5f0fa] border border-[#6b5ce7]/10 rounded-2xl px-5 py-4 mb-6 flex items-center gap-3">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#6b6b8a] flex-shrink-0">
                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
                   </svg>
                   <input
@@ -507,7 +508,7 @@ export default function OrganizerDashboard() {
                     value={newPin}
                     onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
                     maxLength={4}
-                    className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 outline-none tracking-[0.3em]"
+                    className="flex-1 bg-transparent text-sm text-[#1a1a3e] placeholder:text-[#6b6b8a] outline-none tracking-[0.3em]"
                   />
                 </div>
 
@@ -530,9 +531,9 @@ export default function OrganizerDashboard() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-3 bg-white/[0.03] rounded-lg border border-white/[0.04]">
-      <p className="text-[10px] text-white/25 mb-0.5">{label}</p>
-      <p className="text-sm font-bold">{value}</p>
+    <div className="p-3 bg-white/40 rounded-lg border border-white/60">
+      <p className="text-[10px] text-[#6b6b8a] mb-0.5">{label}</p>
+      <p className="text-sm font-bold text-[#1a1a3e]">{value}</p>
     </div>
   );
 }
