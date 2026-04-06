@@ -54,32 +54,31 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-[#080e1a]">
-      <div className="ambient-bg" />
+    <div className="min-h-screen relative bg-[#080e1a] overflow-hidden">
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.05) 0%, transparent 60%)" }} />
 
       <div className="relative z-10 min-h-screen p-4 lg:p-8">
         <div className="page-enter max-w-5xl mx-auto">
 
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => router.push(`/event/${eventId}`)}
-                className="glass-card w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-colors"
-              >
-                ←
-              </button>
+          <div className="mb-6">
+            <button onClick={() => router.push(`/event/${eventId}`)} aria-label="Back to event" className="text-white/30 hover:text-white/60 text-sm mb-4 inline-flex items-center gap-1.5 transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+              Back to Event
+            </button>
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl lg:text-3xl font-black">Leaderboard</h1>
-                {event && <p className="text-white/30 text-sm">{event.name}</p>}
+                {event && <p className="text-white/30 text-sm mt-1">{event.name}</p>}
               </div>
+              <button
+                onClick={() => setIsProjector(true)}
+                className="px-4 py-2 rounded-2xl text-sm bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.06] transition-all hidden sm:block"
+              >
+                Projector Mode
+              </button>
             </div>
-            <button
-              onClick={() => setIsProjector(true)}
-              className="glass-card px-4 py-2 rounded-xl text-sm text-white/50 hover:text-white transition-colors hidden sm:block"
-            >
-              Projector Mode
-            </button>
           </div>
 
           {/* View tabs */}
@@ -332,8 +331,8 @@ function ProjectorMode({
   }, [sorted.length]);
 
   return (
-    <div className="min-h-screen relative bg-[#080e1a] cursor-pointer" onClick={onExit}>
-      <div className="ambient-bg" />
+    <div className="min-h-screen relative bg-[#080e1a] cursor-pointer overflow-hidden" onClick={onExit}>
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
       <div ref={scrollRef} className="relative z-10 min-h-screen max-h-screen overflow-y-auto p-8 lg:p-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">

@@ -108,7 +108,7 @@ export default function HomePage() {
                     onChange={(e) => { setJoinCode(e.target.value.toUpperCase()); setJoinError(""); }}
                     onKeyDown={(e) => e.key === "Enter" && handleJoin()}
                     maxLength={6}
-                    className="w-full bg-[#353534]/50 border-none rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-[#53433c] focus:outline-none focus:ring-1 focus:ring-[#d4845a]/40 uppercase font-black tracking-[0.4em] text-lg transition-all"
+                    className="glass-input w-full rounded-xl py-4 pl-12 pr-4 uppercase font-black tracking-[0.4em] text-lg"
                   />
                 </div>
                 <button
@@ -140,7 +140,7 @@ export default function HomePage() {
 
         {/* Floating stat card — desktop only */}
         <div className="absolute bottom-12 left-12 hidden lg:block">
-          <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 p-6 rounded-2xl">
+          <div className="bg-white/[0.03] border border-white/[0.06] p-6 rounded-2xl">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full border-2 border-[#d4845a]/20 flex items-center justify-center">
                 <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
@@ -180,7 +180,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
 
             {/* Step 1 — Squeeze */}
-            <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">1</div>
 
               {/* Image */}
@@ -207,7 +207,7 @@ export default function HomePage() {
             </div>
 
             {/* Step 2 — Analyze */}
-            <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">2</div>
 
               <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">
@@ -229,7 +229,7 @@ export default function HomePage() {
             </div>
 
             {/* Step 3 — Rank */}
-            <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl relative overflow-hidden group hover:border-[#d4845a]/30 transition-colors">
               <div className="absolute -right-4 -top-4 text-[150px] font-black text-white/[0.02] pointer-events-none group-hover:text-[#d4845a]/[0.03] transition-colors leading-none">3</div>
 
               <div className="relative w-full h-56 overflow-hidden rounded-t-2xl">

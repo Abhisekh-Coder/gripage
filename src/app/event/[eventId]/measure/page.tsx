@@ -116,17 +116,13 @@ export default function MeasurePage() {
         <div className="page-enter w-full max-w-md md:desktop-card">
 
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              onClick={() => router.back()}
-              className="glass-card w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-colors flex-shrink-0"
-            >
-              ←
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold">Grip Test</h1>
-              <p className="text-white/30 text-sm">Step 2 of 2</p>
-            </div>
+          <button onClick={() => router.back()} aria-label="Go back" className="text-white/30 hover:text-white/60 text-sm mb-4 inline-flex items-center gap-1.5 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+            Back
+          </button>
+          <div className="mb-6">
+            <h1 className="text-2xl sm:text-3xl font-black">Grip Test</h1>
+            <p className="text-white/30 text-sm mt-1">Step 2 of 2</p>
           </div>
 
           {/* Step indicator */}

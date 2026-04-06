@@ -166,7 +166,7 @@ export default function OrganizerDashboard() {
   participants.forEach((p) => { stageCounts[p.bioStage] = (stageCounts[p.bioStage] || 0) + 1; });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-4 sm:p-8">
+    <div className="min-h-screen bg-[#080e1a] p-4 sm:p-8 relative overflow-hidden">
       <div className="max-w-3xl mx-auto page-enter">
 
         {/* HEADER */}
@@ -274,7 +274,7 @@ export default function OrganizerDashboard() {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-          <div className="relative bg-[#141414] border border-white/10 rounded-2xl w-full max-w-md page-enter max-h-[90vh] overflow-y-auto">
+          <div className="relative bg-[#0c1220] border border-white/[0.08] rounded-2xl w-full max-w-md page-enter max-h-[90vh] overflow-y-auto">
 
             {/* Image upload area */}
             <div className="p-6 pb-0">
@@ -371,7 +371,7 @@ export default function OrganizerDashboard() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-3 bg-white/[0.03] rounded-lg border border-white/[0.04]">
+    <div className="p-3 bg-white/[0.03] rounded-xl border border-white/[0.06]">
       <p className="text-[10px] text-white/25 mb-0.5">{label}</p>
       <p className="text-sm font-bold">{value}</p>
     </div>

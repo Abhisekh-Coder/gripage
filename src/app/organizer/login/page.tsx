@@ -32,8 +32,10 @@ export default function OrganizerLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
-      <div className="page-enter w-full max-w-sm text-center">
+    <div className="min-h-screen bg-[#080e1a] flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 90%, rgba(212,132,90,0.05) 0%, transparent 60%)" }} />
+      <div className="relative z-10 page-enter w-full max-w-sm text-center">
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
           <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
@@ -56,7 +58,7 @@ export default function OrganizerLoginPage() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-          className="w-full py-4 px-5 bg-white/5 border border-white/10 rounded-2xl text-white text-center text-lg tracking-widest placeholder:tracking-normal placeholder:text-white/25 focus:outline-none focus:border-[#d4845a]/60 transition-all mb-4"
+          className="glass-input w-full py-4 px-5 rounded-2xl text-center text-lg tracking-widest placeholder:tracking-normal mb-4"
         />
 
         {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
@@ -64,7 +66,7 @@ export default function OrganizerLoginPage() {
         <button
           onClick={handleLogin}
           disabled={!code.trim() || loading}
-          className="w-full py-4 px-6 bg-[#d4845a] hover:bg-[#c27548] disabled:bg-white/5 disabled:text-white/20 text-white font-semibold rounded-2xl transition-all text-lg"
+          className="btn-primary w-full py-4 px-6 rounded-2xl text-lg"
         >
           {loading ? "Verifying..." : "Login"}
         </button>
@@ -79,3 +81,4 @@ export default function OrganizerLoginPage() {
     </div>
   );
 }
+
