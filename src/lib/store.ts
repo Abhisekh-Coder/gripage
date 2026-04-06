@@ -107,12 +107,25 @@ export async function getParticipants(eventId: string): Promise<Participant[]> {
 
 export async function getParticipantByEmail(eventId: string, email: string): Promise<Participant | null> {
   const supabase = createClient();
-  const { data } = await supabase
+  const normalizedEmail = email.toLowerCase().trim();
+  // Try exact match first, then case-insensitive
+  let { data } = await supabase
     .from("participants")
     .select("*")
     .eq("event_id", eventId)
-    .eq("email", email.toLowerCase().trim())
+    .eq("email", normalizedEmail)
     .single();
+  if (!data) {
+    // Fallback: case-insensitive search using ilike
+    const res = await supabase
+      .from("participants")
+      .select("*")
+      .eq("event_id", eventId)
+      .ilike("email", normalizedEmail)
+      .limit(1)
+      .single();
+    data = res.data;
+  }
   return data ? mapParticipant(data) : null;
 }
 
