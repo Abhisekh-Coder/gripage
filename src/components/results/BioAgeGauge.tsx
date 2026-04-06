@@ -1,75 +1,46 @@
 export function BioAgeGauge({ age, biologicalAge, delta }: { age: number; biologicalAge: number; delta: number }) {
-  // Map delta (-15 to +15) to angle (0 to 180 degrees)
-  const clampedDelta = Math.max(-15, Math.min(15, delta));
-  const angle = ((clampedDelta + 15) / 30) * 180;
-  const clampedAngle = Math.max(5, Math.min(175, angle));
+  const clamped = Math.max(-15, Math.min(15, delta));
+  const angle = Math.max(8, Math.min(172, ((clamped + 15) / 30) * 180));
+  const rad = Math.PI - (angle * Math.PI) / 180;
+  const cx = 100, cy = 100, r = 80;
 
-  // Arc parameters
-  const cx = 100, cy = 110, r = 85;
-  const totalArcLength = Math.PI * r; // ~267
+  // Dot position on arc
+  const dx = cx + r * Math.cos(rad);
+  const dy = cy - r * Math.sin(rad);
 
-  // Fill arc length (from left to needle position)
-  const fillLength = (clampedAngle / 180) * totalArcLength;
+  // Needle end (shorter than radius)
+  const nx = cx + (r * 0.65) * Math.cos(rad);
+  const ny = cy - (r * 0.65) * Math.sin(rad);
 
-  // Needle endpoint
-  const needleAngle = Math.PI - (clampedAngle * Math.PI) / 180;
-  const nx = cx + (r - 10) * Math.cos(needleAngle);
-  const ny = cy - (r - 10) * Math.sin(needleAngle);
+  // Arc fill length
+  const totalArc = Math.PI * r;
+  const fillLen = (angle / 180) * totalArc;
 
-  // Dot on arc
-  const dotX = cx + r * Math.cos(needleAngle);
-  const dotY = cy - r * Math.sin(needleAngle);
-
-  const isPositive = delta >= 0;
+  const positive = delta >= 0;
 
   return (
-    <div className="w-full">
-      <svg viewBox="0 0 200 125" className="w-full">
-        {/* Background arc */}
-        <path
-          d="M 15 110 A 85 85 0 0 1 185 110"
-          fill="none"
-          stroke="rgba(255,255,255,0.06)"
-          strokeWidth="8"
-          strokeLinecap="round"
-        />
+    <svg viewBox="0 0 200 130" className="w-full max-w-[280px] mx-auto block">
+      {/* Track */}
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" strokeLinecap="round" />
 
-        {/* Colored fill arc */}
-        <path
-          d="M 15 110 A 85 85 0 0 1 185 110"
-          fill="none"
-          stroke={isPositive ? "#4ADE80" : "#f87171"}
-          strokeWidth="8"
-          strokeLinecap="round"
-          strokeDasharray={`${fillLength} ${totalArcLength}`}
-          strokeOpacity="0.6"
-        />
+      {/* Fill */}
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke={positive ? "#4ADE80" : "#f87171"} strokeWidth="10" strokeLinecap="round" strokeDasharray={`${fillLen} ${totalArc}`} opacity="0.5" />
 
-        {/* Tick marks */}
-        {[0, 90, 180].map(deg => {
-          const rad = Math.PI - (deg * Math.PI) / 180;
-          const x1 = cx + (r + 4) * Math.cos(rad);
-          const y1 = cy - (r + 4) * Math.sin(rad);
-          const x2 = cx + (r + 9) * Math.cos(rad);
-          const y2 = cy - (r + 9) * Math.sin(rad);
-          return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />;
-        })}
+      {/* Needle */}
+      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" />
+      <circle cx={cx} cy={cy} r="4" fill="rgba(255,255,255,0.15)" />
 
-        {/* Needle line */}
-        <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Dot on arc */}
+      <circle cx={dx} cy={dy} r="6" fill={positive ? "#4ADE80" : "#f87171"} stroke="#0B0B0F" strokeWidth="2.5" />
 
-        {/* Dot on arc */}
-        <circle cx={dotX} cy={dotY} r="5" fill={isPositive ? "#4ADE80" : "#f87171"} stroke="#0B0B0F" strokeWidth="2" />
+      {/* Center number */}
+      <text x={cx} y={cy - 10} textAnchor="middle" fill="white" fontSize="32" fontWeight="900" fontFamily="Inter,system-ui">{biologicalAge}</text>
+      <text x={cx} y={cy + 8} textAnchor="middle" fill="rgba(255,255,255,0.2)" fontSize="7" fontWeight="600" letterSpacing="0.15em">BIO AGE</text>
 
-        {/* Center: Bio Age value */}
-        <text x={cx} y={cy - 15} textAnchor="middle" fill="white" fontSize="28" fontWeight="900" fontFamily="Inter, system-ui">{biologicalAge}</text>
-        <text x={cx} y={cy + 2} textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="8" fontWeight="500" letterSpacing="0.1em">BIO AGE</text>
-
-        {/* End labels */}
-        <text x="8" y="122" fill="rgba(255,255,255,0.15)" fontSize="7">Older</text>
-        <text x={cx} y="122" textAnchor="middle" fill="rgba(255,255,255,0.15)" fontSize="7">{age}</text>
-        <text x="192" y="122" textAnchor="end" fill="rgba(255,255,255,0.15)" fontSize="7">Younger</text>
-      </svg>
-    </div>
+      {/* Bottom labels */}
+      <text x="20" y="118" fill="rgba(255,255,255,0.12)" fontSize="8" textAnchor="start">Older</text>
+      <text x={cx} y="118" fill="rgba(255,255,255,0.15)" fontSize="8" textAnchor="middle">{age}</text>
+      <text x="180" y="118" fill="rgba(255,255,255,0.12)" fontSize="8" textAnchor="end">Younger</text>
+    </svg>
   );
 }
