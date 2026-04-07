@@ -90,7 +90,7 @@ function Results() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0B0B0F] text-white p-4 sm:p-6" style={{ fontFamily: "'Inter', system-ui" }}>
+    <div className="min-h-screen bg-[#0B0B0F] text-white px-3 py-4 sm:p-6" style={{ fontFamily: "'Inter', system-ui" }}>
       <div className="max-w-[1400px] mx-auto">
 
         {/* HEADER */}
@@ -122,18 +122,18 @@ function Results() {
         </header>
 
         {/* KPI STRIP */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <KPI icon={<Gauge className="w-3.5 h-3.5" />} label="Bio Age" value={String(p.biologicalAge)} sub={`${Math.abs(delta)}y ${delta >= 0 ? "younger" : "older"}`} accent />
           <KPI icon={<Activity className="w-3.5 h-3.5" />} label="Max Grip" value={String(grip)} unit="kg" sub={`Expected ${p.expectedGrip}kg`} />
           <KPI icon={<TrendingUp className="w-3.5 h-3.5" />} label="Standing" value={`Top ${100 - percentile}%`} sub={`${p.gender === "male" ? "Men" : "Women"} aged ${ageGroup}`} />
           <KPI icon={<Activity className="w-3.5 h-3.5" />} label="Balance" value={p.gripLeftKg !== null && p.gripRightKg !== null ? Math.abs(p.gripLeftKg - p.gripRightKg).toFixed(1) : "—"} unit="kg" sub={`L ${p.gripLeftKg ?? "—"} · R ${p.gripRightKg ?? "—"}`} />
         </div>
 
-        {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* ROW: Bio Age Gauge + Grip Trajectory */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 
           {/* BIO AGE GAUGE */}
-          <div className="card lg:col-span-5 p-6 relative overflow-hidden">
+          <div className="card p-5 sm:p-6 relative overflow-hidden">
             <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[#10b981]/5 blur-3xl" />
             <div className="relative">
               <div className="flex items-start justify-between mb-2">
@@ -174,7 +174,7 @@ function Results() {
           </div>
 
           {/* GRIP TRAJECTORY CURVE */}
-          <div className="card lg:col-span-7 p-6">
+          <div className="card p-5 sm:p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold">Grip Trajectory</div>
@@ -210,21 +210,33 @@ function Results() {
           </div>
 
           {/* HAND BREAKDOWN */}
-          <div className="card lg:col-span-4 p-6">
+          <div className="card col-span-1 md:col-span-2 p-5 sm:p-6">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-4">Hand Breakdown</div>
-            <div className="flex items-end justify-around gap-4 h-40">
+            <div className="flex items-end justify-around gap-6 relative" style={{ height: 160 }}>
+              {/* Dotted expected line */}
+              {(() => {
+                const expPct = (p.expectedGrip / (normHigh * 1.1)) * 100;
+                return (
+                  <>
+                    <div className="absolute left-0 right-0 border-t-2 border-dashed border-white/15 z-10" style={{ bottom: `${expPct}%` }} />
+                    <div className="absolute right-0 text-[9px] text-white/25 z-10" style={{ bottom: `${expPct}%`, transform: "translateY(-12px)" }}>
+                      Expected {p.expectedGrip}kg
+                    </div>
+                  </>
+                );
+              })()}
               {[{ label: "Left", val: p.gripLeftKg }, { label: "Right", val: p.gripRightKg }].filter(h => h.val !== null).map(h => (
-                <div key={h.label} className="flex flex-col items-center flex-1">
-                  <div className="text-2xl font-black text-white mb-2">{h.val}</div>
-                  <div className="w-full relative flex items-end" style={{ height: 90 }}>
-                    <div className="w-full bg-white/[0.03] rounded-t-xl" style={{ height: "100%" }} />
+                <div key={h.label} className="flex flex-col items-center flex-1 max-w-[80px]">
+                  <div className="text-xl sm:text-2xl font-black text-white mb-1.5">{h.val}<span className="text-[10px] text-white/25 ml-0.5">kg</span></div>
+                  <div className="w-full relative" style={{ height: 110 }}>
+                    <div className="w-full h-full bg-white/[0.03] rounded-t-xl" />
                     <div className="absolute bottom-0 w-full rounded-t-xl bg-gradient-to-t from-[#10b981] to-[#34d399]" style={{ height: `${((h.val ?? 0) / (normHigh * 1.1)) * 100}%` }} />
                   </div>
-                  <div className="text-[10px] text-white/30 mt-2">{h.label}</div>
+                  <div className="text-[10px] text-white/30 mt-1.5">{h.label}</div>
                 </div>
               ))}
             </div>
-            <div className="mt-4 pt-3 border-t border-white/[0.05] flex justify-between text-[10px]">
+            <div className="mt-3 pt-3 border-t border-white/[0.05] flex justify-between text-[10px]">
               <span className="text-white/30">Symmetry</span>
               <span className="font-semibold text-[#10b981]">
                 {p.gripLeftKg !== null && p.gripRightKg !== null ? `${Math.abs(p.gripLeftKg - p.gripRightKg).toFixed(1)} kg · ${Math.abs(p.gripLeftKg - p.gripRightKg) <= 2 ? "Balanced" : "Imbalanced"}` : "—"}
@@ -232,8 +244,13 @@ function Results() {
             </div>
           </div>
 
+        </div>
+
+        {/* ROW: Hand + Comparison + Stage Reference */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+
           {/* COMPARISON BARS */}
-          <div className="card lg:col-span-4 p-6">
+          <div className="card p-5 sm:p-6">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-4">Grip Comparison</div>
             {[
               { label: "You", val: grip, color: "#10b981", bold: true },
@@ -261,7 +278,7 @@ function Results() {
           </div>
 
           {/* STAGE REFERENCE */}
-          <div className="card lg:col-span-4 p-6">
+          <div className="card p-5 sm:p-6">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-4">Stage Reference</div>
             <div className="space-y-1">
               {stages.map((s, i) => {
@@ -279,7 +296,11 @@ function Results() {
           </div>
 
           {/* SENSITIVITY MODEL */}
-          <div className="card lg:col-span-7 p-6">
+        </div>
+
+        {/* ROW: Sensitivity + Leaderboard Position */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="card p-5 sm:p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold">Sensitivity Model</div>
@@ -305,7 +326,7 @@ function Results() {
           </div>
 
           {/* EVENT COHORT */}
-          <div className="card lg:col-span-5 p-6">
+          <div className="card p-5 sm:p-6">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-1">Event Leaderboard</div>
             <div className="text-lg font-bold text-white mb-4">Your Position</div>
             <div className="flex items-center gap-3 mb-4">
