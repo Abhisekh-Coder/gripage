@@ -95,9 +95,9 @@ export default function EventLandingPage() {
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
 
         {/* Back button */}
-        <button onClick={() => router.push("/")} className="text-white/30 hover:text-white/60 text-sm mb-6 sm:mb-8 inline-flex items-center gap-1.5 transition-colors">
+        <button onClick={() => router.back()} className="text-white/30 hover:text-white/60 text-sm mb-6 sm:mb-8 inline-flex items-center gap-1.5 transition-colors">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
-          Home
+          Back
         </button>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
@@ -202,10 +202,8 @@ export default function EventLandingPage() {
               )}
             </div>
 
-            {/* Organizer login link */}
-            <a href={`/event/${event.id}/admin`} className="block text-center py-3 text-sm text-white/20 hover:text-white/40 transition-colors">
-              Organizer Login →
-            </a>
+            {/* spacer */}
+            <div className="h-2" />
           </div>
 
           {/* ─── RIGHT: Details ─── */}

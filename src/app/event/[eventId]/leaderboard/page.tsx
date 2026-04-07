@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getEvent, getParticipants } from "@/lib/store";
 import { STAGE_MAP } from "@/lib/formula";
@@ -16,7 +16,6 @@ export default function LeaderboardPage() {
   const [view, setView] = useState<LeaderboardView>("delta");
   const [genderFilter, setGenderFilter] = useState<Gender | "all">("all");
   const [ageGroup, setAgeGroup] = useState<AgeGroup>("all");
-  const [isProjector, setIsProjector] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -49,9 +48,6 @@ export default function LeaderboardPage() {
     { key: "strongest", label: "Strongest Grip", icon: "💪" },
   ];
 
-  if (isProjector) {
-    return <ProjectorMode event={event} sorted={sorted} view={view} onExit={() => setIsProjector(false)} />;
-  }
 
   // Top 3 separate from rest
   const top3 = sorted.slice(0, 3);
@@ -87,9 +83,6 @@ export default function LeaderboardPage() {
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Leaderboard</h1>
               {event && <p className="text-white/25 text-sm mt-0.5">{event.name} · {sorted.length} participants</p>}
             </div>
-            <button onClick={() => setIsProjector(true)} className="px-3 py-1.5 rounded-lg text-[11px] bg-white/[0.06] text-white/40 hover:text-white/70 transition-all hidden sm:block">
-              Projector
-            </button>
           </div>
 
           {/* ═══ TOP 3 PODIUM ═══ */}
@@ -245,105 +238,3 @@ function LeaderboardRow({ rank, participant: p, view, highlighted }: { rank: num
   );
 }
 
-function ProjectorMode({
-  event,
-  sorted,
-  view,
-  onExit,
-}: {
-  event: GripEvent | null;
-  sorted: Participant[];
-  view: LeaderboardView;
-  onExit: () => void;
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || sorted.length <= 10) return;
-
-    let scrollPos = 0;
-    const speed = 0.5; // pixels per frame
-    let animId: number;
-
-    function scroll() {
-      scrollPos += speed;
-      if (scrollPos >= el!.scrollHeight - el!.clientHeight) {
-        scrollPos = 0;
-      }
-      el!.scrollTop = scrollPos;
-      animId = requestAnimationFrame(scroll);
-    }
-
-    // Start after 3 seconds
-    const timeout = setTimeout(() => {
-      animId = requestAnimationFrame(scroll);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timeout);
-      cancelAnimationFrame(animId);
-    };
-  }, [sorted.length]);
-
-  return (
-    <div className="min-h-screen relative bg-[#0B0B0F] cursor-pointer overflow-hidden" onClick={onExit}>
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 10%, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
-      <div ref={scrollRef} className="relative z-10 min-h-screen max-h-screen overflow-y-auto p-8 lg:p-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M8 28c4-2 8-3 12-3s8 1 12 3" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
-                <path d="M10 22c3-1.5 7-2.5 10-2.5s7 1 10 2.5" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
-                <path d="M12 16c2.5-1 5.5-1.5 8-1.5s5.5.5 8 1.5" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"/>
-              </svg>
-              <h1 className="text-5xl lg:text-6xl font-black">
-                Grip<span className="text-[#4ADE80]">Age</span>
-              </h1>
-            </div>
-            {event && <p className="text-2xl text-white/30 mt-2">{event.name}</p>}
-            <p className="text-lg text-white/20 mt-1">
-              {view === "delta" ? "Biggest Delta" : "Strongest Grip"} Leaderboard
-            </p>
-          </div>
-
-          {/* Top 3 large */}
-          {sorted.length >= 1 && (
-            <div className="grid grid-cols-3 gap-6 mb-12">
-              {[1, 0, 2].map((i) => {
-                const p = sorted[i];
-                if (!p) return <div key={i} />;
-                const stage = STAGE_MAP[p.bioStage];
-                const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉";
-                const podiumClass = i === 0 ? "podium-gold" : i === 1 ? "podium-silver" : "podium-bronze";
-                return (
-                  <div key={p.id} className={`${podiumClass} glass-card-strong p-8 rounded-3xl text-center ${i === 0 ? "transform -translate-y-6 scale-105" : ""}`}>
-                    <span className="text-6xl">{medal}</span>
-                    <p className="text-3xl font-bold mt-4">{p.name}</p>
-                    <p className="text-4xl font-black mt-3" style={{ color: stage.color }}>
-                      {getMetric(p, view)}
-                    </p>
-                    <p className="text-xl mt-2" style={{ color: stage.color, opacity: 0.7 }}>
-                      {p.bioStage}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Rest */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {sorted.slice(3, 30).map((p, i) => (
-              <LeaderboardRow key={p.id} rank={i + 4} participant={p} view={view} highlighted={false} />
-            ))}
-          </div>
-
-          <p className="text-center text-white/20 mt-10 text-sm">Click anywhere to exit</p>
-        </div>
-      </div>
-    </div>
-  );
-}
