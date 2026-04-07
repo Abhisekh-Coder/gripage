@@ -324,6 +324,15 @@ body {
 .step-dot-active { width: 24px; border-radius: 4px; background: var(--accent); }
 .step-dot-done { background: rgba(74, 222, 128, 0.35); }
 
+/* ─── Light glassmorphic card (Vitality style) ─── */
+.vcard {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.4), 0 20px 40px -10px rgba(0, 0, 0, 0.06);
+}
+
 /* ─── Loading skeleton ─── */
 @keyframes skeletonShimmer {
   0% { background-position: -200% 0; }

@@ -2,15 +2,11 @@
 
 import { Suspense, useEffect, useState, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { getParticipant, getParticipants } from "@/lib/store";
 import { STAGE_MAP } from "@/lib/formula";
 import { generateResultPDF } from "@/lib/pdf";
 import type { Participant, BioStage, Gender } from "@/lib/types";
 import { StageBadge } from "@/components/results/StageBadge";
-import { BioAgeGauge } from "@/components/results/BioAgeGauge";
-import { GripBarChart } from "@/components/results/GripBarChart";
-import { HandComparison } from "@/components/results/HandComparison";
 
 function norms(age: number, gender: Gender) {
   const t: Record<string, [number, number, number]> = gender === "male"
@@ -34,9 +30,19 @@ const STAGES: { r: string; l: BioStage }[] = [
   { r: "< −10", l: "Critical Gap" },
 ];
 
+// Percentile distribution for bell curve viz
+function bellBars(userPctl: number): { pctl: number; height: number; isUser: boolean }[] {
+  const buckets = [10, 25, 50, 75, 90];
+  return buckets.map(p => ({
+    pctl: p,
+    height: p <= 50 ? (p / 50) * 100 : ((100 - p) / 50) * 100 + 50,
+    isUser: Math.abs(p - userPctl) < 15,
+  }));
+}
+
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/40 rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#f7f9fb] flex items-center justify-center"><div className="w-6 h-6 border-2 border-emerald-200 border-t-emerald-500 rounded-full animate-spin" /></div>}>
       <Results />
     </Suspense>
   );
@@ -65,147 +71,230 @@ function Results() {
 
   const pdf = useCallback(() => { if (p) generateResultPDF(p); }, [p]);
 
-  if (!p) return <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center"><p className="text-white/30 text-sm">Loading results...</p></div>;
+  if (!p) return <div className="min-h-screen bg-[#f7f9fb] flex items-center justify-center"><p className="text-slate-400 text-sm">Loading results...</p></div>;
 
   const delta = p.age - p.biologicalAge;
   const stage = STAGE_MAP[p.bioStage];
   const n = norms(p.age, p.gender);
   const percentile = pctl(p.gripAvgKg, p.age, p.gender);
   const gDiff = p.gripAvgKg - p.expectedGrip;
+  const gaugeOffset = 553 - (553 * Math.min(100, Math.max(5, 50 + delta * 3.3)) / 100);
+  const bars = bellBars(percentile);
 
   return (
-    <div className="min-h-screen bg-[#0B0B0F]">
+    <div className="min-h-screen" style={{ background: "radial-gradient(circle at 0% 0%, #e0f2f1 0%, transparent 50%), radial-gradient(circle at 100% 0%, #e3f2fd 0%, transparent 50%), radial-gradient(circle at 100% 100%, #f1f8e9 0%, transparent 50%), radial-gradient(circle at 0% 100%, #fce4ec 0%, transparent 50%), #f7f9fb" }}>
 
-      {/* ═══ BANNER — Full width with image ═══ */}
-      <div className="relative h-48 sm:h-56 overflow-hidden">
-        <Image src="/hero-gym.jpg" alt="" fill className="object-cover object-center opacity-40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/70 to-[#0B0B0F]/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0F]/60 to-transparent" />
+      {/* ═══ TOP BAR ═══ */}
+      <header className="bg-white/60 backdrop-blur-xl flex justify-between items-center px-6 py-4 w-full z-50 sticky top-0 border-b border-white/20">
+        <button onClick={() => router.push(`/event/${eventId}`)} className="text-slate-400 hover:text-slate-600 text-sm inline-flex items-center gap-1.5 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+          Back
+        </button>
+        <span className="text-sm font-bold text-slate-900" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Grip<span className="text-emerald-600">Age</span></span>
+        <span className="text-xs text-slate-400">#{rank} of {total}</span>
+      </header>
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 h-full flex flex-col justify-end pb-5">
-          <button onClick={() => router.push(`/event/${eventId}`)} aria-label="Back" className="text-white/25 hover:text-white/50 text-[11px] inline-flex items-center gap-1 transition-colors mb-3">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
-            Back to Event
-          </button>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight uppercase">{p.name}</h1>
-          <div className="flex items-center gap-4 mt-1.5 flex-wrap">
-            <span className="text-sm text-white/40">{p.gender} — {p.age}y</span>
-            <span className="text-sm text-white/40">Weight — {p.weightKg}kg</span>
-            <span className="text-sm text-white/40">Height — {p.heightCm}cm</span>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+        {/* ═══ HERO: Bio Age Gauge + KPI Cards ═══ */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* Gauge + Description */}
+          <div className="lg:col-span-7 vcard rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-8">
+            {/* Circular Gauge */}
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 shrink-0 flex items-center justify-center">
+              <svg className="absolute inset-0 w-full h-full -rotate-90">
+                <circle cx="50%" cy="50%" r="44%" fill="transparent" stroke="#e6e8ea" strokeWidth="12" />
+                <circle cx="50%" cy="50%" r="44%" fill="transparent" stroke="#10b981" strokeWidth="12"
+                  strokeDasharray="553" strokeDashoffset={gaugeOffset} strokeLinecap="round" />
+              </svg>
+              <div className="text-center z-10">
+                <span className="block text-4xl sm:text-5xl font-extrabold text-emerald-700 tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans'" }}>{p.biologicalAge}</span>
+                <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-slate-400 mt-1">Bio Age</span>
+              </div>
+            </div>
+
+            <div className="flex-1 space-y-3 text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans'" }}>Grip Vitality Report</h1>
+              <p className="text-slate-500 text-sm leading-relaxed max-w-md">
+                Your grip strength indicates a biological age{" "}
+                <span className="text-emerald-600 font-bold">{delta > 0 ? `${delta} years younger` : delta < 0 ? `${Math.abs(delta)} years older` : "matching your age"}</span>
+                {" "}than your chronological age ({p.age}).
+              </p>
+              <div className="flex gap-2 justify-center sm:justify-start flex-wrap">
+                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold uppercase tracking-wider border border-emerald-100">{stage.label}</span>
+                <span className="px-3 py-1 rounded-full bg-slate-50 text-slate-500 text-[10px] font-semibold uppercase tracking-wider border border-slate-100">Rank #{rank}</span>
+              </div>
+            </div>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white/70 mt-3">Rank <span className="text-white">#{rank}</span> of {total}</p>
-        </div>
-      </div>
 
-      {/* ═══ CONTENT ═══ */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5 space-y-3">
-
-        {/* Row 1: Age Gauge + Grip Comparison — side by side (as in wireframe) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Card label="Age Gauge">
-            <BioAgeGauge age={p.age} biologicalAge={p.biologicalAge} delta={delta} />
-          </Card>
-          <Card label="Grip Comparison">
-            <GripBarChart grip={p.gripAvgKg} expected={p.expectedGrip} normLow={n.low} normAvg={n.avg} normHigh={n.high} gender={p.gender} ageGroup={n.group} />
-          </Card>
-        </div>
-
-        {/* Row 2: Hand Breakdown + Percentile — side by side */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Card label="Hand Breakdown">
-            <HandComparison left={p.gripLeftKg} right={p.gripRightKg} expected={p.expectedGrip} />
-          </Card>
-          <Card label="Percentile">
-            <div className="flex items-center gap-6 py-2">
-              {/* You vs Expected — simple visual bars */}
-              <div className="flex-1 space-y-3">
-                <div>
-                  <div className="flex justify-between text-[10px] text-white/30 mb-1">
-                    <span>You</span>
-                    <span>{p.gripAvgKg} kg</span>
-                  </div>
-                  <div className="h-3 rounded-full bg-white/[0.04]">
-                    <div className="h-full rounded-full bg-[#4ADE80]" style={{ width: `${Math.min(100, (p.gripAvgKg / (n.high * 1.1)) * 100)}%` }} />
-                  </div>
+          {/* KPI Cards */}
+          <div className="lg:col-span-5 grid grid-cols-2 gap-3">
+            <KPI icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>} value={`${p.gripAvgKg}`} unit="kg" label="Max Grip" />
+            <KPI icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12h-4l-3 9L9 3l-3 9H2"/></svg>} value={`P${percentile}`} unit="" label="Percentile" />
+            <div className="col-span-2 vcard rounded-3xl p-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3v18M3 12h18"/></svg>
                 </div>
                 <div>
-                  <div className="flex justify-between text-[10px] text-white/20 mb-1">
-                    <span>Expected</span>
-                    <span>{p.expectedGrip} kg</span>
-                  </div>
-                  <div className="h-3 rounded-full bg-white/[0.04]">
-                    <div className="h-full rounded-full bg-white/10" style={{ width: `${Math.min(100, (p.expectedGrip / (n.high * 1.1)) * 100)}%` }} />
-                  </div>
+                  <p className="text-2xl font-bold text-slate-900" style={{ fontFamily: "'Plus Jakarta Sans'" }}>{p.gripLeftKg !== null && p.gripRightKg !== null ? Math.abs(p.gripLeftKg - p.gripRightKg).toFixed(1) : "—"}<small className="text-sm font-medium ml-1 text-slate-400">kg diff</small></p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Balance Score</p>
                 </div>
               </div>
-              {/* Percentile number */}
-              <div className="text-center shrink-0">
-                <p className="text-3xl sm:text-4xl font-black text-[#4ADE80]">P{percentile}</p>
-                <p className="text-[10px] text-white/25 mt-0.5">Top {100 - percentile}%</p>
-                <p className="text-[9px] text-white/15">{p.gender === "male" ? "Men" : "Women"} {n.group}</p>
-              </div>
+              <span className="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-md border border-emerald-100">
+                {p.gripLeftKg !== null && p.gripRightKg !== null && Math.abs(p.gripLeftKg - p.gripRightKg) <= 2 ? "SYMMETRIC" : "ASYMMETRIC"}
+              </span>
             </div>
-          </Card>
-        </div>
+          </div>
+        </section>
 
-        {/* Row 3: Your Badge + Stage Reference — side by side (as in wireframe) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Your Badge — large centered badge */}
-          <Card label="Your Badge">
-            <div className="flex flex-col items-center py-3">
+        {/* ═══ HAND BREAKDOWN + POPULATION COMPARISON ═══ */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Hand Breakdown */}
+          <div className="vcard rounded-[2rem] p-6 sm:p-8">
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-6" style={{ fontFamily: "'Plus Jakarta Sans'" }}>Hand Breakdown</h2>
+            <div className="space-y-6">
+              {p.gripLeftKg !== null && (
+                <HandBar label="Left Hand" value={p.gripLeftKg} expected={p.expectedGrip} max={n.high} />
+              )}
+              {p.gripRightKg !== null && (
+                <HandBar label="Right Hand" value={p.gripRightKg} expected={p.expectedGrip} max={n.high} />
+              )}
+            </div>
+            {p.gripLeftKg !== null && p.gripRightKg !== null && (
+              <div className="mt-6 p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100/50">
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  {Math.abs(p.gripLeftKg - p.gripRightKg) <= 2
+                    ? "Your balance is within the optimal range (< 5% difference), reducing risk of injury."
+                    : `${Math.abs(p.gripLeftKg - p.gripRightKg).toFixed(1)}kg imbalance detected. Consider training your weaker hand.`}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Population Comparison — Bell Curve */}
+          <div className="vcard rounded-[2rem] p-6 sm:p-8 flex flex-col">
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-6" style={{ fontFamily: "'Plus Jakarta Sans'" }}>Grip Comparison</h2>
+            <div className="flex-1 relative flex items-end gap-2 pb-6 min-h-[200px]">
+              {bars.map((b, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1 relative">
+                  {b.isUser && (
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-center whitespace-nowrap">
+                      <span className="text-emerald-600 font-bold text-xs block">YOU</span>
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="mx-auto text-emerald-500"><path d="M5 10L0 3h10z" fill="currentColor"/></svg>
+                    </div>
+                  )}
+                  <div
+                    className={`w-full rounded-t-xl transition-all ${b.isUser ? "bg-emerald-500/80" : "bg-slate-200/60 hover:bg-slate-200"}`}
+                    style={{ height: `${b.height}%` }}
+                  />
+                  <span className={`text-[9px] font-bold ${b.isUser ? "text-emerald-600" : "text-slate-300"}`}>P{b.pctl}</span>
+                </div>
+              ))}
+            </div>
+            <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+              <span className="text-xs font-medium text-slate-400">vs. {p.gender === "male" ? "Men" : "Women"} {n.group}</span>
+              <span className="text-xs font-bold text-emerald-600">{gDiff >= 0 ? "+" : ""}{((gDiff / p.expectedGrip) * 100).toFixed(0)}% vs Expected</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ STAGE + REFERENCE ═══ */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Your Badge */}
+          <div className="vcard rounded-[2rem] p-6 sm:p-8">
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-5" style={{ fontFamily: "'Plus Jakarta Sans'" }}>Your Badge</h2>
+            <div className="flex items-center gap-4 mb-5">
               <StageBadge stage={p.bioStage} size="lg" />
-              <p className="font-bold text-sm mt-3" style={{ color: stage.color }}>{stage.label}</p>
-              <p className="text-[10px] text-white/25 mt-0.5">{stage.description}</p>
+              <div>
+                <p className="font-bold text-lg" style={{ color: stage.color, fontFamily: "'Plus Jakarta Sans'" }}>{stage.label}</p>
+                <p className="text-sm text-slate-400">{stage.description}</p>
+              </div>
             </div>
-            <div className="grid grid-cols-3 gap-1.5 mt-3">
-              <StatBox label="Expected" value={`${p.expectedGrip}kg`} />
-              <StatBox label="Performance" value={`${gDiff >= 0 ? "+" : ""}${gDiff.toFixed(1)}kg`} color={gDiff >= 0 ? "#4ADE80" : "#f87171"} />
-              <StatBox label="Standing" value={`Top ${100 - percentile}%`} />
+            <div className="grid grid-cols-3 gap-2">
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                <p className="text-[9px] text-slate-400 uppercase tracking-wider">Expected</p>
+                <p className="text-sm font-bold text-slate-700">{p.expectedGrip} kg</p>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                <p className="text-[9px] text-slate-400 uppercase tracking-wider">Performance</p>
+                <p className="text-sm font-bold" style={{ color: gDiff >= 0 ? "#059669" : "#dc2626" }}>{gDiff >= 0 ? "+" : ""}{gDiff.toFixed(1)} kg</p>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                <p className="text-[9px] text-slate-400 uppercase tracking-wider">Standing</p>
+                <p className="text-sm font-bold text-slate-700">Top {100 - percentile}%</p>
+              </div>
             </div>
-          </Card>
+          </div>
 
-          {/* Stage Reference — with mini badges */}
-          <Card label="Stage Reference">
-            <div className="space-y-1 mt-1">
+          {/* Stage Reference */}
+          <div className="vcard rounded-[2rem] p-6 sm:p-8">
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-5" style={{ fontFamily: "'Plus Jakarta Sans'" }}>Stage Reference</h2>
+            <div className="space-y-1">
               {STAGES.map(s => {
                 const info = STAGE_MAP[s.l]; const cur = s.l === p.bioStage;
                 return (
-                  <div key={s.l} className={`flex items-center gap-2.5 py-1.5 px-2 rounded-lg ${cur ? "bg-white/[0.04]" : ""}`}>
+                  <div key={s.l} className={`flex items-center gap-3 py-2 px-3 rounded-xl ${cur ? "bg-emerald-50 border border-emerald-100" : ""}`}>
                     <StageBadge stage={s.l} size="sm" />
-                    <span className="text-[10px] text-white/15 w-16 shrink-0 font-mono">{s.r}</span>
-                    <span className={`text-sm ${cur ? "font-bold" : "text-white/20"}`} style={cur ? { color: info.color } : {}}>{s.l}{cur ? " ←" : ""}</span>
+                    <span className="text-[10px] text-slate-300 w-16 shrink-0 font-mono">{s.r}</span>
+                    <span className={`text-sm ${cur ? "font-bold text-emerald-700" : "text-slate-400"}`}>{s.l}{cur ? " ←" : ""}</span>
                   </div>
                 );
               })}
             </div>
-          </Card>
-        </div>
+          </div>
+        </section>
+
+        {/* ═══ LONGEVITY INSIGHT BANNER ═══ */}
+        <section className="vcard rounded-[2rem] overflow-hidden">
+          <div className="p-6 sm:p-10 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900" style={{ fontFamily: "'Plus Jakarta Sans'" }}>Longevity Insight</h3>
+            <p className="text-slate-500 leading-relaxed text-sm max-w-xl">
+              High grip strength is closely correlated with skeletal muscle mass and lower all-cause mortality.
+              {percentile >= 50 ? ` Your current grip puts you in the top ${100 - percentile}% for your demographic — a strong indicator of healthspan.` : ` Building grip strength through targeted exercises can significantly improve your biological markers.`}
+            </p>
+            <button onClick={pdf} className="mt-2 px-6 py-3 bg-emerald-500 text-white font-bold rounded-full shadow-lg shadow-emerald-200/50 hover:bg-emerald-600 transition-all inline-flex items-center gap-2 text-sm">
+              Download PDF Report
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </section>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-2 pt-2 pb-6">
-          <button onClick={pdf} className="btn-primary flex-1 py-3 rounded-xl text-sm font-bold">Download PDF Report</button>
-          <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="btn-outline-accent flex-1 py-3 rounded-xl text-sm font-semibold">Leaderboard</button>
-          <button onClick={() => router.push(`/event/${eventId}/register`)} className="btn-secondary flex-1 py-3 rounded-xl text-sm">Next Player →</button>
+        <div className="flex gap-3 pb-6">
+          <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-3 rounded-full text-sm font-semibold border border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-all">Leaderboard</button>
+          <button onClick={() => router.push(`/event/${eventId}/register`)} className="flex-1 py-3 rounded-full text-sm font-medium border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all">Next Player →</button>
         </div>
+      </main>
+    </div>
+  );
+}
+
+/* ─── Sub-components ─── */
+
+function KPI({ icon, value, unit, label }: { icon: React.ReactNode; value: string; unit: string; label: string }) {
+  return (
+    <div className="vcard rounded-3xl p-5 flex flex-col justify-between min-h-[120px]">
+      <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">{icon}</div>
+      <div className="mt-3">
+        <p className="text-2xl font-bold text-slate-900" style={{ fontFamily: "'Plus Jakarta Sans'" }}>{value}<small className="text-sm font-medium ml-1 text-slate-400">{unit}</small></p>
+        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400 mt-0.5">{label}</p>
       </div>
     </div>
   );
 }
 
-function Card({ label, children }: { label: string; children: React.ReactNode }) {
+function HandBar({ label, value, expected, max }: { label: string; value: number; expected: number; max: number }) {
+  const pct = Math.min(100, (value / (max * 1.1)) * 100);
   return (
-    <div className="glass rounded-2xl p-4 sm:p-5">
-      <p className="text-[9px] text-white/30 font-semibold uppercase tracking-[0.12em] mb-3">{label}</p>
-      {children}
-    </div>
-  );
-}
-
-function StatBox({ label, value, color }: { label: string; value: string; color?: string }) {
-  return (
-    <div className="p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-sm border border-white/[0.05]">
-      <p className="text-[8px] text-white/20">{label}</p>
-      <p className="text-[11px] font-semibold" style={{ color: color || "rgba(255,255,255,0.45)" }}>{value}</p>
+    <div className="space-y-2">
+      <div className="flex justify-between items-end">
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</span>
+        <span className="text-xl font-bold text-slate-900" style={{ fontFamily: "'Plus Jakarta Sans'" }}>{value}<small className="text-xs ml-1 font-normal text-slate-300">kg</small></span>
+      </div>
+      <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: value >= expected ? "#10b981" : "#f87171", boxShadow: value >= expected ? "0 0 12px rgba(16,185,129,0.3)" : "none" }} />
+      </div>
     </div>
   );
 }
