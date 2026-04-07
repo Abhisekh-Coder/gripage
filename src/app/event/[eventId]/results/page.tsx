@@ -82,7 +82,7 @@ function Results() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/70 to-[#0B0B0F]/40" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0F]/60 to-transparent" />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 h-full flex flex-col justify-end pb-5">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 h-full flex flex-col justify-end pb-5">
           <button onClick={() => router.push(`/event/${eventId}`)} aria-label="Back" className="text-white/25 hover:text-white/50 text-[11px] inline-flex items-center gap-1 transition-colors mb-3">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
             Back to Event
@@ -98,7 +98,7 @@ function Results() {
       </div>
 
       {/* ═══ CONTENT ═══ */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5 space-y-3">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5 space-y-3">
 
         {/* Row 1: Age Gauge + Grip Comparison — side by side (as in wireframe) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -194,8 +194,8 @@ function Results() {
 
 function Card({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl p-3 sm:p-4 bg-white/[0.025] border border-white/[0.05]">
-      <p className="text-[9px] text-white/25 font-semibold uppercase tracking-[0.1em] mb-2">{label}</p>
+    <div className="glass rounded-2xl p-4 sm:p-5">
+      <p className="text-[9px] text-white/30 font-semibold uppercase tracking-[0.12em] mb-3">{label}</p>
       {children}
     </div>
   );
@@ -203,9 +203,9 @@ function Card({ label, children }: { label: string; children: React.ReactNode })
 
 function StatBox({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
-    <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.03]">
-      <p className="text-[8px] text-white/15">{label}</p>
-      <p className="text-[11px] font-semibold" style={{ color: color || "rgba(255,255,255,0.4)" }}>{value}</p>
+    <div className="p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-sm border border-white/[0.05]">
+      <p className="text-[8px] text-white/20">{label}</p>
+      <p className="text-[11px] font-semibold" style={{ color: color || "rgba(255,255,255,0.45)" }}>{value}</p>
     </div>
   );
 }

@@ -92,7 +92,7 @@ export default function EventLandingPage() {
         </div>
       )}
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
 
         {/* Back button */}
         <button onClick={() => router.push("/")} className="text-white/30 hover:text-white/60 text-sm mb-6 sm:mb-8 inline-flex items-center gap-1.5 transition-colors">
@@ -164,7 +164,7 @@ export default function EventLandingPage() {
                 )}
 
                 {/* Stats row */}
-                <div className="flex items-center gap-4 py-3 px-4 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                <div className="flex items-center gap-4 py-3 px-4 rounded-xl glass">
                   <div className="flex-1 text-center">
                     <p className="text-2xl font-black">{count}</p>
                     <p className="text-[10px] text-white/30 uppercase tracking-wider">Participants</p>
@@ -179,7 +179,7 @@ export default function EventLandingPage() {
             </div>
 
             {/* Share section */}
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5">
+            <div className="glass rounded-2xl p-5">
               <p className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">Share Event</p>
               <div className="grid grid-cols-3 gap-2">
                 <button onClick={handleCopyLink} className="py-3 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/[0.08] transition-all flex flex-col items-center gap-1.5">
@@ -268,7 +268,7 @@ export default function EventLandingPage() {
                   </button>
                 </div>
               ) : (
-                <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 page-enter">
+                <div className="glass rounded-2xl p-5 page-enter">
                   <p className="text-sm text-white/40 mb-3">Enter the email you registered with</p>
                   <input type="email" placeholder="your@email.com" value={lookupEmail}
                     onChange={(e) => { setLookupEmail(e.target.value); setLookupError(""); }}
@@ -292,7 +292,7 @@ export default function EventLandingPage() {
             {event.description && (
               <div className="mb-8">
                 <h3 className="text-lg font-bold mb-3 text-white/70">About This Event</h3>
-                <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-5">
+                <div className="glass rounded-2xl p-5">
                   <p className="text-white/50 leading-relaxed text-sm whitespace-pre-wrap">{event.description}</p>
                 </div>
               </div>
@@ -320,7 +320,7 @@ export default function EventLandingPage() {
             </div>
 
             {/* How to join info */}
-            <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-5">
+            <div className="glass rounded-2xl p-5">
               <p className="text-xs font-bold text-white/30 uppercase tracking-wider mb-3">How to Join</p>
               <div className="flex items-start gap-4">
                 <div className="space-y-3 text-sm text-white/50">

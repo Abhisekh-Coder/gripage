@@ -174,7 +174,7 @@ export default function OrganizerDashboard() {
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] p-4 sm:p-8 relative overflow-hidden">
-      <div className="max-w-3xl mx-auto page-enter">
+      <div className="max-w-5xl mx-auto page-enter">
 
         {/* HEADER */}
         <div className="flex items-center justify-between mb-8">
@@ -232,7 +232,7 @@ export default function OrganizerDashboard() {
                   </div>
 
                   {expandedEvent === evt.id && (
-                    <div className="mt-2 bg-white/[0.02] border border-white/[0.06] rounded-xl p-5 page-enter">
+                    <div className="mt-2 glass rounded-xl p-5 page-enter">
                       {loadingParticipants ? (<p className="text-white/30 text-center py-6">Loading...</p>) : (<>
                         <div className="flex items-center gap-2 mb-5 flex-wrap">
                           <button onClick={() => router.push(`/event/${evt.id}/leaderboard`)} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 text-white/50 hover:text-white/70 transition-all">Leaderboard</button>
@@ -326,7 +326,7 @@ export default function OrganizerDashboard() {
               <input type="text" placeholder="Event Name" value={newName} onChange={(e) => setNewName(e.target.value)}
                 className="w-full py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-lg font-semibold placeholder:text-white/20 placeholder:font-normal focus:outline-none focus:border-[#4ADE80]/60 transition-all" />
 
-              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl overflow-hidden">
+              <div className="glass rounded-xl overflow-hidden">
                 <div className="flex items-center px-4 py-3 gap-3">
                   <span className="text-white/30 text-sm w-10">Start</span>
                   <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
@@ -339,7 +339,7 @@ export default function OrganizerDashboard() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl">
+              <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30 flex-shrink-0">
                   <path d="M12 13a3 3 0 100-6 3 3 0 000 6z"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
                 </svg>
@@ -347,7 +347,7 @@ export default function OrganizerDashboard() {
                   className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 focus:outline-none" />
               </div>
 
-              <div className="flex items-start gap-3 px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl">
+              <div className="flex items-start gap-3 px-4 py-3 glass rounded-xl">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30 flex-shrink-0 mt-0.5">
                   <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/>
                 </svg>
@@ -371,7 +371,7 @@ export default function OrganizerDashboard() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-3 bg-white/[0.03] rounded-xl border border-white/[0.06]">
+    <div className="p-3 glass rounded-xl">
       <p className="text-[10px] text-white/25 mb-0.5">{label}</p>
       <p className="text-sm font-bold">{value}</p>
     </div>
