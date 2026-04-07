@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   getEvents,
   createEvent,
-  uploadEventImage,
   getParticipants,
   getParticipantCount,
   exportParticipantsCSV,
@@ -105,7 +104,13 @@ export default function OrganizerDashboard() {
     try {
       let imageUrl = "";
       if (newImageFile) {
-        try { imageUrl = await uploadEventImage(newImageFile); } catch (e) { console.error("Image upload failed:", e); }
+        try {
+          const fd = new FormData();
+          fd.append("file", newImageFile);
+          const res = await fetch("/api/upload", { method: "POST", body: fd });
+          const data = await res.json();
+          if (data.url) imageUrl = data.url;
+        } catch (e) { console.error("Image upload failed:", e); }
       }
       const duration = newStartTime && newEndTime ? `${formatTime12(newStartTime)} – ${formatTime12(newEndTime)}` : newDuration.trim();
       await createEvent(newName.trim(), newDate, newDesc.trim(), newLocation.trim(), duration, imageUrl);

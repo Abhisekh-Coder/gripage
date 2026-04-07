@@ -6,8 +6,28 @@ import type { Gender, FitnessAnswers } from "@/lib/types";
 import { saveRegistration } from "@/lib/session";
 import { getEvent, getParticipantByEmail } from "@/lib/store";
 
-function isValidEmail(e: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
-function isValidPhone(p: string) { return p.replace(/\D/g, "").length >= 10; }
+// Disposable email domains to block
+const DISPOSABLE = ["tempmail.com","throwaway.email","guerrillamail.com","mailinator.com","yopmail.com","10minutemail.com","temp-mail.org","fakeinbox.com","trashmail.com","sharklasers.com","guerrillamailblock.com","grr.la","dispostable.com","maildrop.cc"];
+
+function isValidEmail(e: string): boolean {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) return false;
+  const domain = e.split("@")[1]?.toLowerCase();
+  if (!domain) return false;
+  // Block disposable domains
+  if (DISPOSABLE.some(d => domain.includes(d))) return false;
+  // Must have a proper TLD (at least 2 chars after last dot)
+  const parts = domain.split(".");
+  if (parts.length < 2 || parts[parts.length - 1].length < 2) return false;
+  return true;
+}
+
+function isValidIndianPhone(p: string): boolean {
+  const digits = p.replace(/\D/g, "");
+  // Remove country code if present
+  const num = digits.startsWith("91") && digits.length > 10 ? digits.slice(2) : digits;
+  // Indian mobile: 10 digits, starts with 6-9
+  return num.length === 10 && /^[6-9]/.test(num);
+}
 
 const EXERCISE_TYPES = [
   { id: "weight_training", label: "Weight Training", icon: "🏋️" },
@@ -62,7 +82,7 @@ export default function RegisterPage() {
   }
 
   const isValid =
-    name.trim().length >= 2 && isValidEmail(email) && isValidPhone(phone) &&
+    name.trim().length >= 2 && isValidEmail(email) && isValidIndianPhone(phone) &&
     Number(height) >= 100 && Number(height) <= 220 &&
     Number(weight) >= 30 && Number(weight) <= 200 &&
     Number(age) >= 17 && Number(age) <= 90;
@@ -139,13 +159,13 @@ export default function RegisterPage() {
                 <div>
                   <label className="block text-xs text-white/40 mb-1.5">Email *</label>
                   <input type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl" />
-                  {email && !isValidEmail(email) && <p className="text-red-400/80 text-xs mt-1">Invalid email</p>}
+                  {email && !isValidEmail(email) && <p className="text-red-400/80 text-xs mt-1">{email.includes("@") && DISPOSABLE.some(d => email.split("@")[1]?.includes(d)) ? "Disposable emails not allowed" : "Enter a valid email address"}</p>}
                 </div>
 
                 <div>
                   <label className="block text-xs text-white/40 mb-1.5">Phone *</label>
                   <input type="tel" placeholder="+91 98765 43210" value={phone} onChange={(e) => setPhone(e.target.value)} className="glass-input w-full py-3 px-4 rounded-xl" />
-                  {phone && !isValidPhone(phone) && <p className="text-red-400/80 text-xs mt-1">Invalid phone</p>}
+                  {phone && !isValidIndianPhone(phone) && <p className="text-red-400/80 text-xs mt-1">Enter a valid 10-digit Indian mobile number</p>}
                 </div>
 
                 <div>
@@ -202,31 +222,41 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                <div>
-                  <label className="block text-xs text-white/40 mb-2">Activity Level</label>
-                  <div className="flex flex-wrap gap-2">
-                    {ACTIVITY_LEVELS.map((l) => (
-                      <button key={l.id} onClick={() => setActivityLevel(l.id)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activityLevel === l.id ? "glass-toggle-active" : "glass-toggle"}`}>{l.label}</button>
+                {doesGym !== "no" && (
+                  <div>
+                    <label className="block text-xs text-white/40 mb-2">Activity Level</label>
+                    <div className="flex flex-wrap gap-2">
+                      {ACTIVITY_LEVELS.map((l) => (
+                        <button key={l.id} onClick={() => setActivityLevel(l.id)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activityLevel === l.id ? "glass-toggle-active" : "glass-toggle"}`}>{l.label}</button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Only show exercise types if they work out */}
+              {doesGym !== "no" && (
+                <div className="glass-card rounded-2xl p-5 space-y-4">
+                  <p className="text-xs text-white/30 uppercase tracking-wider font-medium">What do you do?</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {EXERCISE_TYPES.filter(e => e.id !== "none").map((e) => (
+                      <button key={e.id} onClick={() => toggleExercise(e.id)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center gap-2 ${exerciseType.includes(e.id) ? "glass-toggle-active" : "glass-toggle"}`}>
+                        <span>{e.icon}</span>{e.label}
+                      </button>
                     ))}
                   </div>
                 </div>
-              </div>
-
-              <div className="glass-card rounded-2xl p-5 space-y-4">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">Exercise Types</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {EXERCISE_TYPES.map((e) => (
-                    <button key={e.id} onClick={() => toggleExercise(e.id)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center gap-2 ${exerciseType.includes(e.id) ? "glass-toggle-active" : "glass-toggle"}`}>
-                      <span>{e.icon}</span>{e.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
 
               <div className="glass-card rounded-2xl p-5 space-y-3">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">Fitness Goal</p>
+                <p className="text-xs text-white/30 uppercase tracking-wider font-medium">
+                  {doesGym === "no" ? "What would you like to achieve?" : "Fitness Goal"}
+                </p>
                 <div className="flex flex-wrap gap-2">
-                  {["Build Strength", "Lose Weight", "Stay Healthy", "Build Muscle", "Improve Endurance", "Flexibility"].map((g) => (
+                  {(doesGym === "no"
+                    ? ["Stay Healthy", "Lose Weight", "Build Strength", "Improve Flexibility"]
+                    : ["Build Strength", "Lose Weight", "Stay Healthy", "Build Muscle", "Improve Endurance", "Flexibility"]
+                  ).map((g) => (
                     <button key={g} onClick={() => setFitnessGoal(g)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${fitnessGoal === g ? "glass-toggle-active" : "glass-toggle"}`}>{g}</button>
                   ))}
                 </div>
