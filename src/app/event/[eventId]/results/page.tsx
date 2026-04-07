@@ -115,8 +115,8 @@ function Results() {
             <button onClick={pdf} className="px-4 py-2.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-sm font-semibold text-white/70 hover:bg-white/[0.08] flex items-center gap-2 transition-colors">
               <Download className="w-3.5 h-3.5" /> PDF
             </button>
-            <button onClick={() => router.push(`/event/${eventId}/register`)} className="px-4 py-2.5 rounded-full bg-[#10b981] text-black text-sm font-bold flex items-center gap-1 hover:bg-[#0ea472] transition-colors">
-              Next <ChevronRight className="w-3.5 h-3.5" />
+            <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="px-4 py-2.5 rounded-full bg-[#10b981] text-black text-sm font-bold flex items-center gap-1 hover:bg-[#0ea472] transition-colors">
+              Leaderboard <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </header>
@@ -335,7 +335,7 @@ function Results() {
             </div>
             <div className="flex gap-2">
               <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-2.5 rounded-xl text-xs font-semibold border border-[#10b981]/20 text-[#10b981] hover:bg-[#10b981]/5 transition-colors">View Leaderboard</button>
-              <button onClick={() => router.push(`/event/${eventId}/register`)} className="flex-1 py-2.5 rounded-xl text-xs font-medium border border-white/[0.06] text-white/40 hover:bg-white/[0.03] transition-colors">Next Player →</button>
+              <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-2.5 rounded-xl text-xs font-medium border border-white/[0.06] text-white/40 hover:bg-white/[0.03] transition-colors">Next Player →</button>
             </div>
           </div>
         </div>

@@ -109,7 +109,8 @@ export default function OrganizerDashboard() {
           fd.append("file", newImageFile);
           const res = await fetch("/api/upload", { method: "POST", body: fd });
           const data = await res.json();
-          if (data.url) imageUrl = data.url;
+          if (data.url) { imageUrl = data.url; }
+          else if (data.error) { console.error("Upload error:", data.error); }
         } catch (e) { console.error("Image upload failed:", e); }
       }
       const duration = newStartTime && newEndTime ? `${formatTime12(newStartTime)} – ${formatTime12(newEndTime)}` : newDuration.trim();

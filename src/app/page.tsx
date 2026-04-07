@@ -39,7 +39,7 @@ export default function HomePage() {
               <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/60 transition-colors">How it works</button>
               <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/60 transition-colors">Join</button>
             </div>
-            <a href="/organizer/login" className="text-[10px] sm:text-[11px] font-semibold text-[#4ADE80]/70 hover:text-[#4ADE80] transition-colors uppercase tracking-wider">Organizers</a>
+            <a href="/organizer/login" className="text-[10px] sm:text-[11px] font-semibold text-[#4ADE80]/70 hover:text-[#4ADE80] transition-colors uppercase tracking-wider">Enterprise</a>
           </div>
         </div>
       </nav>
@@ -241,7 +241,7 @@ export default function HomePage() {
               <div className="space-y-2">
                 <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="block text-xs text-white/25 hover:text-white/50 transition-colors">How it works</button>
                 <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="block text-xs text-white/25 hover:text-white/50 transition-colors">Join Event</button>
-                <a href="/organizer/login" className="block text-xs text-white/25 hover:text-white/50 transition-colors">Organizer Login</a>
+                <a href="/organizer/login" className="block text-xs text-white/25 hover:text-white/50 transition-colors">Enterprise Login</a>
               </div>
             </div>
             <div>

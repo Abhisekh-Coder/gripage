@@ -47,8 +47,8 @@ export default function OrganizerLoginPage() {
           <span className="text-xl font-black tracking-tight">Grip<span className="text-[#10b981]">Age</span></span>
         </div>
 
-        <h1 className="text-2xl font-black mb-2">Organizer Login</h1>
-        <p className="text-white/30 text-sm mb-8">Enter your @foxo.club email to continue</p>
+        <h1 className="text-2xl font-black mb-2">Enterprise Login</h1>
+        <p className="text-white/30 text-sm mb-8">Sign in with your @foxo.club email</p>
 
         <input
           type="email"
