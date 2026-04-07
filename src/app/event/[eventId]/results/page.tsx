@@ -125,7 +125,7 @@ function Results() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
           <KPI icon={<Gauge className="w-3.5 h-3.5" />} label="Bio Age" value={String(p.biologicalAge)} sub={`${Math.abs(delta)}y ${delta >= 0 ? "younger" : "older"}`} accent />
           <KPI icon={<Activity className="w-3.5 h-3.5" />} label="Max Grip" value={String(grip)} unit="kg" sub={`Expected ${p.expectedGrip}kg`} />
-          <KPI icon={<TrendingUp className="w-3.5 h-3.5" />} label="Percentile" value={`P${percentile}`} sub={`Top ${100 - percentile}% · ${p.gender === "male" ? "Men" : "Women"} ${ageGroup}`} />
+          <KPI icon={<TrendingUp className="w-3.5 h-3.5" />} label="Standing" value={`Top ${100 - percentile}%`} sub={`${p.gender === "male" ? "Men" : "Women"} aged ${ageGroup}`} />
           <KPI icon={<Activity className="w-3.5 h-3.5" />} label="Balance" value={p.gripLeftKg !== null && p.gripRightKg !== null ? Math.abs(p.gripLeftKg - p.gripRightKg).toFixed(1) : "—"} unit="kg" sub={`L ${p.gripLeftKg ?? "—"} · R ${p.gripRightKg ?? "—"}`} />
         </div>
 
@@ -253,8 +253,8 @@ function Results() {
             ))}
             <div className="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between">
               <div>
-                <div className="text-[10px] text-white/25">Percentile</div>
-                <div className="text-2xl font-black text-[#10b981]">P{percentile}</div>
+                <div className="text-[10px] text-white/25">Standing</div>
+                <div className="text-2xl font-black text-[#10b981]">Top {100 - percentile}%</div>
               </div>
               <div className="text-right text-[10px] text-white/25">Top {100 - percentile}%<br />{p.gender === "male" ? "Men" : "Women"} {ageGroup}</div>
             </div>
