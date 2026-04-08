@@ -109,6 +109,36 @@ export async function deleteEvent(eventId: string): Promise<void> {
 
 export async function deleteParticipant(participantId: string): Promise<void> {
   const supabase = createClient();
+
+  // Archive to deleted_participants before removing
+  const { data: p } = await supabase.from("participants").select("*").eq("id", participantId).single();
+  if (p) {
+    await supabase.from("deleted_participants").insert({
+      original_id: p.id,
+      event_id: p.event_id,
+      name: p.name,
+      email: p.email,
+      phone: p.phone,
+      gender: p.gender,
+      height_cm: p.height_cm,
+      weight_kg: p.weight_kg,
+      age: p.age,
+      fitness_does_gym: p.fitness_does_gym,
+      fitness_gym_frequency: p.fitness_gym_frequency,
+      fitness_exercise_types: p.fitness_exercise_types,
+      fitness_goal: p.fitness_goal,
+      fitness_activity_level: p.fitness_activity_level,
+      grip_left_kg: p.grip_left_kg,
+      grip_right_kg: p.grip_right_kg,
+      grip_avg_kg: p.grip_avg_kg,
+      expected_grip: p.expected_grip,
+      biological_age: p.biological_age,
+      bio_stage: p.bio_stage,
+      original_created_at: p.created_at,
+    });
+  }
+
+  // Now delete from active table
   const { error } = await supabase.from("participants").delete().eq("id", participantId);
   if (error) throw new Error(error.message);
 }

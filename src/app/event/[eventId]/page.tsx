@@ -182,18 +182,14 @@ export default function EventLandingPage() {
             {/* Share section */}
             <div className="glass rounded-2xl p-5">
               <p className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">Share Event</p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <button onClick={handleCopyLink} className="py-3 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/[0.08] transition-all flex flex-col items-center gap-1.5">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-                  <span className="text-[10px]">Link</span>
-                </button>
-                <button onClick={handleCopyCode} className="py-3 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/[0.08] transition-all flex flex-col items-center gap-1.5">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                  <span className="text-[10px]">Code</span>
+                  <span className="text-[10px]">Copy Link</span>
                 </button>
                 <button onClick={() => setShowQR(!showQR)} className="py-3 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/[0.08] transition-all flex flex-col items-center gap-1.5">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                  <span className="text-[10px]">QR</span>
+                  <span className="text-[10px]">QR Code</span>
                 </button>
               </div>
               {showQR && eventUrl && (
