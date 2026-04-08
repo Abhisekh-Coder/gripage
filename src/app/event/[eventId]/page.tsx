@@ -27,6 +27,7 @@ export default function EventLandingPage() {
   const [copied, setCopied] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
+  const [showExitWarning, setShowExitWarning] = useState(false);
   const [showResultLookup, setShowResultLookup] = useState(false);
   const [lookupEmail, setLookupEmail] = useState("");
   const [lookupError, setLookupError] = useState("");
@@ -94,10 +95,10 @@ export default function EventLandingPage() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
 
-        {/* Back button */}
-        <button onClick={() => router.back()} className="text-white/30 hover:text-white/60 text-sm mb-6 sm:mb-8 inline-flex items-center gap-1.5 transition-colors">
+        {/* Back button with confirmation */}
+        <button onClick={() => setShowExitWarning(true)} className="text-white/30 hover:text-white/60 text-sm mb-6 sm:mb-8 inline-flex items-center gap-1.5 transition-colors">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
-          Back
+          Home
         </button>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
@@ -352,6 +353,28 @@ export default function EventLandingPage() {
           <span>Powered by Foxo.club</span>
         </div>
       </div>
+
+      {/* Exit warning popup */}
+      {showExitWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowExitWarning(false)} />
+          <div className="relative bg-[#141820] border border-white/[0.08] rounded-2xl p-6 w-full max-w-sm text-center page-enter">
+            <div className="w-12 h-12 rounded-xl bg-white/[0.05] flex items-center justify-center mx-auto mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+            </div>
+            <h3 className="text-lg font-bold text-white mb-1">Leave this event?</h3>
+            <p className="text-sm text-white/35 mb-6">You&apos;ll be taken back to the landing page.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowExitWarning(false)} className="flex-1 py-3 rounded-xl text-sm font-medium border border-white/[0.08] text-white/50 hover:bg-white/[0.04] transition-colors">
+                Stay
+              </button>
+              <button onClick={() => router.push("/")} className="flex-1 py-3 rounded-xl text-sm font-bold bg-white/[0.08] text-white hover:bg-white/[0.12] transition-colors">
+                Leave
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
