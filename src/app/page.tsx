@@ -25,10 +25,10 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] overflow-x-hidden">
 
-      {/* ═══ NAV — glass morphic ═══ */}
-      <nav className="fixed top-0 inset-x-0 z-50">
-        <div className="mx-4 sm:mx-6 mt-3 max-w-6xl lg:mx-auto">
-          <div className="glass-strong rounded-2xl px-5 sm:px-6 h-14 flex items-center justify-between">
+      {/* ═══ NAV ═══ */}
+      <nav className="fixed top-0 inset-x-0 z-50 bg-[#0B0B0F] border-b border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <div className="h-14 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-[#4ADE80]/10 border border-[#4ADE80]/15 flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"><path d="M4 18c3-1.5 7-3 10-3s7 1.5 10 3"/><path d="M6 13c2.5-1 6-2 8-2s5.5 1 8 2"/><path d="M8 8c2-.8 4.5-1.5 6-1.5s4 .7 6 1.5"/></svg>
