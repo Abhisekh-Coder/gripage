@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6">
+      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6 pb-24">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
             <div>
@@ -271,6 +271,20 @@ export default function HomePage() {
         </div>
       </footer>
 
+      {/* ═══ STICKY BOTTOM BAR ═══ */}
+      <div className="fixed bottom-0 inset-x-0 z-50 bg-[#0B0B0F] border-t border-white/[0.06] py-2.5 px-4">
+        <div className="max-w-sm mx-auto flex gap-2">
+          <input
+            type="text" placeholder="Enter Event Code" value={code} maxLength={6} aria-label="Event code"
+            onChange={e => { setCode(e.target.value.toUpperCase()); setError(""); }}
+            onKeyDown={e => e.key === "Enter" && join()}
+            className="glass-input flex-1 py-2.5 px-3 text-center uppercase font-bold tracking-[0.15em] text-xs rounded-xl"
+          />
+          <button onClick={join} disabled={!code.trim() || loading} className="btn-primary px-5 py-2.5 text-xs font-bold rounded-xl whitespace-nowrap">
+            {loading ? "..." : "Join"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

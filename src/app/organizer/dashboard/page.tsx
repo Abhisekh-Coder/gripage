@@ -136,8 +136,13 @@ export default function OrganizerDashboard() {
   }
 
   async function handleToggleStatus(event: GripEvent) {
-    event.status === "live" ? await endEvent(event.id) : await reopenEvent(event.id);
-    await loadEvents();
+    try {
+      event.status === "live" ? await endEvent(event.id) : await reopenEvent(event.id);
+      await loadEvents();
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to update event status";
+      setCreateError(msg);
+    }
   }
 
   async function handleDeleteEvent(eventId: string) {
@@ -340,8 +345,11 @@ export default function OrganizerDashboard() {
                 </div>
                 <div className="border-t border-white/[0.06] flex items-center px-4 py-3 gap-3">
                   <span className="text-white/30 text-sm w-10">Time</span>
-                  <input type="text" placeholder="e.g. 9 AM – 5 PM" value={newDuration} onChange={(e) => setNewDuration(e.target.value)}
-                    className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 focus:outline-none" />
+                  <input type="time" value={newStartTime} onChange={(e) => setNewStartTime(e.target.value)}
+                    className="bg-transparent text-white text-sm focus:outline-none" />
+                  <span className="text-white/20 text-xs">to</span>
+                  <input type="time" value={newEndTime} onChange={(e) => setNewEndTime(e.target.value)}
+                    className="bg-transparent text-white text-sm focus:outline-none" />
                 </div>
               </div>
 

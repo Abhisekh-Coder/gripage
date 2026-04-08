@@ -79,7 +79,23 @@ function Results() {
 
   const pdf = useCallback(() => { if (p) generateResultPDF(p); }, [p]);
 
-  if (!p) return <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center"><p className="text-white/30 text-sm">Loading results...</p></div>;
+  if (!p) return (
+    <div className="min-h-screen bg-[#0B0B0F] px-3 py-3 sm:px-4 sm:py-4">
+      <div className="max-w-[1200px] mx-auto space-y-2">
+        <div className="skeleton h-16 w-full rounded-xl" />
+        <div className="grid grid-cols-2 gap-2">
+          <div className="skeleton h-28 rounded-xl" />
+          <div className="skeleton h-28 rounded-xl" />
+          <div className="skeleton h-28 rounded-xl" />
+          <div className="skeleton h-28 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="skeleton h-56 rounded-xl" />
+          <div className="skeleton h-56 rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
 
   const delta = p.age - p.biologicalAge;
   const stage = getStage(delta);
@@ -98,7 +114,7 @@ function Results() {
   const sensitivity = Array.from({ length: 21 }, (_, i) => {
     const g = grip - 10 + i;
     const r = calculateBiologialAge_safe(p, g);
-    return { grip: g, bioAge: r, isYou: g === Math.round(grip) };
+    return { grip: g, bioAge: r, isYou: i === 10 }; // i=10 is center = current grip
   });
 
   return (
@@ -327,6 +343,7 @@ function Results() {
                   <YAxis tick={{ fontSize: 9, fill: "rgba(255,255,255,0.2)" }} tickLine={false} axisLine={false} domain={[Math.min(...sensitivity.map(s => s.bioAge)) - 2, Math.max(...sensitivity.map(s => s.bioAge)) + 2]} />
                   <RechartsTooltip contentStyle={{ background: "#1a1a1f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, color: "#fff", fontSize: 11 }} formatter={(v) => [`${v} yrs`, "Bio Age"]} labelFormatter={(v) => `Grip ${v}kg`} />
                   <ReferenceLine y={p.age} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" />
+                  <ReferenceLine x={Math.round(grip)} stroke="#4ADE80" strokeWidth={2} strokeDasharray="3 3" label={{ value: "YOU", position: "top", fill: "#4ADE80", fontSize: 9, fontWeight: 700 }} />
                   <Bar dataKey="bioAge" radius={[4, 4, 0, 0]}>
                     {sensitivity.map((d, i) => (
                       <Cell key={i} fill={d.isYou ? "#059669" : d.bioAge < p.age ? "rgba(16,185,129,0.25)" : "rgba(239,68,68,0.2)"} />
