@@ -41,14 +41,12 @@ export default function HomePage() {
               <span className="text-lg font-black tracking-tight">Grip<span className="text-[#4ADE80]">Age</span></span>
             </div>
             {/* Nav links */}
-            <div className="flex items-center gap-4 sm:gap-5">
+            <div className="flex items-center gap-5 sm:gap-6">
               <div className="hidden sm:flex items-center gap-5 text-xs font-medium text-white/40">
                 <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/70 transition-colors">How it works</button>
               </div>
-              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="btn-primary px-4 py-2 text-xs font-bold rounded-lg">
-                Join Event
-              </button>
-              <a href="/organizer/login" className="text-xs font-semibold text-white/30 hover:text-white/60 transition-colors">Enterprise</a>
+              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="text-xs font-semibold text-white/50 hover:text-white/80 transition-colors">Join Event</button>
+              <a href="/organizer/login" className="text-xs font-semibold text-white/50 hover:text-white/80 transition-colors">Enterprise</a>
             </div>
           </div>
         </div>
@@ -234,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6 pb-24">
+      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
             <div>
@@ -273,21 +271,6 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* ═══ STICKY BOTTOM BAR — always visible ═══ */}
-      <div className="fixed bottom-0 inset-x-0 z-50 bg-[#0B0B0F]/90 backdrop-blur-xl border-t border-white/[0.06] py-3 px-4 sm:px-6">
-        <div className="max-w-md mx-auto flex gap-2">
-          <input
-            type="text" placeholder="Event Code" value={code} maxLength={6} aria-label="Event code"
-            onChange={e => { setCode(e.target.value.toUpperCase()); setError(""); }}
-            onKeyDown={e => e.key === "Enter" && join()}
-            className="glass-input flex-1 py-2.5 px-3 text-center uppercase font-bold tracking-[0.2em] text-sm rounded-xl"
-          />
-          <button onClick={join} disabled={!code.trim() || loading} className="btn-primary px-5 py-2.5 text-sm font-bold rounded-xl whitespace-nowrap">
-            {loading ? "..." : "Join Event"}
-          </button>
-        </div>
-        {error && <p className="text-red-400 text-[10px] text-center mt-1">{error}</p>}
-      </div>
     </div>
   );
 }
