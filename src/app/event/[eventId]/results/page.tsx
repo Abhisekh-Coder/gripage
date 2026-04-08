@@ -2,16 +2,28 @@
 
 import { Suspense, useEffect, useState, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import { getParticipant, getParticipants } from "@/lib/store";
 import { STAGE_MAP, calculateBiologicalAge } from "@/lib/formula";
 import { generateResultPDF } from "@/lib/pdf";
 import type { Participant, BioStage } from "@/lib/types";
-import {
-  RadialBarChart, RadialBar, PolarAngleAxis,
-  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine,
-  BarChart, Bar, Cell, Line
-} from "recharts";
 import { ArrowLeft, Download, Trophy, ChevronRight, Activity, Gauge, TrendingUp, Info } from "lucide-react";
+
+// Recharts must be loaded client-side only (uses window)
+const RadialBarChart = dynamic(() => import("recharts").then(m => m.RadialBarChart), { ssr: false });
+const RadialBar = dynamic(() => import("recharts").then(m => m.RadialBar), { ssr: false });
+const PolarAngleAxis = dynamic(() => import("recharts").then(m => m.PolarAngleAxis), { ssr: false });
+const AreaChart = dynamic(() => import("recharts").then(m => m.AreaChart), { ssr: false });
+const Area = dynamic(() => import("recharts").then(m => m.Area), { ssr: false });
+const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
+const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false });
+const RechartsTooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
+const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
+const ReferenceLine = dynamic(() => import("recharts").then(m => m.ReferenceLine), { ssr: false });
+const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
+const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
+const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
+const Line = dynamic(() => import("recharts").then(m => m.Line), { ssr: false });
 
 const stages: { label: BioStage; min: number; color: string; bg: string }[] = [
   { label: "Elite Vitality", min: 10, color: "#34d399", bg: "rgba(52,211,153,0.1)" },
@@ -196,7 +208,7 @@ function Results() {
                   </defs>
                   <XAxis dataKey="age" tick={{ fontSize: 10, fill: "rgba(255,255,255,0.2)" }} tickLine={false} axisLine={{ stroke: "rgba(255,255,255,0.05)" }} />
                   <YAxis tick={{ fontSize: 10, fill: "rgba(255,255,255,0.2)" }} tickLine={false} axisLine={false} domain={[10, 55]} />
-                  <Tooltip contentStyle={{ background: "#1a1a1f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, color: "#fff", fontSize: 11 }} />
+                  <RechartsTooltip contentStyle={{ background: "#1a1a1f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, color: "#fff", fontSize: 11 }} />
                   <Area type="monotone" dataKey="expected" stroke="rgba(255,255,255,0.15)" strokeWidth={2} fill="url(#gA)" strokeDasharray="4 4" />
                   <ReferenceLine x={p.age} stroke="#10b981" strokeDasharray="2 2" strokeOpacity={0.4} />
                   <Line type="monotone" dataKey="you" stroke="#10b981" strokeWidth={0} dot={{ r: 7, fill: "#10b981", stroke: "#0B0B0F", strokeWidth: 3 }} />
@@ -313,7 +325,7 @@ function Results() {
                 <BarChart data={sensitivity} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
                   <XAxis dataKey="grip" tick={{ fontSize: 9, fill: "rgba(255,255,255,0.2)" }} tickLine={false} axisLine={{ stroke: "rgba(255,255,255,0.05)" }} interval={4} />
                   <YAxis tick={{ fontSize: 9, fill: "rgba(255,255,255,0.2)" }} tickLine={false} axisLine={false} domain={[Math.min(...sensitivity.map(s => s.bioAge)) - 2, Math.max(...sensitivity.map(s => s.bioAge)) + 2]} />
-                  <Tooltip contentStyle={{ background: "#1a1a1f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, color: "#fff", fontSize: 11 }} formatter={(v) => [`${v} yrs`, "Bio Age"]} labelFormatter={(v) => `Grip ${v}kg`} />
+                  <RechartsTooltip contentStyle={{ background: "#1a1a1f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, color: "#fff", fontSize: 11 }} formatter={(v) => [`${v} yrs`, "Bio Age"]} labelFormatter={(v) => `Grip ${v}kg`} />
                   <ReferenceLine y={p.age} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" />
                   <Bar dataKey="bioAge" radius={[4, 4, 0, 0]}>
                     {sensitivity.map((d, i) => (
