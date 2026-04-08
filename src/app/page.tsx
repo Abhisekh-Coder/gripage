@@ -29,18 +29,26 @@ export default function HomePage() {
       <nav className="fixed top-0 inset-x-0 z-50 bg-[#0B0B0F] border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
           <div className="h-14 flex items-center justify-between">
+            {/* Logo */}
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#4ADE80]/10 border border-[#4ADE80]/15 flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"><path d="M4 18c3-1.5 7-3 10-3s7 1.5 10 3"/><path d="M6 13c2.5-1 6-2 8-2s5.5 1 8 2"/><path d="M8 8c2-.8 4.5-1.5 6-1.5s4 .7 6 1.5"/></svg>
-              </div>
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <rect width="32" height="32" rx="8" fill="#4ADE80" fillOpacity="0.1"/>
+                <rect x="0.5" y="0.5" width="31" height="31" rx="7.5" stroke="#4ADE80" strokeOpacity="0.15"/>
+                <path d="M7 22c3-1.5 6-2 9-2s6 .5 9 2" stroke="#4ADE80" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M9 17.5c2.5-1 5-1.5 7-1.5s4.5.5 7 1.5" stroke="#4ADE80" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M11 13c2-.5 3.5-1 5-1s3 .5 5 1" stroke="#4ADE80" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
               <span className="text-lg font-black tracking-tight">Grip<span className="text-[#4ADE80]">Age</span></span>
             </div>
-            <div className="flex items-center gap-5 sm:gap-6">
+            {/* Nav links */}
+            <div className="flex items-center gap-4 sm:gap-5">
               <div className="hidden sm:flex items-center gap-5 text-xs font-medium text-white/40">
                 <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/70 transition-colors">How it works</button>
-                <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/70 transition-colors">Join</button>
               </div>
-              <a href="/organizer/login" className="text-xs font-bold text-[#4ADE80] hover:text-[#4ADE80]/80 transition-colors">Enterprise</a>
+              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="btn-primary px-4 py-2 text-xs font-bold rounded-lg">
+                Join Event
+              </button>
+              <a href="/organizer/login" className="text-xs font-semibold text-white/30 hover:text-white/60 transition-colors">Enterprise</a>
             </div>
           </div>
         </div>
@@ -226,7 +234,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6">
+      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6 pb-24">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
             <div>
@@ -264,6 +272,22 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* ═══ STICKY BOTTOM BAR — always visible ═══ */}
+      <div className="fixed bottom-0 inset-x-0 z-50 bg-[#0B0B0F]/90 backdrop-blur-xl border-t border-white/[0.06] py-3 px-4 sm:px-6">
+        <div className="max-w-md mx-auto flex gap-2">
+          <input
+            type="text" placeholder="Event Code" value={code} maxLength={6} aria-label="Event code"
+            onChange={e => { setCode(e.target.value.toUpperCase()); setError(""); }}
+            onKeyDown={e => e.key === "Enter" && join()}
+            className="glass-input flex-1 py-2.5 px-3 text-center uppercase font-bold tracking-[0.2em] text-sm rounded-xl"
+          />
+          <button onClick={join} disabled={!code.trim() || loading} className="btn-primary px-5 py-2.5 text-sm font-bold rounded-xl whitespace-nowrap">
+            {loading ? "..." : "Join Event"}
+          </button>
+        </div>
+        {error && <p className="text-red-400 text-[10px] text-center mt-1">{error}</p>}
+      </div>
     </div>
   );
 }
