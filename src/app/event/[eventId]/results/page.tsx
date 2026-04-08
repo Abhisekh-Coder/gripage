@@ -102,11 +102,11 @@ function Results() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0B0B0F] text-white px-3 py-4 sm:p-6" style={{ fontFamily: "'Inter', system-ui" }}>
-      <div className="max-w-[1400px] mx-auto">
+    <div className="min-h-screen bg-[#0B0B0F] text-white px-3 py-3 sm:px-4 sm:py-4" style={{ fontFamily: "'Inter', system-ui" }}>
+      <div className="max-w-[1200px] mx-auto">
 
         {/* HEADER */}
-        <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-5 gap-4">
+        <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-3">
           <div className="flex items-center gap-3">
             <button onClick={() => router.push(`/event/${eventId}`)} className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors">
               <ArrowLeft className="w-4 h-4 text-white/60" />
@@ -134,7 +134,7 @@ function Results() {
         </header>
 
         {/* KPI STRIP */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-2">
           <KPI icon={<Gauge className="w-3.5 h-3.5" />} label="Bio Age" value={String(p.biologicalAge)} sub={`${Math.abs(delta)}y ${delta >= 0 ? "younger" : "older"}`} accent />
           <KPI icon={<Activity className="w-3.5 h-3.5" />} label="Max Grip" value={String(grip)} unit="kg" sub={`Expected ${p.expectedGrip}kg`} />
           <KPI icon={<TrendingUp className="w-3.5 h-3.5" />} label="Standing" value={`Top ${100 - percentile}%`} sub={`${p.gender === "male" ? "Men" : "Women"} aged ${ageGroup}`} />
@@ -142,10 +142,10 @@ function Results() {
         </div>
 
         {/* ROW: Bio Age Gauge + Grip Trajectory */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 
           {/* BIO AGE GAUGE */}
-          <div className="card p-5 sm:p-6 relative overflow-hidden">
+          <div className="card p-4 relative overflow-hidden">
             <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[#10b981]/5 blur-3xl" />
             <div className="relative">
               <div className="flex items-start justify-between mb-2">
@@ -186,7 +186,7 @@ function Results() {
           </div>
 
           {/* GRIP TRAJECTORY CURVE */}
-          <div className="card p-5 sm:p-6">
+          <div className="card p-4">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold">Grip Trajectory</div>
@@ -222,7 +222,7 @@ function Results() {
           </div>
 
           {/* HAND BREAKDOWN */}
-          <div className="card col-span-1 md:col-span-2 p-5 sm:p-6">
+          <div className="card col-span-1 md:col-span-2 p-4">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-4">Hand Breakdown</div>
             <div className="flex items-end justify-around gap-6 relative" style={{ height: 160 }}>
               {/* Dotted expected line */}
@@ -259,10 +259,10 @@ function Results() {
         </div>
 
         {/* ROW: Hand + Comparison + Stage Reference */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
 
           {/* COMPARISON BARS */}
-          <div className="card p-5 sm:p-6">
+          <div className="card p-4">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-4">Grip Comparison</div>
             {[
               { label: "You", val: grip, color: "#10b981", bold: true },
@@ -290,7 +290,7 @@ function Results() {
           </div>
 
           {/* STAGE REFERENCE */}
-          <div className="card p-5 sm:p-6">
+          <div className="card p-4">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-4">Stage Reference</div>
             <div className="space-y-1">
               {stages.map((s, i) => {
@@ -311,8 +311,8 @@ function Results() {
         </div>
 
         {/* ROW: Sensitivity + Leaderboard Position */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-          <div className="card p-5 sm:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="card p-4">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold">Sensitivity Model</div>
@@ -338,7 +338,7 @@ function Results() {
           </div>
 
           {/* EVENT COHORT */}
-          <div className="card p-5 sm:p-6">
+          <div className="card p-4">
             <div className="text-[10px] uppercase tracking-widest text-white/30 font-semibold mb-1">Event Leaderboard</div>
             <div className="text-lg font-bold text-white mb-4">Your Position</div>
             <div className="flex items-center gap-3 mb-4">
@@ -347,12 +347,12 @@ function Results() {
             </div>
             <div className="flex gap-2">
               <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-2.5 rounded-xl text-xs font-semibold border border-[#10b981]/20 text-[#10b981] hover:bg-[#10b981]/5 transition-colors">View Leaderboard</button>
-              <button onClick={() => router.push(`/event/${eventId}/leaderboard`)} className="flex-1 py-2.5 rounded-xl text-xs font-medium border border-white/[0.06] text-white/40 hover:bg-white/[0.03] transition-colors">Next Player →</button>
+              <button onClick={() => router.push(`/event/${eventId}/register`)} className="flex-1 py-2.5 rounded-xl text-xs font-medium border border-white/[0.06] text-white/40 hover:bg-white/[0.03] transition-colors">Register Next</button>
             </div>
           </div>
         </div>
 
-        <footer className="text-center text-[10px] text-white/15 mt-6 pb-4">
+        <footer className="text-center text-[10px] text-white/15 mt-3 pb-3">
           Model anchored to LASI Indian population norms · Grip represents one biological system · Dampened 0.4× · Clamped ±15y
         </footer>
       </div>
