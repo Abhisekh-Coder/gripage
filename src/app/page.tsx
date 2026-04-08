@@ -45,7 +45,7 @@ export default function HomePage() {
               <div className="hidden sm:flex items-center gap-5 text-xs font-medium text-white/40">
                 <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/70 transition-colors">How it works</button>
               </div>
-              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="text-xs font-semibold text-white/50 hover:text-white/80 transition-colors">Join Event</button>
+              <button onClick={() => { document.getElementById("join")?.scrollIntoView({ behavior: "smooth" }); setTimeout(() => (document.getElementById("code-input") as HTMLInputElement)?.focus(), 500); }} className="text-xs font-semibold text-white/50 hover:text-white/80 transition-colors">Join Event</button>
               <a href="/organizer/login" className="text-xs font-semibold text-white/50 hover:text-white/80 transition-colors">Enterprise</a>
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function HomePage() {
             {/* Join input */}
             <div id="join" className="flex gap-2 max-w-xs sm:max-w-sm mb-4">
               <input
-                type="text" placeholder="Event Code" value={code} maxLength={6} aria-label="Event code"
+                id="code-input" type="text" placeholder="Event Code" value={code} maxLength={6} aria-label="Event code"
                 onChange={e => { setCode(e.target.value.toUpperCase()); setError(""); }}
                 onKeyDown={e => e.key === "Enter" && join()}
                 className="glass-input flex-1 py-3 sm:py-3.5 px-3 sm:px-4 text-center uppercase font-bold tracking-[0.2em] sm:tracking-[0.25em] text-sm"
@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6 pb-24">
+      <footer className="relative z-10 border-t border-white/[0.04] py-10 sm:py-12 px-5 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
             <div>
@@ -271,20 +271,6 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* ═══ STICKY BOTTOM BAR ═══ */}
-      <div className="fixed bottom-0 inset-x-0 z-50 bg-[#0B0B0F] border-t border-white/[0.06] py-2.5 px-4">
-        <div className="max-w-sm mx-auto flex gap-2">
-          <input
-            type="text" placeholder="Enter Event Code" value={code} maxLength={6} aria-label="Event code"
-            onChange={e => { setCode(e.target.value.toUpperCase()); setError(""); }}
-            onKeyDown={e => e.key === "Enter" && join()}
-            className="glass-input flex-1 py-2.5 px-3 text-center uppercase font-bold tracking-[0.15em] text-xs rounded-xl"
-          />
-          <button onClick={join} disabled={!code.trim() || loading} className="btn-primary px-5 py-2.5 text-xs font-bold rounded-xl whitespace-nowrap">
-            {loading ? "..." : "Join"}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
