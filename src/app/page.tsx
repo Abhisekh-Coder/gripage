@@ -25,21 +25,23 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] overflow-x-hidden">
 
-      {/* ═══ NAV ═══ */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-[#0B0B0F]/70 backdrop-blur-xl border-b border-white/[0.04]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#4ADE80]/10 flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"><path d="M6 18c3-1.5 6-2.5 9-2.5s6 1 9 2.5"/><path d="M8 13c2.5-1 5-1.5 7-1.5s4.5.5 7 1.5"/><path d="M10 8c2-.5 4-1 5-1s3 .5 5 1"/></svg>
+      {/* ═══ NAV — glass morphic ═══ */}
+      <nav className="fixed top-0 inset-x-0 z-50">
+        <div className="mx-4 sm:mx-6 mt-3 max-w-6xl lg:mx-auto">
+          <div className="glass-strong rounded-2xl px-5 sm:px-6 h-14 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-[#4ADE80]/10 border border-[#4ADE80]/15 flex items-center justify-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round"><path d="M4 18c3-1.5 7-3 10-3s7 1.5 10 3"/><path d="M6 13c2.5-1 6-2 8-2s5.5 1 8 2"/><path d="M8 8c2-.8 4.5-1.5 6-1.5s4 .7 6 1.5"/></svg>
+              </div>
+              <span className="text-lg font-black tracking-tight">Grip<span className="text-[#4ADE80]">Age</span></span>
             </div>
-            <span className="text-base font-black tracking-tight">Grip<span className="text-[#4ADE80]">Age</span></span>
-          </div>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <div className="hidden sm:flex items-center gap-6 text-[11px] font-medium uppercase tracking-[0.12em] text-white/35">
-              <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/60 transition-colors">How it works</button>
-              <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/60 transition-colors">Join</button>
+            <div className="flex items-center gap-5 sm:gap-6">
+              <div className="hidden sm:flex items-center gap-5 text-xs font-medium text-white/40">
+                <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/70 transition-colors">How it works</button>
+                <button onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/70 transition-colors">Join</button>
+              </div>
+              <a href="/organizer/login" className="text-xs font-bold text-[#4ADE80] hover:text-[#4ADE80]/80 transition-colors">Enterprise</a>
             </div>
-            <a href="/organizer/login" className="text-[10px] sm:text-[11px] font-semibold text-[#4ADE80]/70 hover:text-[#4ADE80] transition-colors uppercase tracking-wider">Enterprise</a>
           </div>
         </div>
       </nav>
@@ -93,23 +95,23 @@ export default function HomePage() {
       </section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section id="how" className="relative z-10 py-16 sm:py-24 lg:py-32 px-5 sm:px-6">
+      <section id="how" className="relative z-10 py-12 sm:py-16 lg:py-20 px-5 sm:px-6">
         {/* Ambient glow */}
         <div className="absolute top-0 left-[50%] -translate-x-1/2 w-[800px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(74,222,128,0.04) 0%, transparent 70%)" }} />
 
         <div className="max-w-6xl mx-auto relative">
-          <div className="mb-14">
-            <p className="text-[11px] text-[#4ADE80]/60 font-semibold uppercase tracking-[0.2em] mb-2">Process</p>
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight">How It Works</h2>
+          <div className="mb-8">
+            <p className="text-[10px] text-[#4ADE80]/50 font-semibold uppercase tracking-[0.15em] mb-1.5">Process</p>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">How It Works</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
             {/* Step 1 — Squeeze */}
             <div className="glass-hover rounded-2xl overflow-hidden group">
-              <div className="relative h-48 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
+              <div className="relative h-36 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
                 <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">01</span>
                 {/* Hand gripping icon */}
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
+                <svg width="60" height="60" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
                   <path d="M28 52V32a4 4 0 018 0v-6a4 4 0 018 0v-2a4 4 0 018 0v8a4 4 0 018 0v16c0 10-6 18-16 18H40c-8 0-12-6-12-14z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M36 32v12M44 26v18M52 30v14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
                   <circle cx="40" cy="62" r="3" fill="currentColor" opacity="0.3"/>
@@ -127,10 +129,10 @@ export default function HomePage() {
 
             {/* Step 2 — Analyze */}
             <div className="glass-hover rounded-2xl overflow-hidden group">
-              <div className="relative h-48 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
+              <div className="relative h-36 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
                 <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">02</span>
                 {/* Analysis/heartbeat icon */}
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
+                <svg width="60" height="60" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
                   <rect x="14" y="16" width="52" height="48" rx="6" stroke="currentColor" strokeWidth="2"/>
                   <path d="M14 32h12l6-10 8 20 6-14 6 8h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <circle cx="40" cy="52" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
@@ -149,10 +151,10 @@ export default function HomePage() {
 
             {/* Step 3 — Rank */}
             <div className="glass-hover rounded-2xl overflow-hidden group">
-              <div className="relative h-48 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
+              <div className="relative h-36 flex items-center justify-center bg-gradient-to-br from-[#4ADE80]/[0.04] to-transparent">
                 <span className="absolute top-4 left-5 text-[10px] font-bold text-[#4ADE80]/40 tracking-wider">03</span>
                 {/* Podium/ranking icon */}
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
+                <svg width="60" height="60" viewBox="0 0 80 80" fill="none" className="text-[#4ADE80]/20 group-hover:text-[#4ADE80]/30 transition-colors">
                   <rect x="10" y="40" width="16" height="24" rx="2" stroke="currentColor" strokeWidth="2"/>
                   <rect x="32" y="28" width="16" height="36" rx="2" stroke="currentColor" strokeWidth="2"/>
                   <rect x="54" y="46" width="16" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
@@ -178,9 +180,9 @@ export default function HomePage() {
       {/* ═══ FEATURES ═══ */}
       <section className="relative z-10 py-16 sm:py-20 px-5 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-14">
-            <p className="text-[11px] text-[#4ADE80]/60 font-semibold uppercase tracking-[0.2em] mb-2">Features</p>
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight">What You Get</h2>
+          <div className="mb-8">
+            <p className="text-[10px] text-[#4ADE80]/50 font-semibold uppercase tracking-[0.15em] mb-1.5">Features</p>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">What You Get</h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
